@@ -19,11 +19,12 @@ dependencies = [
     "numpy",
     "matplotlib",
     "pandas",
-    "ipython"
+    "ipython",
+    "tqdm"
 ]
 
 [tool.setuptools.packages.find]
-include = ["figures*", "processing*", "model*"]
+include = ["figures*", "processing*", "model*", "util*"]
 
 [project.urls]
 GitHub = "https://github.com/nts345045/CRSD_OLUB"

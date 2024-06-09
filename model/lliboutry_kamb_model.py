@@ -1,5 +1,5 @@
-import os
 import numpy as np
+from 
 from tqdm import tqdm
 """
 This module calculates discretized solutions for cavity geometry and resultant
@@ -7,35 +7,42 @@ drag using the double-valued quasi-equilibrium model in Zoet & Iverson (2015)
 originally based on Lliboutry (1976) and Kamb (1986)
 """
 
-def acot(x):
-	"""
-	Return the inverse cotangent of x
-	:: INPUT ::
-	:param x: [array-like] input value
 
-	:: OUTPUT ::
-	:return: [array-like] output value
-	"""
-	return np.pi/2 - np.arctan(x)
 
-def defined_bed():
-	"""
-	Populate a dictionary with geometry of the UW-CRSD to pass
-	to the steady-state model
-	:: INPUTS ::
-	None
+class BedGeometry(object):
+	def __init__(self,
+			  obstacle_height=0.0253*2,
+			  obstacle_wavelength=0.31425,
+			  sliding_velocity=15.,
+			  effective_vicosity=6.3e7,
+			  flowlaw_exponent=3):
+		self.h = obstacle_height
+		self.lbda = obstacle_wavelength
+		self.US = sliding_velocity
+		self.nn = flowlaw_exponent
+		self.B = effective_vicosity
 
-	:: OUTPUTS ::
-	:return out: dictionary with:
-				'h': centerline bed height (2x amplitude)
-				'B': effective viscosity [Pa s^-3]
-				'nn': flowlaw exponent
-				'lbda': bed wavelength [m]
-				'US': sliding speed [m a^-1]
-	"""
-	# 	   Step height, Viscosity, Flow exp, Wlength. ,  Slide speed (m/a)
-	out = {'h':0.0253*2,'B':6.3e7,'nn':3,'lbda':.31425,'US':15}
-	return out
+	def make_bedmodel(
+			self,
+			npts=5001,
+			offset=0.5*np.pi,
+			)
+
+# def defined_bed():
+# 	"""
+# 	Populate a dictionary with geometry of the UW-CRSD to pass
+# 	to the steady-state model
+	
+# 	:return out: dictionary with:
+# 				'h': centerline bed height (2x amplitude)
+# 				'B': effective viscosity [Pa s^-3]
+# 				'nn': flowlaw exponent
+# 				'lbda': bed wavelength [m]
+# 				'US': sliding speed [m a^-1]
+# 	"""
+# 	# 	   Step height, Viscosity, Flow exp, Wlength. ,  Slide speed (m/a)
+# 	out = {'h':0.0253*2,'B':6.3e7,'nn':3,'lbda':.31425,'US':15}
+# 	return out
 
 def bedmodel(lbda=.3*np.pi*2.*0.25,hh=.078,npts=5001,pi_offset=0.5,lbda_offset=0.5,ncycles=1.5):
 	xv = np.linspace(-ncycles*0.5*lbda,ncycles*0.5*lbda,npts)
@@ -46,7 +53,7 @@ def bedmodel(lbda=.3*np.pi*2.*0.25,hh=.078,npts=5001,pi_offset=0.5,lbda_offset=0
 	# Calculate bed elevation vector (h(x) - defines a sinusoidal bed with wavelength lambda)
 	# hx = (h/2.)*np.sin((2.*np.pi*xv/lbda) + np.pi/2.) + h/2.
 	hx = aa*(np.cos(kk*xv - pi_offset*np.pi) + 1.)
-	# Calculate get normlized locatins
+	# Calculate get normlized locations
 	iv = xv/lbda
 	do = {'x_m':xv - lbda_offset*lbda,'y_m':hx,'x_ind':iv}
 	return do

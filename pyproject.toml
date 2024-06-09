@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools","wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name="CRSD_OLUB"
+authors = [{name="Nathan T. Stevens", email="ntsteven@uw.edu"},
+           {name="Dougal D. Hansen", email="ddhansen@wisc.edu"}]
+requires-python = ">=3.9"
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: CC 4.0 BY :: Creative Commons By Attribution License",
+    "Operating System :: OS Agnostic",
+    "Development Status :: 2 - Beta"
+]
+dependencies = [
+    "scipy",
+    "numpy",
+    "matplotlib",
+    "pandas",
+    "ipython"
+]
+
+[tool.setuptools.packages.find]
+include = ["figures*", "processing*", "model*"]
+
+[project.urls]
+GitHub = "https://github.com/nts345045/CRSD_OLUB"

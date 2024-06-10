@@ -11,12 +11,12 @@ echo "Will fetch data with curl here"
 # Pressure Transducers Initial Processing
 STRESS_RAW_FILE='../data/0_raw/Timeseries/RS_RAWdata_OSC_N.mat'
 STRESS_PUTC_FILE='../data/1_preprocessed/Timeseries/PhysicalUnitsData__UTC_Timing.csv'
-python ../processing/preprocessing/CRSD_volts2phys.py -i $STRESS_RAW_FILE -o $STRESS_PUTC_FILE
+python ../processing/initial/CRSD_volts2phys.py -i $STRESS_RAW_FILE -o $STRESS_PUTC_FILE
 
 # LVDT Initial Processing
 LVDT_RAW_FILES='../data/0_raw/Timeseries/LVDT/*.txt'
 LVDT_UTC_FILE='../data/1_preprocessed/Timeseries/Stitched_LVDT_Data__UTC_Timing.csv'
-python ../processing/preprocessing/merge_raw_LVDT.py -i $LVDT_RAW_FILES -o $LVDT_UTC_FILE -t 0.05 -r 1
+python ../processing/initial/merge_raw_LVDT.py -i $LVDT_RAW_FILES -o $LVDT_UTC_FILE -t 0.05 -r 1
 
 
 echo "Will run processing scripts here"

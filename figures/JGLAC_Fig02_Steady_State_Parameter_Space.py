@@ -29,7 +29,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 sys.path.append(os.path.join('..'))
-import core.model.steadystate_model as ssm
+import scripts.model.steadystate_model as ssm
 
 issave = True
 DPI = 200

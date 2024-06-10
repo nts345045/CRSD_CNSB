@@ -6,7 +6,6 @@
 echo "Will create the environment"
 echo "Will launch the environment"
 
-echo "Will fetch data with curl here"
 
 # Pressure Transducers Initial Processing
 STRESS_RAW_FILE='../data/0_raw/Timeseries/RS_RAWdata_OSC_N.mat'

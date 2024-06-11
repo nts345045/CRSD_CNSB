@@ -41,6 +41,16 @@ Logger.setLevel(logging.INFO)
 ROOT = os.path.join('..', '..', 'data')
 
 def main(data_file):
+    """main process
+    Run processing converting volt-united measurements from CRSD transducers
+    into kilopascal united measurements and timestamps from seconds relative
+    to 1904-1-1 referenced times to epoch and UTC times (referenced to 1970-1-1)
+
+    :param data_file: Raw CRSD *.mat data file path and name
+    :type data_file: str
+    :return: processed pressure data and timestamps
+    :rtype: pandas.core.dataframe.DataFrame
+    """    
     data_dict = loadmat(data_file)
     Logger.info('data loaded')
 

@@ -26,7 +26,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 sys.path.append(os.path.join('..'))
 from util.datetimeindex import pick_extrema_indices
-import core.model.steadystate_model as ssm
+import scripts.model.steadystate_model as ssm
 
 # Map Directories
 ROOT = os.path.join('..','..')

@@ -3,9 +3,19 @@
 # This script runs everything necessary to reproduce results presented
 # in Stevens et al. (202X) from minimally processed data sources archived
 # in their data repository.
-echo "Will create the environment"
-echo "Will launch the environment"
-
+ENVNAME='crsd'
+# Check if the environment is active
+if [[ "$CONDA_DEFAULT_ENV" == "$ENVNAME" ]]; then
+    echo "Environment '$ENVNAME' already active"
+# If not active, but exists, activate
+elif conda info --envs | grep -q "$ENVNAME"
+    echo "Activating '$ENVNAME'"
+    conda activate "$ENVNAME"
+# Otherwise 
+else
+    echo "Environment '$ENVNAME' does not exist - exiting"
+    exit
+fi
 
 # Pressure Transducers Initial Processing
 STRESS_RAW_FILE='../data/0_raw/Timeseries/RS_RAWdata_OSC_N.mat'

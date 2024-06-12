@@ -13,18 +13,13 @@
 import argparse, logging
 import pandas as pd
 import numpy as np
-from tqdm import tqdm
 
 Logger = logging.getLogger('merge_raw_LVDT.py')
-ch = logging.StreamHandler()                                                            
-fmt = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(fmt)
-Logger.addHandler(ch)
-Logger.setLevel(logging.INFO)
+
 
 def read_lvdt_record(file):
 	dt = (pd.Timestamp("1904-1-1") - pd.Timestamp("1970-1-1")).total_seconds()
-	df_in = pd.read_csv(file, delim_whitespace=True)
+	df_in = pd.read_csv(file, sep='\s+')
 	measure = df_in['LVDT1.1'].values
 	time = df_in['time'].values
 	df_out = pd.DataFrame(
@@ -73,10 +68,21 @@ def main(input_files, threshold=0.05, range=1):
 	df_out = pd.DataFrame(
 		{'LVDT_mm': zv, 'epoch': df.epoch.values},
 		index=df.index)
+	# Do manually ID'd trim out of flat spot in data
+	IND = (df_out.index >= pd.Timestamp("2021-11-06T19:30")) & (df_out.index <= pd.Timestamp("2021-11-07T18"))
+	df_out = df_out[~IND]		
 	return df_out
 
 
 if __name__ == "__main__":
+	# Set up logging to terminal
+	ch = logging.StreamHandler()                                                            
+	fmt = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+	ch.setFormatter(fmt)
+	Logger.addHandler(ch)
+	Logger.setLevel(logging.INFO)
+
+	# Setup command line argument parsing
 	parser = argparse.ArgumentParser(
 		prog='merge_raw_LVDT.py',
 		description='concatenates timestamped LVDT observations and corrects for large jumps in measurements'
@@ -124,7 +130,9 @@ if __name__ == "__main__":
 		input_files = arguments.input_files,
 		threshold = arguments.threshold,
 		range=arguments.rng)
+	Logger.info('writing data to disk')
 	df_out.to_csv(arguments.output_file)
+	Logger.info('data written to disk - concluding main')
 			   
 # ROOT = os.path.join('..','..','..')
 # IROOT = os.path.join(ROOT,'raw','LVDT')

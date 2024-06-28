@@ -32,19 +32,21 @@ LVDT_UTC_FILE="'$PPDIR'/Timeseries/Stitched_LVDT_Data__UTC_Timing.csv"
 #python ../processing/initial/merge_raw_LVDT.py -i $LVDT_RAW_FILES -o $LVDT_UTC_FILE -t 0.05 -r 1
 
 # Timeseries resampling
-STRESS_RESAMPLED="'$PPDIR'/Timeseries/Resampled_Pressure_Data.csv"
-LVDT_RESAMPLED="'$PPDIR'/Timeseries/Resampled_LVDT_Data.csv"
+STRESS_RESAMPLED="$PPDIR/Timeseries/Resampled_Pressure_Data.csv"
+LVDT_RESAMPLED="$PPDIR/Timeseries/Resampled_LVDT_Data.csv"
 #python ../processing/preprocess/evenly_sample_timeseries.py -i $STRESS_PUTC_FILE -o $STRESS_RESAMPLED
 #python ../processing/preprocess/evenly_sample_timeseries.py -i $LVDT_UTC_FILE -o $LVDT_RESAMPLED
 
 # Timeseries despiking
-STRESS_DESPIKED="'$PPDIR'/Timeseries/Despiked_Pressure_Data.csv"
-LVDT_DESPIKED="'$PPDIR'/Timeseries/Despiked_LVDT_Data.csv"
+STRESS_DESPIKED="$PPDIR/Timeseries/Despiked_Pressure_Data.csv"
+LVDT_DESPIKED="$PPDIR/Timeseries/Despiked_LVDT_Data.csv"
 python ../processing/preprocess/despike_timeseries.py -i $STRESS_RESAMPLED -o $STRESS_DESPIKED
 python ../processing/preprocess/despike_timeseries.py -i $LVDT_RESAMPLED -o $LVDT_DESPIKED
 
 # Timeseries smoothing
-STRESS_SMOOTH="'$PPDIR'/Timeseries/Smoothed_Pressure_Data.csv"
-LVDT_SMOOTH="'$PPDIR'/Timeseries/Smoothed_LVDT_Data.csv"
+STRESS_SMOOTH="$PPDIR/Timeseries/Smoothed_Pressure_Data.csv"
+LVDT_SMOOTH="$PPDIR/Timeseries/Smoothed_LVDT_Data.csv"
+python ../processing/preprocess/smooth_timeseries.py -i $STRESS_DESPIKED -o $STRESS_SMOOTH -n 3 -w 10
+python ../processing/preprocess/smooth_timeseries.py -i $LVDT_DESPIKED -o $LVDT_SMOOTH -n 3 -w 10
 
 echo "Will run figure rendering scripts here"

@@ -42,7 +42,7 @@ def main():
         dest='niter',
         default=3,
         help='number of smoothing iterations to apply',
-        type=float
+        type=int
     )
     parser.add_argument(
         '-w',
@@ -60,27 +60,17 @@ def main():
     
     df = pd.read_csv(args.input_file, parse_dates=['Time_UTC'], index_col=[0])
     Logger.info('data loaded')
+    # Iterate for the number of smoothing passes
+    fields = [c_ for c_ in df.columns if c_ != 'epoch']
+    df_out = df[fields].copy()
+    Logger.info('running smoothing')
     for _n in range(args.niter):
-        if _n == 0:
-            df_out = df.copy().rolling(pd.Timedelta(args.window,unit='seconds')).mean()
-        else:
-            df_out = df_out.rolling(pd.Timedelta(args.window, unit='seconds')).mean()
-        df_out.index -= pd.Timedelta(args.window, unit='seconds')/2.
-        df_out= df_out[(df_out.index >= df.index.min())&
-                    (df_out.index <= df.index.max())]
-    
-    df_out = pd.DataFrame()
-    for _n, _c in enumerate(df.columns):
-        if _c not in ['epoch','Time_UTC']:
-            Logger.info(f'processing {_c}')
-            s_ = df[_c].copy().rolling(dt).median()
-            s_.index -= dt/2.
-            s_Z = (df[_c] - s_)
-            IND = np.abs(s_Z) <= args.threshold*s_Z.std()
-            if _n == 0:
-                df_out = df_out._append(df[_c][IND]).T
-            else:
-                df_out = pd.concat([df_out, df[_c][IND]], axis=1, ignore_index=False)
+        Logger.info(f'...iteration {_n+1}/{args.niter}...')
+        df_out = df_out.rolling(pd.Timedelta(args.window, unit='seconds')).mean()
+        df_out.index -= pd.Timedelta(args.window/2, unit='seconds')
+        df_out = df_out[(df_out.index >= df.index.min()) & 
+                        (df_out.index <= df.index.max())]
+    Logger.info('getting window-centered epoch values')
     df_out = df_out.assign(epoch=lambda x: (x.index - pd.Timestamp('1970-1-1')).total_seconds())
     Logger.info('writing data to disk')
     df_out.to_csv(args.output_file, header=True, index=True)

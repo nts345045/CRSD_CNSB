@@ -56,15 +56,18 @@ def main():
     )
     args = parser.parse_args()
     Logger.info(f'loading data from: {args.input_file}')
-    Logger.info(f'writing data to: {args.output_file}')
+    # Logger.info(f'writing data to: {args.output_file}')
     Logger.info(f'using a z-score threshold of {args.threshold}')
     Logger.info(f'using a sampling window of {args.window} sec to estimate the central value (median)')
     dt = pd.Timedelta(args.window, unit='seconds')
-    df = pd.read_csv(args.input_file, parse_dates=['Time_UTC'], index_col=[0])
+    # Load data
+    df = pd.read_csv(args.input_file)
+    # Populate Timestamp index from Epoch_UTC
+    df.index = df.Epoch_UTC.apply(lambda x: pd.Timestamp(x*1e9))
     Logger.info('data loaded')
     df_out = pd.DataFrame()
     for _n, _c in enumerate(df.columns):
-        if _c not in ['epoch','Time_UTC']:
+        if _c not in ['Epoch_UTC']:
             Logger.info(f'processing {_c}')
             s_ = df[_c].copy().rolling(dt).median()
             s_.index -= dt/2.
@@ -74,9 +77,10 @@ def main():
                 df_out = df_out._append(df[_c][IND]).T
             else:
                 df_out = pd.concat([df_out, df[_c][IND]], axis=1, ignore_index=False)
-    df_out = df_out.assign(epoch=lambda x: (x.index - pd.Timestamp('1970-1-1')).total_seconds())
-    Logger.info('writing data to disk')
-    df_out.to_csv(args.output_file, header=True, index=True)
+    # Write out updated Epoch_UTC timestamps from the Timestamp index
+    df_out = df_out.assign(Epoch_UTC=[x.timestamp() for x in df_out.index])
+    Logger.info(f'writing data to disk: {args.output_file}')
+    df_out.to_csv(args.output_file, header=True, index=False)
     Logger.info('data written to disk - concluding main')
 
 

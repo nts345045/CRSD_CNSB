@@ -43,15 +43,23 @@ def main():
     )
     args = parser.parse_args()
     Logger.info(f'loading data from: {args.input_file}')
-    Logger.info(f'writing data to: {args.output_file}')
-    df = pd.read_csv(args.input_file, parse_dates=['Time_UTC'], index_col=[0])
+    # Logger.info(f'writing data to: {args.output_file}')
+    # Read CSV
+    df = pd.read_csv(args.input_file)
+    # Update index as Timestamp objects
+    df.index = df.Epoch_UTC.apply(lambda x: pd.Timestamp(x*1e9))
     Logger.info('data loaded')
     df = df.sort_index()
-    dt = np.round(np.median(df.epoch.values[1:] - df.epoch.values[:-1]), decimals=0)
+    # Get sampling period
+    dt = np.round(np.median(df.Epoch_UTC.values[1:] - df.Epoch_UTC.values[:-1]), decimals=0)
     Logger.info(f'data to be resampled at {dt} sec intervals')
-    df = df.resample(pd.Timedelta(dt, unit='sec')).median()
+    # Resample
+    df = df.resample(pd.Timedelta(dt, unit='second')).median()
     Logger.info('data resampled')
-    df.to_csv(args.output_file, header=True, index=True)
+    # Update Epoch_UTC
+    df.Epoch_UTC = [(ind - pd.Timestamp("1970-01-01T00:00:00")).total_seconds() for ind in df.index]
+    Logger.info(f'writing to disk: {args.output_file}')
+    df.to_csv(args.output_file, header=True, index=False)
     Logger.info('data written to disk - concluing main')
 
 

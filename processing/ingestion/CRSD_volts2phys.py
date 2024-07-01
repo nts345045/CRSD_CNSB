@@ -127,10 +127,10 @@ def main(data_file):
     df_processed = pd.DataFrame({'SigmaN_kPa': SigmaN_kPa.flatten(),
                                 'Tau_kPa': Tau_kPa.flatten(),
                                 'Pw1_kPa': Pw1_kPa.flatten(),
-                                'Pw2_kPa': Pw2_kPa.flatten(),
-                                'epoch': epoch_times.flatten()},
-                                index = epoch_times.flatten().astype('datetime64[s]'))
-    df_processed.index.name = 'Time_UTC'
+                                'Pw2_kPa': Pw2_kPa.flatten()},
+                                index = epoch_times.flatten())#},
+                                # index = epoch_times.flatten().astype('datetime64[s]'))
+    df_processed.index.name = 'Epoch_UTC'
     Logger.info('dataframe composed, concluding main()')
 
     return df_processed

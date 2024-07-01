@@ -130,8 +130,11 @@ if __name__ == "__main__":
 		input_files = arguments.input_files,
 		threshold = arguments.threshold,
 		range=arguments.rng)
-	Logger.info('writing data to disk')
-	df_out.to_csv(arguments.output_file)
+	S_out = df_out['LVDT_mm']
+	S_out.index = df_out['epoch']
+	S_out.index.name='Epoch_UTC'
+	Logger.info(f'writing data to disk {arguments.output_file}')
+	S_out.to_csv(arguments.output_file, header=True, index=True)
 	Logger.info('data written to disk - concluding main')
 			   
 # ROOT = os.path.join('..','..','..')

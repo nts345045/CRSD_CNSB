@@ -58,7 +58,8 @@ def main():
     Logger.info(f'using a window length of {args.window} sec')
     Logger.info(f'running {args.niter} iterations of window-centered boxcar smoothing')
     
-    df = pd.read_csv(args.input_file, parse_dates=['Time_UTC'], index_col=[0])
+    df = pd.read_csv(args.input_file, parse_dates=['Epoch_UTC'], index_col=[0])
+    breakpoint()
     Logger.info('data loaded')
     # Iterate for the number of smoothing passes
     fields = [c_ for c_ in df.columns if c_ != 'epoch']

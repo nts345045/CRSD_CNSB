@@ -131,6 +131,7 @@ def main(data_file):
                                 index = epoch_times.flatten())#},
                                 # index = epoch_times.flatten().astype('datetime64[s]'))
     df_processed.index.name = 'Epoch_UTC'
+    df_processed = df_processed.sort_index()
     Logger.info('dataframe composed, concluding main()')
 
     return df_processed

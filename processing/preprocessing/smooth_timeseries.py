@@ -57,12 +57,13 @@ def main():
     Logger.info(f'writing data to: {args.output_file}')
     Logger.info(f'using a window length of {args.window} sec')
     Logger.info(f'running {args.niter} iterations of window-centered boxcar smoothing')
-    
-    df = pd.read_csv(args.input_file, parse_dates=['Epoch_UTC'], index_col=[0])
-    breakpoint()
+    # Load data
+    df = pd.read_csv(args.input_file)
+    # Populate Timestamp index
+    df.index = pd.to_datetime(df.Epoch_UTC, unit='s')
     Logger.info('data loaded')
     # Iterate for the number of smoothing passes
-    fields = [c_ for c_ in df.columns if c_ != 'epoch']
+    fields = [c_ for c_ in df.columns if c_ != 'Epoch_UTC']
     df_out = df[fields].copy()
     Logger.info('running smoothing')
     for _n in range(args.niter):
@@ -72,9 +73,10 @@ def main():
         df_out = df_out[(df_out.index >= df.index.min()) & 
                         (df_out.index <= df.index.max())]
     Logger.info('getting window-centered epoch values')
-    df_out = df_out.assign(epoch=lambda x: (x.index - pd.Timestamp('1970-1-1')).total_seconds())
+    df_out.Epoch_UTC = [x.timestamp() for x in df_out.index]
+    # df_out = df_out.assign(epoch=lambda x: (x.index - pd.Timestamp('1970-1-1')).total_seconds())
     Logger.info('writing data to disk')
-    df_out.to_csv(args.output_file, header=True, index=True)
+    df_out.to_csv(args.output_file, header=True, index=False)
     Logger.info('data written to disk - concluding main')
 
 

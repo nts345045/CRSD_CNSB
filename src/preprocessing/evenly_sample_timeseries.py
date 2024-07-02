@@ -41,6 +41,17 @@ def main():
         help='output CSV file path and name',
         type=str
     )
+
+    parser.add_argument(
+        '-n',
+        '--ninterp',
+        action='store',
+        dest='ninterp',
+        default=0,
+        help='number of interpolation samples to allow on either side of a gap',
+        type=int
+    )
+
     args = parser.parse_args()
     Logger.info(f'loading data from: {args.input_file}')
     # Logger.info(f'writing data to: {args.output_file}')
@@ -56,6 +67,15 @@ def main():
     # Resample
     df = df.resample(pd.Timedelta(dt, unit='second')).median()
     Logger.info('data resampled')
+    # Interpolate
+    if args.ninterp > 0:
+        Logger.info(f'interpolating internal gaps for max {args.ninterp} samples on either side')
+        df.interpolate(
+            method='linear',
+            limit=args.ninterp,
+            inplace=True,
+            limit_direction='both',
+            limit_area='inside')
     # Update Epoch_UTC
     df.Epoch_UTC = [(ind - pd.Timestamp("1970-01-01T00:00:00")).total_seconds() for ind in df.index]
     Logger.info(f'writing to disk: {args.output_file}')

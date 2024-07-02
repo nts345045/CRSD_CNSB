@@ -45,7 +45,7 @@ def main():
         '-padding',
         dest='padding',
         default=6*3600,
-        help='Seconds of extra data before and after specified experiment starttime and endtime values to include in output file(s)'
+        help='Seconds of extra data before and after specified experiment starttime and endtime values to include in output file(s)',
         type=float
     )
 
@@ -57,6 +57,16 @@ def main():
         default='tmp_smoothed_data.csv',
         help='path for saving results. Filenames auto-assigned as '+\
              '<input_file_name>_<timefile_entry_name>.csv',
+        type=str
+    )
+
+    parser.add_argument(
+        '-t',
+        '--data_type',
+        action='store',
+        dest='data_type',
+        default='tmp',
+        help='shorthand name of the data type being processed',
         type=str
     )
 
@@ -74,26 +84,31 @@ def main():
     dt_pad = pd.Timedelta(args.padding, unit='seconds')
     Logger.info(f'using a padding window of {args.padding/3600:.3f} hours ({args.padding:.1f} sec)')
 
-    Logger.info(f'will write data to directory: {args.output_path}')
+    Logger.info(f'will write data with path and name prefix: {args.output_path}')
     
-    _, root_name_ext = os.path.split(args.input_file)
-    root_name, _ = os.path.splitext(root_name_ext)
-    save_name = os.path.join(args.out_path,root_name,'_{seg_name}.csv')
 
+
+    # save_name = os.path.join(args.out_path,root_name,'_{seg_name}.csv')
+    if not os.path.exists(args.output_path):
+        os.makedirs(args.output_path)
+        Logger.info(f'Creating directory: {args.output_path}')
     for name, row in df_time.iterrows():
         # Create subsetting index
         ind = (df_in.index >= row.starttime - dt_pad) & (df_in.index < row.endtime + dt_pad)
         # Subset data
         idf = df_in.copy()[ind]
         # Compose output file path and name
-        out_fp = save_name.format(seg_name=name)
-        Logger.info(f'writing output for {name} ({len(idf)} samples) to {out_fp}')
+        out_fp = os.path.join(args.output_path,f'{name}-{args.data_type}.csv')
+        Logger.info(f'writing output for {name}-{args.data_type} ({len(idf)} samples) to {out_fp}')
         # Write without index (get rid of temporary Timestamp index)
         idf.to_csv(out_fp, header=True, index=False)
     
     Logger.info('Concluding main() without errors')
 
-
-
 if __name__ == '__main__':
+    ch = logging.StreamHandler()                                                            
+    fmt = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(fmt)
+    Logger.addHandler(ch)
+    Logger.setLevel(logging.INFO)
     main()

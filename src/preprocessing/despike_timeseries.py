@@ -63,24 +63,28 @@ def main():
     # Load data
     df = pd.read_csv(args.input_file)
     # Populate Timestamp index from Epoch_UTC
-    df.index = df.Epoch_UTC.apply(lambda x: pd.Timestamp(x*1e9))
+    df.index = pd.to_datetime(df.Epoch_UTC, unit='s')
     Logger.info('data loaded')
-    df_out = pd.DataFrame()
-    for _n, _c in enumerate(df.columns):
-        if _c not in ['Epoch_UTC']:
-            Logger.info(f'processing {_c}')
-            s_ = df[_c].copy().rolling(dt).median()
-            s_.index -= dt/2.
-            s_Z = (df[_c] - s_)
-            IND = np.abs(s_Z) <= args.threshold*s_Z.std()
-            if _n == 0:
-                df_out = df_out._append(df[_c][IND]).T
-            else:
-                df_out = pd.concat([df_out, df[_c][IND]], axis=1, ignore_index=False)
-    # Write out updated Epoch_UTC timestamps from the Timestamp index
-    df_out = df_out.assign(Epoch_UTC=[x.timestamp() for x in df_out.index])
+    # Get copy of dataframe, less the Epoch_UTC column
+    df_tmp = df.copy()[df.columns.difference(['Epoch_UTC'])]
+    # Apply rolling to all columns
+    Logger.info('running rolling calculations')
+    df_tmp_mea = df_tmp.copy().rolling(dt, center=True).median()
+    df_tmp_std = df_tmp.copy().rolling(dt, center=True).std()
+    Logger.info('Getting Z-scores')
+    # Get deltas
+    df_tmp_Z = df_tmp.copy() - df_tmp_mea
+    # Get Z-scores
+    df_tmp_Z /= df_tmp_std
+    # Get unsigned Z-scores
+    df_tmp_Z = df_tmp_Z.abs()
+    # Filter out values greater than threshold
+    df_tmp[df_tmp_Z > args.threshold] = np.nan
+    Logger.info(f'Value counts filtered out for {len(df_tmp)} rows\n{(df_tmp_Z > args.threshold).sum()}')
+
+    df_tmp = df_tmp.assign(Epoch_UTC=[x.timestamp() for x in df_tmp.index])
     Logger.info(f'writing data to disk: {args.output_file}')
-    df_out.to_csv(args.output_file, header=True, index=False)
+    df_tmp.to_csv(args.output_file, header=True, index=False)
     Logger.info('data written to disk - concluding main')
 
 

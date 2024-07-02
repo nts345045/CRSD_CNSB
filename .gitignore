@@ -3,6 +3,7 @@
 
 # Local options
 data
+processed_data
 
 # Temporary Earthworm Files
 *.state

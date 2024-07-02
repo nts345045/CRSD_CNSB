@@ -29,34 +29,51 @@ fi
 RDDIR='../data'
 PPDIR='../processed_data'
 SRC='../src'
-# # Pressure Transducers Raw Data Ingestion
+EXP_TIMES='../param/UTC_experiment_times.csv'
+
+# Pressure Transducers Raw Data Ingestion
 STRESS_RAW_FILE="$RDDIR/RS_RAWdata_OSC_N.mat"
 STRESS_PUTC_FILE="$PPDIR/1_PhysicalUnitsData__UTC_Timing.csv"
-python $SRC/ingestion/CRSD_volts2phys.py -i $STRESS_RAW_FILE -o $STRESS_PUTC_FILE
+# echo "~~~~~~~~~~ INGESTING TRANSDUCER TIMESERIES ~~~~~~~~~~"
+# python $SRC/ingestion/CRSD_volts2phys.py -i $STRESS_RAW_FILE -o $STRESS_PUTC_FILE
 
-# # LVDT Raw Data Ingestion
+# LVDT Raw Data Ingestion
 LVDT_RAW_FILES="$RDDIR/LVDT/*.txt"
 LVDT_UTC_FILE="$PPDIR/1_Stitched_LVDT_Data__UTC_Timing.csv"
-python $SRC/ingestion/merge_raw_LVDT.py -i $LVDT_RAW_FILES -o $LVDT_UTC_FILE -t 0.05 -r 1
+# echo "~~~~~~~~~~ INGESTING LVDT TIMESERIES ~~~~~~~~~~"
+# python $SRC/ingestion/merge_raw_LVDT.py -i $LVDT_RAW_FILES -o $LVDT_UTC_FILE -t 0.05 -r 1
 
-# # Timeseries sampling homogenization
+# Timeseries sampling homogenization
 STRESS_RESAMPLED="$PPDIR/2_Resampled_Pressure_Data.csv"
 LVDT_RESAMPLED="$PPDIR/2_Resampled_LVDT_Data.csv"
-python $SRC/preprocessing/evenly_sample_timeseries.py -i $STRESS_PUTC_FILE -o $STRESS_RESAMPLED
-python $SRC/preprocessing/evenly_sample_timeseries.py -i $LVDT_UTC_FILE -o $LVDT_RESAMPLED
+# echo "~~~~~~~~~~ EVENLY SAMPLING TIMESERIES ~~~~~~~~~~"
+# python $SRC/preprocessing/evenly_sample_timeseries.py -i $STRESS_PUTC_FILE -o $STRESS_RESAMPLED -n 2
+# python $SRC/preprocessing/evenly_sample_timeseries.py -i $LVDT_UTC_FILE -o $LVDT_RESAMPLED -n 2
 
-# # Timeseries despiking
+# Timeseries despiking
 STRESS_DESPIKED="$PPDIR/3_Despiked_Pressure_Data.csv"
 LVDT_DESPIKED="$PPDIR/3_Despiked_LVDT_Data.csv"
-python $SRC/preprocessing/despike_timeseries.py -i $STRESS_RESAMPLED -o $STRESS_DESPIKED
-python $SRC/preprocessing/despike_timeseries.py -i $LVDT_RESAMPLED -o $LVDT_DESPIKED
+# echo "~~~~~~~~~~ DESPIKING TIMESERIES ~~~~~~~~~~"
+# python $SRC/preprocessing/despike_timeseries.py -i $STRESS_RESAMPLED -o $STRESS_DESPIKED
+# python $SRC/preprocessing/despike_timeseries.py -i $LVDT_RESAMPLED -o $LVDT_DESPIKED
 
-# # Timeseries smoothing
+# Timeseries smoothing
 STRESS_SMOOTH="$PPDIR/4_Smoothed_Pressure_Data.csv"
 LVDT_SMOOTH="$PPDIR/4_Smoothed_LVDT_Data.csv"
-python $SRC/preprocessing/smooth_timeseries.py -i $STRESS_DESPIKED -o $STRESS_SMOOTH -n 3 -w 10
-python $SRC/preprocessing/smooth_timeseries.py -i $LVDT_DESPIKED -o $LVDT_SMOOTH -n 3 -w 10
+echo "~~~~~~~~~~ SMOOTHING TIMESERIES ~~~~~~~~~~"
+#Window settings both sample 10 minute moving windows that go out to +/- 4 sigma for gaussian weighted mean
+# python $SRC/preprocessing/smooth_timeseries.py -i $STRESS_DESPIKED -o $STRESS_SMOOTH -w 600 -s 75
+# python $SRC/preprocessing/smooth_timeseries.py -i $LVDT_DESPIKED -o $LVDT_SMOOTH -w 40 -s 5
 
-# # Split Timeseries into Experiments
+# Split Timeseries into Experiments
+SPLIT_DATA_PATH="$PPDIR/5_split_data"
+# echo "~~~~~~~~~~ SPLITTING OUT TIMESERIES ~~~~~~~~~~"
+# python $SRC/preprocessing/split_out_experiments.py -i $STRESS_SMOOTH -o $SPLIT_DATA_PATH -t "Presssure" -f $EXP_TIMES
+# python $SRC/preprocessing/split_out_experiments.py -i $LVDT_SMOOTH -o $SPLIT_DATA_PATH -t "LVDT" -f $EXP_TIMES
 
-echo "Will run figure rendering scripts here"
+echo "!!!!!!!!!! END OF PREPROCESSING !!!!!!!!!!"
+
+# Process LVDT for empirical melt-rate calculations and getting extremum
+ 
+
+# echo "Will run figure rendering scripts here"

@@ -1,0 +1,4 @@
+name,peak_period,peak_period_unit,fit_ind,reduce
+EX_T06,5,'hour',-3,True
+EX_T24,23,'hour',-2,True
+HOLD_0,-999,'hour',None,False

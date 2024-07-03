@@ -100,8 +100,9 @@ def main():
     if args.params is None:
         Logger.critical('No parameter file provided with flag -f. Quitting')
         sys.exit(1)
-	else:
-	df_pf = pd.read_csv(args.params)
+    else:
+        df_pf = pd.read_csv(args.params)
+		
     # Get names of LVDT files
     flist = glob.glob(os.path.join(args.input_path,'*LVDT*.csv'))
     print(flist)

@@ -4,7 +4,7 @@
 # Local options
 data
 processed_data
-
+results
 # Temporary Earthworm Files
 *.state
 *.lock

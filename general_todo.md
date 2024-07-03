@@ -3,6 +3,7 @@
 TODO: Shift all data files to just UTC epoch time for more-compact saving
 TODO: Make sure params/UTC_experiment_times.csv is in UTC (via plotting)
 TODO: Make sure params/UTC_experiment_times.csv HOLD_2 makes sense (via plotting)
+TODO: Calculate effective pressure from axial stress and water pressures after the smoothing step
 
 ## Bugs
 BUG: Placeholder example for ToDoTree

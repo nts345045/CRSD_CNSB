@@ -1,10 +1,10 @@
 # General ToDo List for CRSD Oscillatory Loading, Undulatory Bed Code Repository
 ## ToDos
 
-TODO: Reconcile process_cavity_picks and process_cavity_picks_v2
+TODO: Placeholder
 ## Bugs
-BUG: Placeholder example for ToDoTree
+BUG: Placeholder
 
 ## FixMes
-FIXME: Placehodler example for ToDoTree
+FIXME: JGLAC_Fig07.py modeled S vs \mu does not scale correctly
 

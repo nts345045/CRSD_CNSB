@@ -52,25 +52,31 @@ def main(data_file):
     :rtype: pandas.core.dataframe.DataFrame
     """    
     data_dict = loadmat(data_file)
+    Logger.info('Running volts to physical units conversions for the UW-Madison CRSD Oscillatory Loading Experiment')
     Logger.info('data loaded')
 
     ## PHYSICAL CONSTANTS ##
-    psi2kpa = 6.895 # [kPa/PSIG]
-    # Sample Chamber Dimensions
-    rout = 0.3  # [m] Outer radius
-    rin = 0.1   # [m] Inner radius
+    # Conversion coefficients
+    psi2kpa = 6.895                     # [kPa/PSIG]
+    # Timestamp conversion from 1904 reference to Epoch standard reference
+    C_1904_to_epoch = (pd.Timestamp('1970-1-1') - pd.Timestamp('1904-1-1')).total_seconds()
+    
+    ## Sample Chamber Constants
+    rout = 0.3                          # [m] Outer radius
+    rin = 0.1                           # [m] Inner radius
     a_ring = np.pi*(rout**2. - rin**2.) # [m^2] area of the experimental chamber floor
+
+
+    # Raw sample chamber load measurement pre experiment
+    raw_chamber_preEXP = 0.109          # [mV] - single value recorded during experiment (lab notebook)
 
     ## EMPIRICAL CONSTANTS ##
     # Calibration coefficients
-    C_torque = -14.34   # Nm/mV
-    C_torque_ram_correction = 0.243 # Nm/PSIG Peter Sobol's linear correction for applied
-                                    # ram pressure on torque sensor readings
-    C_ram = 2000.       # PSIG/mV
-    C_ram_calib = 0.0231252 # PSIG -> kN calibration coefficient (From Peter Sobol)
-    C_Pw = 50.          #PSIG/V
-
-    C_1904_to_epoch = (pd.Timestamp('1970-1-1') - pd.Timestamp('1904-1-1')).total_seconds()
+    C_torque = -14.34                   # Nm/mV
+    C_torque_ram_correction = 0.243     # Nm/PSIG Peter Sobol's linear correction for applied ram pressure on torque sensor readings
+    C_ram = 2000.                       # PSIG/mV
+    C_ram_calib = 0.0231252             # PSIG -> kN calibration coefficient (From Peter Sobol)
+    C_Pw = 50.                          # PSIG/V
 
     Logger.info('constants defined')
 
@@ -81,7 +87,6 @@ def main(data_file):
     zero_Pw1 = np.mean(data_dict['rawPw1_zero']) # [V]
     zero_Pw2 = np.mean(data_dict['rawPw2_zero']) # [V]
     # Raw sample chamber weight
-    raw_chamber_preEXP = 0.109 # [mV] - single value recorded during experiment (lab notebook)
     raw_chamber_postEXP = np.mean(data_dict['raw_chamber_postExp'])
     # Average of pre-/post-experiment mesurements
     chamber_weight = (raw_chamber_preEXP - raw_chamber_postEXP)/2. 
@@ -113,9 +118,7 @@ def main(data_file):
     # Include Peter Sobol's correction for sensor dependence on axial load
     Torque_Nm -= C_torque_ram_correction*Ram_PSIG
     # Convert torque into shear stress
-    num = (3./2.*np.pi) * Torque_Nm
-    den = (rout**3 - rin**3)*1e-3
-    Tau_kPa = num/den
+    Tau_kPa = (3./(2.*np.pi) * Torque_Nm / (rout**3 - rin**3) / 1000.)
 
     Logger.info('torque mV -> shear stress kPa converted')
 

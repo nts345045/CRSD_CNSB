@@ -38,14 +38,14 @@ def plot_cycles(axis,Xdata,Ydata,Tindex,t0,cmaps,ncycles=5,T=pd.Timedelta(24,uni
 	return chs
 
 # Map Data
-ROOT = os.path.join('..','..')
-DDIR = os.path.join(ROOT,'processed','timeseries')
+ROOT = os.path.join('..')
+DDIR = os.path.join(ROOT,'processed_data','cavities')
 # Map Experimental Data
-T24_CM = os.path.join(DDIR,'S5_experiment_T24_cavity_metrics.csv')
-MOD_CM = os.path.join(DDIR,'S5_modeled_values.csv')
+T24_CM = os.path.join(DDIR,'experiment_T24_cavity_metrics.csv')
+MOD_CM = os.path.join(DDIR,'modeled_values.csv')
 
 # Map output directory
-ODIR = os.path.join(ROOT,'results','figures','manuscript')
+ODIR = os.path.join(ROOT,'results','figures')
 
 ### LOAD EXPERIMENTAL DATA ###
 # Load Experimental Data
@@ -53,7 +53,7 @@ df_T24 = pd.read_csv(T24_CM,parse_dates=True,index_col=[0])
 df_MOD = pd.read_csv(MOD_CM,parse_dates=True,index_col=[0])
 
 ### SET REFERENCES AND OFFSETS ###
-t0_T24 = pd.Timestamp('2021-10-26T13:58')
+t0_T24 = pd.Timestamp('2021-10-26T18:58')
 D_tau = 91.76 #60.95 # [kPa] - amount to reduce \tau(t)
 
 ### SET PLOTTING PARAMETERS
@@ -228,7 +228,7 @@ for k_ in range(5):
 
 
 if issave:
-	SAVE_FILE = 'JGLAC_Fig06_v1.6_T24_Crossplots_%ddpi.%s'%(DPI,FMT.lower())
+	SAVE_FILE = 'JGLAC_Fig07_T24_Crossplots_%ddpi.%s'%(DPI,FMT.lower())
 	plt.savefig(os.path.join(ODIR,SAVE_FILE),dpi=DPI,format=FMT.lower())
 
 

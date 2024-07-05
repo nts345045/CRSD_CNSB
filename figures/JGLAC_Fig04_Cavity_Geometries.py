@@ -8,25 +8,23 @@ import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-sys.path.append(os.path.join('..'))
-import scripts.model.steadystate_model as ssm
-
+import src.model.lliboutry_kamb_model as lkm
 
 # plt.rc('text',usetex=True)
 
 # Map Data
-ROOT = os.path.join('..','..')
-DDIR = os.path.join(ROOT,'processed','timeseries')
+ROOT = os.path.join('..')
+DDIR = os.path.join(ROOT,'processed_data','cavities')
 # Map Experimental Data
 # Observed Cavity Geometry DataData
-T24_SM = os.path.join(ROOT,'processed','Cavity_Picks','Postprocessed_Contact_Geometries.csv')
+T24_SM = os.path.join(DDIR,'Postprocessed_Contact_Geometries.csv')
 # Processed Cavity Geometry Data
-T24_CM = os.path.join(DDIR,'S5_experiment_T24_cavity_metrics.csv')
+T24_CM = os.path.join(DDIR,'experiment_T24_cavity_metrics.csv')
 # Steady-State Modelled Values
-MOD_CM = os.path.join(DDIR,'S5_modeled_values.csv')
+MOD_CM = os.path.join(DDIR,'modeled_values.csv')
 
 # Map output directory
-ODIR = os.path.join(ROOT,'results','figures','manuscript')
+ODIR = os.path.join(ROOT,'results','figures')
 issave = True
 DPI = 200
 FMT = 'PNG'
@@ -192,9 +190,9 @@ Ybed = 0.5 + 0.5*np.cos(2*np.pi*Xbed)
 axs[3].fill_between(Xbed,np.ones(len(Xbed))*np.min(Ybed),Ybed,color='k',zorder=2)
 
 # Plot Cavity Profile
-_,gxm,_ = ssm.model_TS_single(df_COR['N kPa'].min()*1e3,output='model')
-_,gxu,_ = ssm.model_TS_single(df_COR['N kPa'].mean()*1e3,output='model')
-_,gxM,_ = ssm.model_TS_single(df_COR['N kPa'].max()*1e3,output='model')
+gxm = lkm.calc_profiles(df_COR['N kPa'].min()*1e3)['gx']
+gxu = lkm.calc_profiles(df_COR['N kPa'].mean()*1e3)['gx']
+gxM = lkm.calc_profiles(df_COR['N kPa'].max()*1e3)['gx']
 
 xlims = axs[3].get_xlim()
 
@@ -263,7 +261,7 @@ axs[2].text(.26,.95,'c',ha='center',va='center',**lblkw)
 
 
 if issave:
-	OFILE = os.path.join(ODIR,'JGLAC_Fig04_v1.6_Cavity_Geometries_%ddpi.%s'%(DPI,FMT.lower()))
+	OFILE = os.path.join(ODIR,'JGLAC_Fig04_Cavity_Geometries_%ddpi.%s'%(DPI,FMT.lower()))
 	plt.savefig(OFILE,dpi=DPI,format=FMT.lower())
 
 

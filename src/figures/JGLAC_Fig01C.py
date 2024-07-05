@@ -66,52 +66,8 @@ def generate_ring(r,dT,h0,dh):
 	R = np.ones(T.shape)*r
 	return R,T,H
 
-if __name__ == '__main__':
 
-	parser = argparse.ArgumentParser(
-		prog='JGLAC_Fig01c_experimental_chamber_diagram.py',
-		description='Renders Figure 1C for Stevens et al. (In Prep for J. Glac.)'
-	)
-	parser.add_argument(
-		'-o',
-		'--output_path',
-		action='store',
-		dest='fname',
-		default='../results/figures',
-		help='path and name to save the rendered figure to, minus format (use -f for format). Defaults to "../results/figures/JGLAC_Fig01c"',
-		type=str
-	)
-
-	parser.add_argument(
-		'-f',
-		'-format',
-		action='store',
-		dest='format',
-		default='png',
-		choices=['png','pdf','svg'],
-		help='the figure output format (e.g., *.png, *.pdf, *.svg) callable by :meth:`~matplotlib.pyplot.savefig`. Defaults to "png"',
-		type=str
-	)
-
-	parser.add_argument(
-		'-d',
-		'--dpi',
-		action='store',
-		dest='dpi',
-		default='figure',
-		help='set the `dpi` argument for :meth:`~matplotlib.pyplot.savefig. Defaults to "figure"'
-	)
-
-	parser.add_argument(
-		'-s',
-		'--show',
-		action='store_true',
-		dest='show',
-		help='if included, render the figure on the desktop in addition to saving to disk'
-	)
-
-	args = parser.parse_args()
-
+def main(args):
 	w = 4. 		# Wavenumber of installed bed
 	ri = 0.1	# [m] Inner Radius of Experimental Chamber
 	ro = 0.3 	# [m] Outer Radius of Experimental Chamber
@@ -189,22 +145,27 @@ if __name__ == '__main__':
 	ax.set_zlabel('Z [m]')
 	ax.view_init(azim=-29, elev=16)
 
+
+
+
 	if args.dpi == 'figure':
 		dpi = 'figure'
 	else:
 		try:
-			dpi = float(args.dpi)
+			dpi = int(args.dpi)
 
 		except:
 			dpi = 'figure'
 	if dpi == 'figure':
-		savename = f'{args.fname}_fdpi.{args.format}'
+		savename = os.path.join(args.output_path, f'JGLAC_Fig01C_fdpi.{args.format}')
 	else:
-		savename = f'{args.fname}_{dpi:.2f}dpi.{args.format}'
-
+		savename = os.path.join(args.output_path, f'JGLAC_Fig01C_{dpi}dpi.{args.format}')
 	if not os.path.exists(os.path.split(savename)[0]):
 		os.makedirs(os.path.split(savename)[0])
 	plt.savefig(savename, dpi=dpi, format=args.format)
+
+	if args.show:
+		plt.show()
 
 	# ### PLOT CROSS-SECTION
 	# plt.figure()
@@ -219,5 +180,49 @@ if __name__ == '__main__':
 	# plt.ylabel('Z [m]')
 
 
-	if args.show:
-		plt.show()
+if __name__ == '__main__':
+
+	parser = argparse.ArgumentParser(
+		prog='JGLAC_Fig01C.py',
+		description='A simple 3D rendering of the experimental chamber and undulatory bed'
+	)
+	parser.add_argument(
+		'-o',
+		'--output_path',
+		action='store',
+		dest='output_path',
+		default='../results/figures',
+		help='path and name to save the rendered figure to, minus format (use -f for format). Defaults to "../results/figures/JGLAC_Fig01c"',
+		type=str
+	)
+
+	parser.add_argument(
+		'-f',
+		'-format',
+		action='store',
+		dest='format',
+		default='png',
+		choices=['png','pdf','svg'],
+		help='the figure output format (e.g., *.png, *.pdf, *.svg) callable by :meth:`~matplotlib.pyplot.savefig`. Defaults to "png"',
+		type=str
+	)
+
+	parser.add_argument(
+		'-d',
+		'--dpi',
+		action='store',
+		dest='dpi',
+		default='figure',
+		help='set the `dpi` argument for :meth:`~matplotlib.pyplot.savefig. Defaults to "figure". All numeric values parsed as int',
+	)
+
+	parser.add_argument(
+		'-s',
+		'--show',
+		action='store_true',
+		dest='show',
+		help='if included, render the figure on the desktop in addition to saving to disk'
+	)
+
+	args = parser.parse_args()
+	main(args)

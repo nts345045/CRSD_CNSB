@@ -102,4 +102,12 @@ echo "Figure 1c - 3D render of experimental chamber"
 # echo "Figure 2 - Steady State Parameter Space"
 # python $SRC/figures/JGLAC_Fig02.py -i $MODDIR -o $FIGDIR -f 'png' -d 200 --show
 echo "Figure 3 - Effective pressures during T24, T6, and bounding hold periods"
-python $SRC/figures/JGLAC_Fig03.py -i $STRESS_SMOOTH -o $FIGDIR -f 'png' -d 200 --show
+# python $SRC/figures/JGLAC_Fig03.py -i $STRESS_SMOOTH -o $FIGDIR -f 'png' -d 200 --show
+echo "Figure 4 - Cavity geometry observation from T24"
+# python $SRC/figures/JGLAC_Fig04.py -i $CDIR -o $FIGDIR -f 'png' -d 200 --show -r
+echo "Figure 5 - Cavity geometry observation from T24"
+# python $SRC/figures/JGLAC_Fig05.py -i $PPDIR -o $FIGDIR -f 'png' -d 200 --show
+echo "Figure 6 - Cavity geometry observation from T06"
+# python $SRC/figures/JGLAC_Fig06.py -i $PPDIR -o $FIGDIR -f 'png' -d 200 --show -r
+echo "Figure 7 - Experiment T24 Crossplots"
+python $SRC/figures/JGLAC_Fig07.py -i $CDIR -o $FIGDIR -f 'png' -d 200 --show -r

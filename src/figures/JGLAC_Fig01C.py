@@ -147,22 +147,22 @@ def main(args):
 
 
 
-
-	if args.dpi == 'figure':
-		dpi = 'figure'
-	else:
-		try:
-			dpi = int(args.dpi)
-
-		except:
+	if not args.render_only:
+		if args.dpi == 'figure':
 			dpi = 'figure'
-	if dpi == 'figure':
-		savename = os.path.join(args.output_path, f'JGLAC_Fig01C_fdpi.{args.format}')
-	else:
-		savename = os.path.join(args.output_path, f'JGLAC_Fig01C_{dpi}dpi.{args.format}')
-	if not os.path.exists(os.path.split(savename)[0]):
-		os.makedirs(os.path.split(savename)[0])
-	plt.savefig(savename, dpi=dpi, format=args.format)
+		else:
+			try:
+				dpi = int(args.dpi)
+
+			except:
+				dpi = 'figure'
+		if dpi == 'figure':
+			savename = os.path.join(args.output_path, f'JGLAC_Fig01C_fdpi.{args.format}')
+		else:
+			savename = os.path.join(args.output_path, f'JGLAC_Fig01C_{dpi}dpi.{args.format}')
+		if not os.path.exists(os.path.split(savename)[0]):
+			os.makedirs(os.path.split(savename)[0])
+		plt.savefig(savename, dpi=dpi, format=args.format)
 
 	if args.show:
 		plt.show()
@@ -222,6 +222,14 @@ if __name__ == '__main__':
 		action='store_true',
 		dest='show',
 		help='if included, render the figure on the desktop in addition to saving to disk'
+	)
+
+	parser.add_argument(
+		'-r',
+		'--render_only',
+		dest='render_only',
+		action='store_true',
+		help='including this flag skips saving to disk'
 	)
 
 	args = parser.parse_args()

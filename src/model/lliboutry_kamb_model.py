@@ -161,7 +161,6 @@ def calc_cavity_stats(gx, xv, idetach, ireattach, hh=0.0253*2, lbda=0.31425):
 	output = dict(zip(['S','Slee','Sstoss','Rmea','Rlea','Rstoss'],[SS, Slee, Sstoss, Rmea, Rlee, Rstoss]))
 	return output
 
-
 def calc_shear_and_geoparam(NN,SS,cc=0.5, hh=0.0253*2,lbda=.31425):
 	"""Calculate shear stress (:math:`\\tau`) and the geometric parameter (:math:`\\Phi`)
 	from the Lliboutry/Kamb analytic solution using specified bed geometry, pre-calculated
@@ -257,6 +256,12 @@ def calc_TS_single(NN, US, hh=0.0253*2, lbda=0.31425, BB=6.3e7, nn=3, npts=5001)
 	return np.array([NN, US, SS, TT, PP, RR])
 
 
+def calc_SR_single(NN, US, hh=0.0253*2, lbda=0.31424, BB=6.3e7, nn=3, npts=5001):
+	profiles = calc_profiles(NN=NN, US=US, lbda=lbda, hh=hh, BB=BB, nn=nn, npts=npts)
+	profiles.update({'hh':hh, 'lbda': lbda})
+	stats = calc_cavity_stats(**profiles)
+	return np.array(stats.values())
+
 def calc_parmeter_space_from_NU(Nv, Uv, hh=0.0253*2, lbda=0.31425, BB=6.3e7, nn=3, npts=5001):
 	"""Wrapper function to calculate the parameter space:
 	.. math::
@@ -292,6 +297,13 @@ def calc_parmeter_space_from_NU(Nv, Uv, hh=0.0253*2, lbda=0.31425, BB=6.3e7, nn=
 	return output_array
 
 
+def calc_geometry_space_from_NU(Nv, Uv, hh=0.0253*2, lbda=0.31425, BB=6.3e7, nn=3, npts=5001):
+	output_array = np.full(shape=(len(Nv), len(Uv), 6), fill_value=np.nan)
+	for ii, N_ in enumerate(Nv):
+		print(f'N iteration {ii+1}/{len(Nv)}')
+		for jj, U_ in enumerate(Uv):
+			output_array[ii,jj,:] = calc_SR_single(N_, U_, hh=hh, lbda=lbda, BB=BB, nn=nn, npts=npts)
+	return output_array
 
 
 # def bedmodel(lbda=.3*np.pi*2.*0.25,hh=.078,npts=5001,pi_offset=0.5,lbda_offset=0.5,ncycles=1.5):

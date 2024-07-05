@@ -1,10 +1,7 @@
 # General ToDo List for CRSD Oscillatory Loading, Undulatory Bed Code Repository
 ## ToDos
-TODO: Shift all data files to just UTC epoch time for more-compact saving
-TODO: Make sure params/UTC_experiment_times.csv is in UTC (via plotting)
-TODO: Make sure params/UTC_experiment_times.csv HOLD_2 makes sense (via plotting)
-TODO: Calculate effective pressure from axial stress and water pressures after the smoothing step
 
+TODO: Reconcile process_cavity_picks and process_cavity_picks_v2
 ## Bugs
 BUG: Placeholder example for ToDoTree
 

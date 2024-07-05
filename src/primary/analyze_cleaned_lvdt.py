@@ -91,7 +91,7 @@ def main(args):
     
     Logger.info(f'Writing melt factor estimates to {args.output_path}')
     S_melt.to_csv(os.path.join(args.output_path,'melt_factor_estimates.csv'), header=True, index=True)
-    if args.show_plots:
+    if args.render_plots:
         ## Display results 
         fig = plt.figure()
         gs = fig.add_gridspec(ncols=2,nrows=2)
@@ -130,7 +130,7 @@ if __name__ == '__main__':
         '--input_path',
         action='store',
         dest='input_path',
-        default=None,
+        default='.',
         help='path to smoothed, segmented LVDT data files',
         type=str
     )
@@ -149,16 +149,16 @@ if __name__ == '__main__':
         '--dt_padding',
         action='store',
         dest='padding',
-        default=6*3600,
+        default=21600,
         help='amount of padding (in seconds) added to input LVDT data files',
         type=float
     )
 
     parser.add_argument(
-        '-p',
-        '--show_plots',
+        '-r',
+        '--render_plots',
         action='store_true',
-        dest='show_plots',
+        dest='render_plots',
     )
 
     args = parser.parse_args()

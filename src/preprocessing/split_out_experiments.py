@@ -44,7 +44,7 @@ def main():
         '-p',
         '-padding',
         dest='padding',
-        default=6*3600,
+        default=21600,
         help='Seconds of extra data before and after specified experiment starttime and endtime values to include in output file(s)',
         type=float
     )

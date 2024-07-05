@@ -260,9 +260,9 @@ def calc_SR_single(NN, US, hh=0.0253*2, lbda=0.31424, BB=6.3e7, nn=3, npts=5001)
 	profiles = calc_profiles(NN=NN, US=US, lbda=lbda, hh=hh, BB=BB, nn=nn, npts=npts)
 	profiles.update({'hh':hh, 'lbda': lbda})
 	stats = calc_cavity_stats(**profiles)
-	return np.array(stats.values())
+	return np.array(list(stats.values()))
 
-def calc_parmeter_space_from_NU(Nv, Uv, hh=0.0253*2, lbda=0.31425, BB=6.3e7, nn=3, npts=5001):
+def calc_parameter_space_from_NU(Nv, Uv, hh=0.0253*2, lbda=0.31425, BB=6.3e7, nn=3, npts=5001):
 	"""Wrapper function to calculate the parameter space:
 	.. math::
 		[S, \\tau, \\Phi, R] = f(N, U, {B, n, \\lambda, h})
@@ -302,7 +302,8 @@ def calc_geometry_space_from_NU(Nv, Uv, hh=0.0253*2, lbda=0.31425, BB=6.3e7, nn=
 	for ii, N_ in enumerate(Nv):
 		print(f'N iteration {ii+1}/{len(Nv)}')
 		for jj, U_ in enumerate(Uv):
-			output_array[ii,jj,:] = calc_SR_single(N_, U_, hh=hh, lbda=lbda, BB=BB, nn=nn, npts=npts)
+			ijout = calc_SR_single(N_, U_, hh=hh, lbda=lbda, BB=BB, nn=nn, npts=npts)
+			output_array[ii,jj,:] = ijout
 	return output_array
 
 

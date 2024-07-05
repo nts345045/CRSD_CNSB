@@ -1,6 +1,7 @@
 import logging, os, argparse
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 from src.model.lliboutry_kamb_model import calc_TS_single
 from src.model.util import defined_experiment
 
@@ -24,9 +25,10 @@ def main(args):
         fill_value=np.nan)
     
     Logger.info(f'starting grid sweep for space: {output_array.shape}')
-    for ii, N_ in enumerate(Nv):
-        if args.verbose:
-            Logger.info(f'N iteration {ii+1}/{len(Nv)}')
+    Logger.info('Outer loop iteration progress:')
+    for ii, N_ in tqdm(enumerate(Nv)):
+        # if args.verbose:
+        #     Logger.debug(f'N iteration {ii+1}/{len(Nv)}')
         for jj, U_ in enumerate(Uv):
             output_array[ii,jj,:] = calc_TS_single(N_, U_, npts=args.ngx, **profile)
 
@@ -72,7 +74,7 @@ if __name__ == '__main__':
         action='store',
         dest='output_file',
         default='./parameter_space_values',
-        help='file to save results to',
+        help='file name root to save results to',
         type=str
     )
 

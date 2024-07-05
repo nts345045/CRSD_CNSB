@@ -196,7 +196,7 @@ def main(args):
 		axs[_i].set_xlabel('Effective Pressure [$N$] (kPa)')
 	
 	for _i in [4,5]:
-		axs[4].set_xlabel('Contact Fraction [$S^{LVDT}$] ( - )')
+		axs[_i].set_xlabel('Contact Fraction [$S^{LVDT}$] ( - )')
 	
 
 	for _i in [1,3,5]:

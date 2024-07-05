@@ -51,17 +51,18 @@ def main():
         '--stdev',
         action='store',
         dest='std',
-        default=1,
-        help='standard deviation used to scale the gaussian weighting window for the rolling mean\n'+\
-             'should be some positive scalar less than the window length (see --window)',
-        type=float
+        default=75,
+        help='standard deviation used to scale the gaussian weighting window for the rolling mean '+\
+             'should be some positive scalar less than the window length (see --window).'+\
+             'Defaults to 75',
+        type=int
     )
     parser.add_argument(
         '-w',
         '--window',
         dest='window',
-        help='smoothing window length in samples',
-        default=10,
+        help='smoothing window length in **samples**. Defaults to 600',
+        default=600,
         type=int
     )
     args = parser.parse_args()
@@ -73,17 +74,19 @@ def main():
     df = pd.read_csv(args.input_file)
     # Populate Timestamp index
     df.index = pd.to_datetime(df.Epoch_UTC, unit='s')
+    df = df.drop(['Epoch_UTC'], axis=1)
     Logger.info('data loaded')
     # Iterate for the number of smoothing passes
-    fields = [c_ for c_ in df.columns if c_ != 'Epoch_UTC']
-    df_out = df[fields].copy()
+    # fields = [c_ for c_ in df.columns if c_ != 'Epoch_UTC']
+    df_out = df.copy()
     Logger.info('running smoothing')
     # for _n in range(args.niter):
     # Logger.info(f'...iteration {_n+1}/{args.niter}...')
     df_out = df_out.rolling(
         window=args.window,
         center=True,
-        win_type='gaussian').mean(std=args.std)
+        win_type='gaussian',
+        min_periods=3).mean(std=args.std)
     # df_out.index -= pd.Timedelta(args.window/2, unit='seconds')
     # df_out = df_out[(df_out.index >= df.index.min()) & 
     #                 (df_out.index <= df.index.max())]

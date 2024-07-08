@@ -19,6 +19,202 @@ import logging
 import numpy as np
 from src.model.util import acot
 
+def lbda2k(lbda):
+	"""Convert wavelength into wavenumber
+
+	:param lbda: wavelength in meters
+	:type lbda: float-like
+	:return: wavenumber
+	:rtype: float-like
+	"""	
+	return 2.*np.pi/lbda
+
+def calc_h_bed(xvect, amp=0.0253, wavenumber=19.99423):
+	"""Calculate the bed elevation profile of a sinusoidal bed
+	using equation A1 in Appendix A of Stevens et al. (in prep)
+
+	Default values from this study
+
+	:param xvect: model gridpoints
+	:type xvect: numpy.ndarray
+	:param amp: bed obstacle amplitude (half-height), defaults to 0.0253 [m]
+	:type amp: float-like, optional
+	:param wavenumber: bed obstacle wavenumber, defaults to 19.99423 [m**-1]
+	:type wavenumber: float-like
+	:return: bed elevation profile
+	:rtype: numpy.ndarray
+	"""	
+	h = amp*(np.cos(wavenumber*xvect) + 1)
+	return h
+
+def calc_g_roof(xvect, cavity_l, amp=0.0253):
+	"""Calculate the cavity roof elevation profile in the absence of subsequent obstacles
+	using equation A2 in Appendix A of Stevens et al. (in prep)
+
+	Default values from this study
+	
+	:param xvect: model gridpoints
+	:type xvect: numpy.ndarray
+	:param cavity_l: cavity lengthscale parameter
+	:type cavity_l: float-like
+	:param amp: Bed obstacle amplitude (half height), defaults to 0.0253 [m]
+	:type amp: float-like, optional
+	:return: cavity roof elevation profile at points in xvect
+	:rtype: numpy.ndarray
+	"""	
+	part1 = 0.5
+	part2 = (1./np.pi)*np.arcsin((2.*xvect - cavity_l)/cavity_l)
+	part3a = 2.*(2.*xvect - 1.)*np.sqrt(xvect*(cavity_l - xvect))
+	part3b = np.pi*(cavity_l**2)
+	g = np.real(amp*2*(part1 - part2 - (part3a/part3b)))
+	return g
+
+def calc_cavity_l(NN, USS=4.756469e-7, amp=0.0253,  BB=6.3e7, nn=3):
+	"""Calculate the cacity lengthscale parameter Equation A3 in Appendix A
+	of Stevens and others (in prep)
+
+	Default values from this study
+
+	:param amp: bed obstacle amplitude (half-height)
+	:type amp: float-like
+	:param USS: sliding velocity in meters per second [m sec**-1], defaults to 4.756469e-7.
+	:type USS: float-like
+	:param NN: effective pressure in Pascals [Pa]
+	:type NN: float-like
+	:param BB: _description_, defaults to 6.3e7
+	:type BB: _type_, optional
+	:param nn: _description_, defaults to 3
+	:type nn: int, optional
+	:return: _description_
+	:rtype: _type_
+	"""	
+	part1 = (8.*USS*2.*amp)/np.pi
+	part2 = (BB/NN)**nn
+	cavity_l = np.sqrt(part1*part2)
+	return cavity_l
+
+def calc_N(Pw, HH, rho=910., g=9.81):
+	"""Calculate the effective pressure from the ice-thickness and subglacial water pressure
+	with equation A4 in Appendix A in Stevens et al. (in prep)
+	
+	:param Pw: subglacial water pressure in [Pa]
+	:type Pw: float-like
+	:param HH: ice thickness in meters [m]
+	:type HH: float-like
+	:param rho: glacier ice density in [kg m**-3], defaults to 910.
+	:type rho: float-like, optional
+	:param g: gravitational acceleration at the Earth's geoid in [m sec**-2], defaults to 9.81
+	:type g: float, optional
+	:return: effective pressure in [Pa]
+	:rtype: float-like
+	"""	
+	return rho*g*HH - Pw
+
+def calc_Tau(NN, Phi, wavenumber=19.99423, amp=0.0253):
+	"""Calculate shear stress using equation A5 in Appendix A from Stevens et al (in prep)
+
+	Default values from this study
+
+	:param NN: Effective pressure in [Pa]
+	:type NN: float-like
+	:param Phi: Geometry parameter [ dimless ]
+	:type Phi: float-like
+	:param wavenumber: bed obstacle wavenumber in [m**-1], defaults to 19.99423
+	:type wavenumber: float, optional
+	:param amp: bed obstacle amplitude in [m], defaults to 0.0253
+	:type amp: float, optional
+	:return: shear stress in [Pa]
+	:rtype: float-like
+	"""	
+	return (amp*wavenumber*0.5)*NN*Phi
+
+
+def calc_Phi(SS, xc, wavenumber=19.99423):
+	"""Calculate the bed geometry parameter using equation A6 in Appendix A
+	from Stevens et al. (in prep)
+
+	Default values from this study
+
+	:param SS: Fractional ice-bed contact length [dimless]
+	:type SS: float-like
+	:param xc: ice-bed contact critical length in [m]
+	:type xc: float-like
+	:param wavenumber: bed obstacle wavenumber in [m**-1], defaults to 19.99423
+	:type wavenumber: float, optional
+	:return: bed geometry parameter
+	:rtype: float-like
+	"""	
+	part1 = (np.pi*SS - 0.5*np.sin(2.*np.pi*SS))*np.sin(np.pi*SS - wavenumber*xc)
+	part2 = np.sin(np.pi*SS) - np.pi*SS*np.cos(np.pi*SS)
+	return part1/part2
+
+def calc_xc(SS, wavenumber=19.99423):
+	"""Calculate the ice-bed contact critical length using equation A7
+	from Appendix A in Stevens and others (in prep)
+
+	Default value from this study
+
+	:param SS: Fractional ice-bed contact length [dimless]
+	:type SS: float-like
+	:param wavenumber: bed obstacle wave number in [m**-1], defaults to 19.99423
+	:type wavenumber: float-like
+	:return: ice-bed contact critical length in [m]
+	:rtype: float-like
+	"""	
+	part1 = 1./wavenumber
+	part2 = 2.*np.pi*(1. - SS) + np.sin(2.*np.pi*SS)
+	part3 = np.sin(np.pi*SS) - np.pi*SS*np.cos(np.pi*SS)
+	return part1*acot(part2/part3)
+
+def calc_S(xr,xd,lbda=0.31425):
+	"""Calculate the contact fraction S using equation A8 in Appendix A of
+	Stevens et al. (in prep)
+
+	Default values from this study
+
+	:param xr: cavity reattachement point position relative to the nucleating bed obstacle crest (x=0) in [m]
+	:type xr: float-like
+	:param xd: cavity detachment point position relative to the nucleating bed obstacle crest (x=0) in [m]
+	:type xd: float-like
+	:param lbda: bed obstacle wavelength in [m], defaults to 0.31425
+	:type lbda: float-like, optional
+	:return: ice-bed contact length fraction
+	:rtype: float-like
+	"""	
+	return 1. - (xr - xd)/lbda
+
+
+def model_roof(NN, USS=15./(365*24*3600), lbda=0.31425, amp=0.0253, BB=6.3e7, nn=3, npts=5001):
+	# Create modeling domain
+	xvect = np.linspace(0,lbda,npts)
+	# Convert wavelength to wavenumber
+	wavenumber = lbda2k(lbda)
+	# Calculate cavity lengthscale
+	cavity_l = calc_cavity_l(NN=NN, USS=USS, amp=amp, BB=BB, nn=nn)
+	# Calculate roof elevation profile
+	g_roof = calc_g_roof(xvect=xvect, cavity_l=cavity_l, amp=amp)
+
+	return xvect, g_roof
+
+def model_bed(lbda=0.31425, amp=0.0253, npts=5001):
+	xvect = np.linspace(0,lbda, npts)
+	wavenumber = lbda2k(lbda)
+	# Calculate bed elevation profile
+	h_bed = calc_h_bed(xvect=xvect, amp=amp, wavenumber=wavenumber)
+	return xvect, h_bed
+
+def get_cavity_ends(xvect, g_roof, h_bed):
+	idx = np.argwhere(np.diff(np.sign(g_roof - h_bed))).flatten()
+	if len(idx) == 2:
+		xd = xvect[idx[0]]
+		xr = xvect[idx[1]]
+	else:
+		breakpoint()
+	return xr, xd
+
+
+
+
 def calc_profiles(NN,US=15.,lbda=.31425,hh=0.0253*2,BB=6.3e7,nn=3,npts=5001):
 	"""Calculate the contact fraction parameter (:math:`S`) using the following system of equations
 	from Appendix A in Stevens et al. (in prep) for a specified effective pressure (:math:`NN`) and

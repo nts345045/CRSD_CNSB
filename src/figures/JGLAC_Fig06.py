@@ -97,44 +97,51 @@ def main(args):
 
 	# (a) PLOT \tau(t) 
 	# Plot observed values
-	axs[0].plot(dtindex,df_NT['Tau_kPa'],'k-',zorder=10)
+	axs[0].plot(dtindex,df_NT['Tau_kPa'],'k-',zorder=10,label='$\\tau_{obs}$')
 	# Plot modeled values
-	axs[0].plot(dtmindex,df_CM['hat T kPa'].values,'r--',zorder=5)  
-	axs[0].plot(dtindex,df_NT['Tau_kPa'] - D_tauP,'b-',zorder=7)
+	axs[0].plot(dtmindex,df_CM['hat T kPa'].values,'r--',zorder=5, label='$\\tau_{mod}$')  
+	axs[0].plot(dtindex,df_NT['Tau_kPa'] - D_tauP,'b-',zorder=7, label='$\\tau^{\\prime}$')
 	# Apply labels & formatting
-	axs[0].set_ylabel('Shear Stress\n[$\\tau$] (kPa)')
+	axs[0].set_ylabel('Shear Stress (kPa)')
 	# axb.set_ylabel('$\\hat{\\tau}$(t) [kPa]',rotation=270,labelpad=15,color='red')
 	axs[0].set_xticks(np.arange(-3,36,3))
 	axs[0].grid(axis='x',linestyle=':')
 
 	axs[0].text(-0.25,df_CM['hat T kPa'].values[-1] + D_tauP/2,'$\\Delta \\tau$',fontsize=14,ha='center',va='center')
 	axs[0].arrow(-1.33,162.33,0,95.4 - 162.33,head_width=2/5,width=0.1/5,head_length=10,fc='k')
-
-
+	# ylims = axs[0].get_ylim()
+	# axs[0].set_ylim([ylims[0]-25, ylims[1]])
+	# axs[0].legend(ncols=3,loc='lower center', bbox_to_anchor=(0.5, -0.05))
 	# (b) PLOT \Delta \mu(t)
 	# Plot observed values
 	# axs[1].plot(dtindex,mu_obs,'k-',zorder=10,label='Obs.')
 	# plot modeled values
-	axs[1].plot(dtmindex,mu_calc,'r--',zorder=5,label='Mod.')
+	axs[1].plot(dtmindex,mu_calc,'r--',zorder=5,label='$\\mu_{mod}$')
 	# Shifted \tau result
-	axs[1].plot(dtindex,mu_tP,'b-',zorder=7,label='$\\tau_{adj}$')
+	axs[1].plot(dtindex,mu_tP,'b-',zorder=7,label='$\\mu^{\\prime}$')
 	# Apply labels & formatting
 	axs[1].set_xticks(np.arange(-3,36,3))
 	axs[1].grid(axis='x',linestyle=':')
-	axs[1].set_ylabel('Drag\n[$\\mu$] ( - )')
+	axs[1].set_ylabel('Drag ( - )')
+	ylims = axs[1].get_ylim()
+	axs[1].set_ylim([ylims[0], ylims[1]+.02])
+	# axs[1].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.65, -0.075))
 	# axc.set_ylabel('$\\Delta\\mu$ (t) [ - ]',rotation=270,labelpad=15,color='red')
 	# axs[1].set_ylim([-0.11,0.22])
-	# axs[1].legend(ncol=1,loc='upper left')
+	#axs[1].legend(ncol=1,loc='upper left')
 
 	# (c) PLOT S(t)
 	# Plot mapped values from LVDT
-	axs[2].plot(dtmindex,df_CM['S tot'],'b-',zorder=10)
+	axs[2].plot(dtmindex,df_CM['S tot'],'b-',zorder=10, label='$S_{LVDT}$')
 	# Plot modeled values
-	axs[2].plot(dtmindex,df_CM['hat S tot'],'r--',zorder=5)
+	axs[2].plot(dtmindex,df_CM['hat S tot'],'r--',zorder=5, label='$S_{mod}$')
 	# Apply labels and formatting
 	axs[2].set_xticks(np.arange(-3,36,3))
 	axs[2].grid(axis='x',linestyle=':')
-	axs[2].set_ylabel('Scaled Contact Length\n[$S$] ( - )')
+	axs[2].set_ylabel('Scaled Contact\nLength ( - )')
+	# ylims = axs[2].get_ylim()
+	# axs[2].set_ylim([ylims[0]-0.025, ylims[1]])
+	# axs[2].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.5, -0.05))
 
 
 	# ## SUBPLOT FORMATTING
@@ -165,7 +172,7 @@ def main(args):
 		axs[i_].set_ylim(ylim)
 		# set xlims from data limits
 		# axs[i_].set_xlim((dtindex.min(),dtindex.max()))
-		axs[i_].text(29.5,(ylim[1] - ylim[0])*0.875 + ylim[0],\
+		axs[i_].text(-2,(ylim[1] - ylim[0])*0.05 + ylim[0],\
 					LBL[i_],fontsize=14,fontweight='extra bold',\
 					fontstyle='italic')
 		if LBL[i_] != 'c':

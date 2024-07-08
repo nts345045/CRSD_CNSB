@@ -1,6 +1,8 @@
 """
-JGLAC_Fig05_v1.4_Cavity_Geometries.py
-
+:script: src/figures/JGLAC_Fig04.py
+:auth: Nathan T. Stevens
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
 
 """
 

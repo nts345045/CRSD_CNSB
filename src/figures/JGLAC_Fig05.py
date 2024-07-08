@@ -98,52 +98,49 @@ def main(args):
 
 	# (a) PLOT \tau(t) 
 	# Plot observed values
-	axs[0].plot(dtindex,df_NT24['Tau_kPa'] - D_tau,'k-',zorder=10)
+	axs[0].plot(dtindex,df_NT24['Tau_kPa'] - D_tau,'k-',zorder=10, label='$\\tau_{obs}$')
 	# Plot modeled values
-	axs[0].plot(dtzindex,df_CM24['hat T kPa'].values ,'r--',zorder=5)
-	axs[0].plot(dtindex,df_NT24['Tau_kPa'] - D_tauP,'b-',zorder=8)
+	axs[0].plot(dtzindex,df_CM24['hat T kPa'].values ,'r--',zorder=5, label='$\\tau_{mod}$')
+	axs[0].plot(dtindex,df_NT24['Tau_kPa'] - D_tauP,'b-',zorder=8, label='$\\tau^{\\prime}$')
 	# Apply labels & formatting
-	axs[0].set_ylabel('Shear Stress\n[$\\tau$] (kPa)')
+	axs[0].set_ylabel('Shear Stress (kPa)')
 	# axb.set_ylabel('$\\hat{\\tau}$(t) [kPa]',rotation=270,labelpad=15,color='red')
 	axs[0].set_xticks(np.arange(0,132,12))
 	axs[0].grid(axis='x',linestyle=':')
 	axs[0].text(115,df_CM24['hat T kPa'].values[-1] + D_tauP/2,'$\\Delta \\tau$',fontsize=14,ha='center',va='center')
 	axs[0].arrow(118,153,0,95.4 - 154,head_width=2,width=0.1,head_length=10,fc='k')
-
+	axs[0].legend(ncols=3, loc='lower center', bbox_to_anchor=(0.5,-0.05))
+	ylims = axs[0].get_ylim()
+	axs[0].set_ylim([ylims[0]-30, ylims[1]])
 
 	# (b) PLOT \Delta \mu(t)
 	# Plot observed values
 	# axs[1].plot(dtindex,mu_obs,'k-',zorder=10,label='Obs.')
 	# plot modeled values
-	axs[1].plot(dtzindex,mu_calc ,'r--',zorder=5,label='Mod.')
-	axs[1].plot(dtindex[np.isfinite(mu_tP)],mu_tP[np.isfinite(mu_tP)],'b-',zorder=5,label='$\\tau_{adj}$')
+	axs[1].plot(dtzindex,mu_calc ,'r--',zorder=5,label='$\\mu_{mod}$')
+	axs[1].plot(dtindex[np.isfinite(mu_tP)],mu_tP[np.isfinite(mu_tP)],'b-',zorder=5,label='$\\mu^{\\prime}$')
 	# Apply labels & formatting
 	axs[1].set_xticks(np.arange(0,132,12))
 	axs[1].grid(axis='x',linestyle=':')
-	axs[1].set_ylabel('Drag\n[$\\mu$] ( - )')
+	axs[1].set_ylabel('Drag ( - )')
 	# axc.set_ylabel('$\\Delta\\mu$ (t) [ - ]',rotation=270,labelpad=15,color='red')
-	# axs[1].set_ylim([-0.11,0.22])
-	# axs[1].legend(ncol=2,loc='upper left')
+	ylims = axs[1].get_ylim()
+	axs[1].set_ylim([ylims[0], ylims[1]+0.02])
+	axs[1].legend(ncol=2,loc='lower right')
 
 	# (c) PLOT S(t)
 	# Plot mapped values from LVDT
-	axs[2].plot(dtzindex,df_CM24['S tot'].values ,'b-',zorder=10)
+	axs[2].plot(dtzindex,df_CM24['S tot'].values ,'b-',zorder=10, label='$S_{LVDT}$')
 	# Plot modeled values
-	axs[2].plot(dtzindex,df_CM24['hat S tot'].values ,'r--',zorder=5)
+	axs[2].plot(dtzindex,df_CM24['hat S tot'].values ,'r--',zorder=5, label='$S_{mod}$')
 	# Apply labels and formatting
 	axs[2].set_xticks(np.arange(0,132,12))
 	axs[2].grid(axis='x',linestyle=':')
-	axs[2].set_ylabel('Scaled Contact\nLength [$S$] ( - )')
+	axs[2].set_ylabel('Scaled Contact\nLength ( - )')
+	ylims = axs[2].get_ylim()
+	axs[2].set_ylim([ylims[0]-0.025, ylims[1]])
+	axs[2].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.5, -0.05))
 
-	# # (d) PLOT R(t)
-	# # Plot observed values
-	# axs[3].plot(dtzindex,df_CM24['R mea'].values,'k-',zorder=10)
-	# axs[3].set_xticks(np.arange(0,132,12))
-	# axs[3].set_ylabel('$R(t)$ [ - ]')
-	# axs[3].plot(dtzindex,df_CM24['hat R mea'],'r--',zorder=5)
-
-	# axs[3].set_xlabel('Experiment runtime [h]')
-	# axs[3].grid(axis='x',linestyle=':')
 	# ## SUBPLOT FORMATTING
 	plt.subplots_adjust(hspace=0)
 	LBL = ['a','b','c','d']
@@ -151,24 +148,8 @@ def main(args):
 		-df_Z24['LVDT_mm red'])
 
 	for i_,D_ in enumerate(DAT):
-	# 	# Pick extremum within given period
-	# 	ex24 = pick_extrema_indices(D_,T=pd.Timedelta(24,unit='hour'))
-	# 	# Get y-lims
 		ylim = axs[i_].get_ylim()
-	# 	# Plot minima times
-	# 	for j_, t_ in enumerate(ex24['I_min']):
-	# 		if i_ == 1 and j_ == 1:
-	# 			pass
-	# 		else:
-	# 			axs[i_].plot(np.ones(2,)*(t_ - t0_T24).total_seconds()/3600,ylim,\
-	# 						':',color='dodgerblue',zorder=1)
-	# 	# Plot maxima times
-	# 	for t_ in ex24['I_max']:
-	# 		axs[i_].plot(np.ones(2,)*(t_ - t0_T24).total_seconds()/3600,ylim,\
-	# 					 '-.',color='dodgerblue',zorder=1)
-	# 	# re-enforce initial ylims
-		# axs[i_].set_ylim(ylim)
-	# 	# set xlims from data limits
+		# set xlims from data limits
 		axs[i_].set_xlim((dtindex.min(),dtindex.max()))
 		axs[i_].text(-5,(ylim[1] - ylim[0])*0.85 + ylim[0],\
 					LBL[i_],fontsize=14,fontweight='extra bold',\
@@ -178,11 +159,7 @@ def main(args):
 
 	axs[0].xaxis.set_ticklabels([])
 	axs[1].xaxis.set_ticklabels([])
-# if issave:
-# 	OFILE = os.path.join(ODIR,'JGLAC_Fig05_Experiment_T24_Timeseries_%ddpi.%s'%(DPI,FMT.lower()))
-# 	plt.savefig(OFILE,dpi=DPI,format=FMT.lower())
 
-# plt.show()
 
 	if not args.render_only:
 		if args.dpi == 'figure':

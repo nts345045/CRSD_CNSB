@@ -1,5 +1,5 @@
 """
-:module: JGLAC_Fig3_T24_T6_Nt_Plot.py
+:script: src/figures/JGLAC_Fig03.py
 :purpose: Plot the N(t) forcing function starting from the N(t) steady
 		  state prior to experiment T24 through to the end of the 
 		  steady-state following experiment T6
@@ -13,7 +13,7 @@
 
 :auth: Nathan T. Stevens
 :email: ntsteven@uw.edu (formerly: ntstevens@wisc.edu)
-:liecnse: CC-BY-4.0
+:license: CC-BY-4.0
 
 """
 import os, argparse

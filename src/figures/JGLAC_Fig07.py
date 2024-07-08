@@ -196,15 +196,15 @@ def main(args):
 		axs[_i].set_xlabel('Effective Pressure [$N$] (kPa)')
 	
 	for _i in [4,5]:
-		axs[_i].set_xlabel('Contact Fraction [$S^{LVDT}$] ( - )')
+		axs[_i].set_xlabel('Contact Fraction [$S_{LVDT}$] ( - )')
 	
 
 	for _i in [1,3,5]:
 		axs[_i].yaxis.tick_right()
 		# axs[_i].yaxis.set_label_position('right')
 	for _i in [0,4]:
-		axs[_i].set_ylabel('Adjusted Drag [$\mu^\prime$] ( - )')
-	axs[2].set_ylabel('Contact Fraction [$S^{LVDT}$] ( - )')
+		axs[_i].set_ylabel('Drag [$\mu^\prime$ | $\\mu_{mod}$] ( - )')
+	axs[2].set_ylabel('Contact Fraction [$S_{LVDT}$] ( - )')
 	
 	for _i, _l in enumerate(['a','b','c','d','e','f']):
 		xlims = axs[_i].get_xlim()

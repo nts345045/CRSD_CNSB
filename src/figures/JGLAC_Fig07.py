@@ -78,7 +78,7 @@ def main(args):
 	# FMT = 'PNG'
 	URC = (0.9,0.85)
 	ULC = (0.05,0.90)
-	PADXY = 0.05
+	PADXY = 0.10
 
 
 
@@ -101,7 +101,7 @@ def main(args):
 
 	chs = plot_cycles(axs[0],XI,YI,II, t0_T24, cmaps, ncycles=5,
 				   T=pd.Timedelta(24,unit='hour'), zorder=10)
-	axs[0].plot(XM, YM, 'r--', zorder=5)
+	axs[0].plot(XM, YM, 'r-', zorder=5)
 	axs[0].set_xlim(xlims)
 	axs[0].set_ylim(ylims)
 
@@ -117,7 +117,7 @@ def main(args):
 
 	chs = plot_cycles(axs[1],XI,YI,II, t0_T06, cmaps, ncycles=5,
 				   T=pd.Timedelta(6,unit='hour'), zorder=10)
-	axs[1].plot(XM, YM, 'r--', zorder=5)
+	axs[1].plot(XM, YM, 'r-', zorder=5)
 	axs[1].set_xlim(xlims)
 	axs[1].set_ylim(ylims)
 
@@ -134,7 +134,7 @@ def main(args):
 
 	chs = plot_cycles(axs[2],XI,YI,II, t0_T24, cmaps, ncycles=5,
 				   T=pd.Timedelta(24,unit='hour'), zorder=10)
-	axs[2].plot(XM, YM, 'r--', zorder=5)
+	axs[2].plot(XM, YM, 'r-', zorder=5)
 	axs[2].set_xlim(xlims)
 	axs[2].set_ylim(ylims)
 
@@ -150,7 +150,7 @@ def main(args):
 
 	chs = plot_cycles(axs[3],XI,YI,II, t0_T06, cmaps, ncycles=5,
 				   T=pd.Timedelta(6,unit='hour'), zorder=10)
-	axs[3].plot(XM, YM, 'r--', zorder=5)
+	axs[3].plot(XM, YM, 'r-', zorder=5)
 	axs[3].set_xlim(xlims)
 	axs[3].set_ylim(ylims)
 
@@ -163,10 +163,10 @@ def main(args):
 	II = df_T24.index
 
 	xlims, ylims = get_lims(XI, YI, PADXY)
-
+	xlims = [0.124, 0.275]
 	chs = plot_cycles(axs[4],XI,YI,II, t0_T24, cmaps, ncycles=5,
 				   T=pd.Timedelta(24,unit='hour'), zorder=10)
-	axs[4].plot(XM, YM, 'r--', zorder=5)
+	axs[4].plot(XM, YM, 'r-', zorder=5)
 	axs[4].set_xlim(xlims)
 	axs[4].set_ylim(ylims)
 
@@ -183,7 +183,7 @@ def main(args):
 
 	chs = plot_cycles(axs[5],XI,YI,II, t0_T06, cmaps, ncycles=5,
 				   T=pd.Timedelta(6,unit='hour'), zorder=10)
-	axs[5].plot(XM, YM, 'r--', zorder=5)
+	axs[5].plot(XM, YM, 'r-', zorder=5)
 	axs[5].set_xlim(xlims)
 	axs[5].set_ylim(ylims)
 
@@ -193,18 +193,18 @@ def main(args):
 	axs[1].set_title('Experiment T06')
 
 	for _i in range(4):
-		axs[_i].set_xlabel('Effective Pressure [$N$] (kPa)')
+		axs[_i].set_xlabel('$N$ (kPa)')
 	
 	for _i in [4,5]:
-		axs[_i].set_xlabel('Contact Fraction [$S_{LVDT}$] ( - )')
+		axs[_i].set_xlabel('$S_{LVDT}$ and $S_{mod}$ ( - )')
 	
 
 	for _i in [1,3,5]:
 		axs[_i].yaxis.tick_right()
 		# axs[_i].yaxis.set_label_position('right')
 	for _i in [0,4]:
-		axs[_i].set_ylabel('Drag [$\mu^\prime$ | $\\mu_{mod}$] ( - )')
-	axs[2].set_ylabel('Contact Fraction [$S_{LVDT}$] ( - )')
+		axs[_i].set_ylabel('$\mu^\prime$ and $\\mu_{mod}$ ( - )')
+	axs[2].set_ylabel('$S_{LVDT}$ and $S_{mod}$ ( - )')
 	
 	for _i, _l in enumerate(['a','b','c','d','e','f']):
 		xlims = axs[_i].get_xlim()

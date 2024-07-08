@@ -81,11 +81,11 @@ def main(args):
 
 
 	### PLOTTING SECTION ###
-	fig = plt.figure(figsize=(5.25,6))
+	fig = plt.figure(figsize=(5.25,5.25))
 	# GS = fig.add_gridspec(ncols=1,nrows=2,hspace=.2,wspace=0)
 	# axs = [fig.add_subplot(GS[_i]) for _i in range(2)]
 	plt.plot(np.r_[15/NkPa_MOD, np.zeros(1)], np.r_[TkPa_MOD/NkPa_MOD, np.zeros(1)],
-		  	'r--',label='$\\mu$, Steady State Theory')
+		  	'r-',label='$\\mu^{calc}$, Steady State Theory')
 	plt.plot(15/(df_T24['N kPa'].values),
 		  	(df_T24['T kPa'].values - D_tau)/df_T24['N kPa'].values,
 			'k-',label=f'$\\mu^\\prime$, Exp. T24 Cycles {QSS_trim_24}$\\endash$5')
@@ -95,9 +95,9 @@ def main(args):
 	
 	plt.xlim(xlims)
 	plt.ylim(ylims)
-	plt.legend(loc='upper right')
-	plt.ylabel('Drag [$\\mu$ | $\\mu^\\prime$] ( - )')
-	plt.xlabel('Effective Pressure Normalized Slip Velocity\n [$V / N$, or $U_b / N$] ($m$ $kPa^{-1}$ $yr^{-1}$)')
+	plt.legend(loc='lower right')
+	plt.ylabel('Drag ( - )')
+	plt.xlabel('$U_b / N$ ($m$ $kPa^{-1}$ $a^{-1}$)')
 
 	if not args.render_only:
 		if args.dpi == 'figure':

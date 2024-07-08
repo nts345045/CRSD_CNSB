@@ -97,9 +97,9 @@ def main(args):
 
 	# (a) PLOT \tau(t) 
 	# Plot observed values
-	axs[0].plot(dtindex,df_NT['Tau_kPa'],'k-',zorder=10,label='$\\tau_{obs}$')
+	axs[0].plot(dtindex,df_NT['Tau_kPa'],'k-',zorder=10,label='$\\tau$')
 	# Plot modeled values
-	axs[0].plot(dtmindex,df_CM['hat T kPa'].values,'r--',zorder=5, label='$\\tau_{mod}$')  
+	axs[0].plot(dtmindex,df_CM['hat T kPa'].values,'r-',zorder=5, label='$\\tau^{calc}$')  
 	axs[0].plot(dtindex,df_NT['Tau_kPa'] - D_tauP,'b-',zorder=7, label='$\\tau^{\\prime}$')
 	# Apply labels & formatting
 	axs[0].set_ylabel('Shear Stress (kPa)')
@@ -116,7 +116,7 @@ def main(args):
 	# Plot observed values
 	# axs[1].plot(dtindex,mu_obs,'k-',zorder=10,label='Obs.')
 	# plot modeled values
-	axs[1].plot(dtmindex,mu_calc,'r--',zorder=5,label='$\\mu_{mod}$')
+	axs[1].plot(dtmindex,mu_calc,'r-',zorder=5,label='$\\mu^{calc}$')
 	# Shifted \tau result
 	axs[1].plot(dtindex,mu_tP,'b-',zorder=7,label='$\\mu^{\\prime}$')
 	# Apply labels & formatting
@@ -132,9 +132,9 @@ def main(args):
 
 	# (c) PLOT S(t)
 	# Plot mapped values from LVDT
-	axs[2].plot(dtmindex,df_CM['S tot'],'b-',zorder=10, label='$S_{LVDT}$')
+	axs[2].plot(dtmindex,df_CM['S tot'],'b-',zorder=10, label='$S^{LVDT}$')
 	# Plot modeled values
-	axs[2].plot(dtmindex,df_CM['hat S tot'],'r--',zorder=5, label='$S_{mod}$')
+	axs[2].plot(dtmindex,df_CM['hat S tot'],'r-',zorder=5, label='$S^{calc}$')
 	# Apply labels and formatting
 	axs[2].set_xticks(np.arange(-3,36,3))
 	axs[2].grid(axis='x',linestyle=':')

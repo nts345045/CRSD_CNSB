@@ -42,7 +42,6 @@ def main(args):
 	df_COR.index = pd.to_datetime(df_COR.Epoch_UTC, unit='s')
 	df_MOD = pd.read_csv(MOD_CM)
 	df_MOD.index = df_MOD['N_Pa'].values
-	breakpoint()
 
 	### REFERENCE VALUES ###
 	# Start of oscillation experiment

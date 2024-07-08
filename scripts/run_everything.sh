@@ -85,8 +85,8 @@ echo "!!!!!!!!!! TIME SERIES PROCESSING COMPLETE !!!!!!!!!!"
 
 # Cavity pick postprocessing
 echo "~~~~~~~~~~ PROCESSING CAVITY GEOMETRIES ~~~~~~~~~~"
-python $SRC/preprocessing/process_cavity_picks.py -i '..' -o $CDIR -s
-python $SRC/primary/analyze_cavity_geometry.py -i $PPDIR -o "$PPDIR/cavities"
+# python $SRC/preprocessing/process_cavity_picks.py -i '..' -o $CDIR -s
+# python $SRC/primary/analyze_cavity_geometry.py -i $PPDIR -o "$PPDIR/cavities"
 
 echo "!!!!!!!!!! CAVITY GEOMETRY PROCESSING COMPLETE !!!!!!!!!"
 
@@ -104,15 +104,15 @@ echo "Figure 1c - 3D render of experimental chamber"
 echo "Figure 3 - Effective pressures during T24, T6, and bounding hold periods"
 # python $SRC/figures/JGLAC_Fig03.py -i $STRESS_SMOOTH -o $FIGDIR -f 'png' -d 200
 echo "Figure 4 - Cavity geometry observation from T24"
-python $SRC/figures/JGLAC_Fig04.py -i $CDIR -o $FIGDIR -f 'png' -d 200
+python $SRC/figures/JGLAC_Fig04.py -i $CDIR -o $FIGDIR -f 'png' -d 200 --show
 echo "Figure 5 - Cavity geometry observation from T24"
-# python $SRC/figures/JGLAC_Fig05.py -i $PPDIR -o $FIGDIR -f 'png' -d 200
+python $SRC/figures/JGLAC_Fig05.py -i $PPDIR -o $FIGDIR -f 'png' -d 200
 echo "Figure 6 - Cavity geometry observation from T06"
-# python $SRC/figures/JGLAC_Fig06.py -i $PPDIR -o $FIGDIR -f 'png' -d 200
+python $SRC/figures/JGLAC_Fig06.py -i $PPDIR -o $FIGDIR -f 'png' -d 200
 echo "Figure 7 - Experiment T24 and T06 Crossplots"
-# python $SRC/figures/JGLAC_Fig07.py -i $CDIR -o $FIGDIR -f 'png' -d 200
+python $SRC/figures/JGLAC_Fig07.py -i $CDIR -o $FIGDIR -f 'png' -d 200
 
 echo "Figure 8 - Experiment T06 and T24 local stresses"
 
 echo "Figure 9 - Comparison of T06 and T24 to common sliding rule parameters from Schoof (2005) parameterizations"
-# python $SRC/figures/JGLAC_Fig09.py -i $PPDIR -o $FIGDIR -f 'png' -d 200
+python $SRC/figures/JGLAC_Fig09.py -i $PPDIR -o $FIGDIR -f 'png' -d 200

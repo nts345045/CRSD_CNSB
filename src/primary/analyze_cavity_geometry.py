@@ -54,10 +54,10 @@ def main(args):
     Logger.info('calculating steady-state model values')
     model_dict = {}
     # Populate \tau(N) and S(N) vectors from steady-state model
-    model_vectors = lkm.calc_parameter_space_from_NU(np.linspace(100e3,600e3,1001), [15])
+    model_vectors = lkm.calc_parameter_space_from_NU(np.linspace(1e3,600e3,1001), [15])
     model_dict.update({'N_Pa': model_vectors[:,0,0], 'T_Pa': model_vectors[:,0,3]})
     # Populate estimates of cavity roof height
-    SR_vectors = lkm.calc_geometry_space_from_NU(np.linspace(100e3,600e3,1001),[15])
+    SR_vectors = lkm.calc_geometry_space_from_NU(np.linspace(1e3,600e3,1001),[15])
     for _i, _k in enumerate(['Stot','Slee','Sstoss','Rmea','Rlee','Rstoss']):
         model_dict.update({_k: SR_vectors[:,0,_i]})
     df_MOD = pd.DataFrame(model_dict)
@@ -202,8 +202,8 @@ if __name__ == '__main__':
 
 
     parser = argparse.ArgumentParser(
-        prog='analyze_cleaned_lvdt.py',
-        description='Conduct empirical melt factor analysis and corrections on LVDT data'
+        prog='analyze_cavity_geometry.py',
+        description='Conduct corrections to stitch together camera-derived cavity geometry measurements and provide an abolute calibration for LVDT based parameters'
     )
     parser.add_argument(
         '-i',

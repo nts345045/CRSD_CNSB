@@ -92,8 +92,8 @@ def main(args):
 
     # Do inital load
     df_main = pd.read_csv(PICKS,parse_dates=['DateTime'],index_col='DateTime')
-    Logger.info('converting pick timestamps from US Central Time to UTC')
-    df_main.index += pd.Timedelta(5, unit='hour')
+    Logger.info('converting LVDT timestamps from UTC to US Central Time temporarily')
+    df_NT24.index += pd.Timedelta(-5, unit='hour')
     # Organize picks into organized sets w/ DateTime indexing
     df_main = reorg_picks(df_main)
 
@@ -225,16 +225,16 @@ def main(args):
 
     Eopt = {}
     Edat = {}
-    if args.render_plots:
+    if args.show:
         plt.figure()
         plt.subplot(121)
     
     for C_ in df_res.columns:
-        if args.render_plots:
+        if args.show:
             plt.plot(df_res.index*(180./np.pi),df_res[C_],label=C_)
         IND_ = df_res[C_] == df_res[C_].min()
         Eopt.update({C_:df_res.index[IND_].values[0]})
-        if args.render_plots:
+        if args.show:
             plt.plot(df_res[IND_].index*(180./np.pi),df_res[IND_][C_],'ro')
             plt.legend()
             plt.xlabel('Rotation angle [$\\degree$]')
@@ -248,7 +248,7 @@ def main(args):
         xr_ = np.matmul(rmat(Eopt[C_]),Data_Tuple[i_].values.T)
         x_ = xr_[0,:]
         y_ = xr_[1,:]
-        if args.render_plots:
+        if args.show:
             plt.plot(x_,y_,'.',label=C_)
         if 'lee' in C_:
             leeX += list(x_)
@@ -258,7 +258,7 @@ def main(args):
             stossY += list(y_)
 
         Edat.update({C_+' dX mm':x_,C_+' dY mm':y_})
-    if args.render_plots:
+    if args.show:
         plt.legend()
         plt.xlabel('X-offset from bump crest [mm]')
         plt.ylabel('Y-offset from bump crest [mm]')
@@ -335,7 +335,7 @@ def main(args):
 
 
     ### PLOTTING SECTION ###
-    if args.render_plots:
+    if args.show:
         OO,YY = np.meshgrid(Ovect,DYvect)
 
         fig,axs = plt.subplots(nrows=3,ncols=3)
@@ -431,7 +431,7 @@ def main(args):
         XSc += list(xysr_[0,:])
         YSc += list(xysr_[1,:])
 
-        if args.render_plots:
+        if args.show:
             ax7.plot(list(xyl_[0,:]) + list(xys_[0,:]),\
                     list(xyl_[1,:]) + list(xys_[1,:]),\
                     's',label=I_)
@@ -448,7 +448,9 @@ def main(args):
                                 index=df_out.index)
 
     df_out = pd.concat([df_out,df_rot,df_corrected],axis=1,ignore_index=False)
-    if args.render_plots:
+    Logger.info('Converting output dataframe timestamps back to UTC')
+    df_out.index += pd.Timedelta(5, unit='hour')
+    if args.show:
         plt.show()
     
     df_out = df_out.assign(Epoch_UTC=[x.timestamp() for x in df_out.index])
@@ -479,10 +481,10 @@ if __name__ == '__main__':
         type=str)
     
     parser.add_argument(
-        '-r',
-        '--render_plots',
+        '-s',
+        '--show',
         action='store_true',
-        dest='render_plots',
+        dest='show',
         help='including this flag renders a series of QC plots associated with this processing script'
     )
 

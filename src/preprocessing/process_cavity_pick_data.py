@@ -324,7 +324,7 @@ if __name__ == '__main__':
     Logger.setLevel(logging.INFO)
 
     parser = argparse.ArgumentParser(
-        prog='process_cavity_pick_data',
+        prog='process_cavity_pick_data.py',
         description='conduct minor projection corrections on extracted cavity geometry data'
     )
 
@@ -349,7 +349,7 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
-          '-p',
+          '-s',
           '-show_plots',
           action='store_true',
           dest='show_plots',

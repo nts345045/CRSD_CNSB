@@ -9,7 +9,5 @@ TODO: (Cleanup) - all year measures in rates from yr^{-1} --> a^{-1}
 BUG: Placeholder
 
 ## FixMes
-FIXME: Fix bad stitching in camera-based cavity geometry parameters resulting in bad LVDT calibrations
-    --> source is correction factors from the cavity image processing line.
-    --> source looks to be a bad stitching between camera handoffs - src/primary/analyze_cavity_geometry.py
+FIXME: Placeholder
 

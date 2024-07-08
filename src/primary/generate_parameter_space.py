@@ -17,8 +17,10 @@ def main(args):
     # elif args.format == 'pandas':
     #     save_file = f'{args.output_file}.csv'
 
-    Nv = np.linspace(args.Nmin, args.Nmax, args.nN)
-    Uv = np.linspace(args.Umin, args.Umax, args.nU)
+    # Nv = np.linspace(args.Nmin, args.Nmax, args.nN)
+    # Uv = np.linspace(args.Umin, args.Umax, args.nU)
+    Nv = np.r_[np.linspace(1000,1e5,50), np.linspace(1e5,9e5,1001)]
+    Uv = np.linspace(0,30,1001)
 
     output_array = np.full(
         shape=(len(Nv), len(Uv), 6),
@@ -100,60 +102,60 @@ if __name__ == '__main__':
         type=str
     )
 
-    parser.add_argument(
-        '-n',
-        '--Nmin',
-        action='store',
-        dest='Nmin',
-        default=1e5,
-        help='minimum effective pressure for gridding. Defaults to 100000 Pa (100 kPa)',
-        type=float
-    )
-    parser.add_argument(
-        '-N',
-        '--Nmax',
-        action='store',
-        dest='Nmax',
-        default=9e5,
-        help='minimum effective pressure for gridding. Defaults to 900000 Pa (900 kPa)',
-        type=float
-    )
-    parser.add_argument(
-        '-u',
-        '--Umin',
-        action='store',
-        dest='Umin',
-        default=0,
-        help='minimum sliding velocity for gridding. Defaults to 0 m/year',
-        type=float
-    )
-    parser.add_argument(
-        '-U',
-        '--Umax',
-        action='store',
-        dest='Umax',
-        default=30,
-        help='minimum effective pressure for gridding. Defaults to 100000 Pa (10 kPa)',
-        type=float
-    )
-    parser.add_argument(
-        '-x',
-        '--N_points',
-        action='store',
-        dest='nN',
-        default=1001,
-        help='number of grid points for effective pressures. Defaults to 401',
-        type=int
-    )
-    parser.add_argument(
-        '-y',
-        '--U_points',
-        action='store',
-        dest='nU',
-        default=1001,
-        help='number of grid points for sliding velocities. Defaults to 201',
-        type=int
-    )
+    # parser.add_argument(
+    #     '-n',
+    #     '--Nmin',
+    #     action='store',
+    #     dest='Nmin',
+    #     default=1e5,
+    #     help='minimum effective pressure for gridding. Defaults to 100000 Pa (100 kPa)',
+    #     type=float
+    # )
+    # parser.add_argument(
+    #     '-N',
+    #     '--Nmax',
+    #     action='store',
+    #     dest='Nmax',
+    #     default=9e5,
+    #     help='minimum effective pressure for gridding. Defaults to 900000 Pa (900 kPa)',
+    #     type=float
+    # )
+    # parser.add_argument(
+    #     '-u',
+    #     '--Umin',
+    #     action='store',
+    #     dest='Umin',
+    #     default=0,
+    #     help='minimum sliding velocity for gridding. Defaults to 0 m/year',
+    #     type=float
+    # )
+    # parser.add_argument(
+    #     '-U',
+    #     '--Umax',
+    #     action='store',
+    #     dest='Umax',
+    #     default=30,
+    #     help='minimum effective pressure for gridding. Defaults to 100000 Pa (10 kPa)',
+    #     type=float
+    # )
+    # parser.add_argument(
+    #     '-x',
+    #     '--N_points',
+    #     action='store',
+    #     dest='nN',
+    #     default=1001,
+    #     help='number of grid points for effective pressures. Defaults to 401',
+    #     type=int
+    # )
+    # parser.add_argument(
+    #     '-y',
+    #     '--U_points',
+    #     action='store',
+    #     dest='nU',
+    #     default=1001,
+    #     help='number of grid points for sliding velocities. Defaults to 201',
+    #     type=int
+    # )
     parser.add_argument(
         '-g',
         '--cavity_points',
@@ -163,12 +165,12 @@ if __name__ == '__main__':
         help='number of grid-points to use for modeling the '
     )
 
-    parser.add_argument(
-        '-v',
-        '--verbose',
-        dest='verbose',
-        action='store_true',
-    )
+    # parser.add_argument(
+    #     '-v',
+    #     '--verbose',
+    #     dest='verbose',
+    #     action='store_true',
+    # )
 
     args = parser.parse_args()
 

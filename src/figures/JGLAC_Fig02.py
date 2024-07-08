@@ -10,13 +10,13 @@
 :Figure Caption: Parameter space for the double-valued drag sliding model of Zoet and Iverson (2015) 
 				 for the geometry of the UW¬–CRSD and the sinusoidal bed in this study (Table 1) and 
 				 UW–CRSD operational limits (Table 2). 
-				 	Figure axes show linear slip velocities, V, and effective pressures, N. 
+				 	Figure axes show linear slip velocities, U_b, and effective pressures, N. 
 				 	Shading shows predicted \\mu (colorbar) 
 				 	solid contours show predicted shear stresses, \tau, and 
 				 	dotted contours represent predicted the ice-bed contact area fractions, S. 
 				 	The operational limit \tau_{max} = 275 kPa is shown as a red dashed line. 
 				 	The operational range of N(t) for these experiments are shown as an orange
-				 	line on the centerline velocity, V = 15 m a^{-1} and surrounded by an orange
+				 	line on the centerline velocity, U_b = 15 m a^{-1} and surrounded by an orange
 				 	shaded region that bounds the inner and outer diameter velocities V\\in[X, Y]
 :auth: Nathan T. Stevens
 :email: ntstevens@wisc.edu
@@ -64,10 +64,10 @@ def main(args):
 	plt.text(0.25,800,'No Cavities\n($S$ = 1)',fontsize=10,va='center')
 
 	# Plot V < V_{min} zone
-	plt.fill_between([0,4],[100]*2,[900]*2,color='black',alpha=0.1)
+	plt.fill_between([0,4],[0]*2,[900]*2,color='black',alpha=0.1)
 
 	# Axis Labels
-	plt.xlabel('Linear Sliding Velocity [$V$] ($m$ $a^{-1}$)')
+	plt.xlabel('Linear Sliding Velocity [$U_b$] ($m$ $a^{-1}$)')
 	plt.ylabel('Effective Pressure [$N$] (kPa)')
 	plt.xlim([0, 30])
 

@@ -113,12 +113,12 @@ def main(args):
 
 	axs[1].set_xticks(np.arange(0,132,12))
 	axs[1].grid(axis='x',linestyle=':')
-	axs[2].legend(ncol=3)
+	# axs[2].legend(ncol=3)
 	axs[1].set_ylabel('Scaled Cavity Height [$R$] ( - )')
 	axs[0].set_xticklabels([])
 	ylims = axs[1].get_ylim()
-	axs[2].xaxis.set_ticks_position('top')
-	axs[2].xaxis.set_label_position('top')
+	# axs[2].xaxis.set_ticks_position('bottom')
+	# axs[2].xaxis.set_label_position('top')
 	axs[1].set_xlabel('Elapsed Time from Start of Experiment T24 (hr)')
 
 	TI = np.linspace((df_OBS.index[0] - t0_T24).total_seconds()/3600,\

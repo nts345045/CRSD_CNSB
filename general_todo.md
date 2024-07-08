@@ -6,5 +6,5 @@ TODO: Placeholder
 BUG: Placeholder
 
 ## FixMes
-FIXME: JGLAC_Fig07.py modeled S vs \mu does not scale correctly
+FIXME: 
 

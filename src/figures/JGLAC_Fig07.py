@@ -159,7 +159,7 @@ def main(args):
 	XI = df_T24['S tot'].values
 	XM = df_MOD['Stot'].values
 	YI = (df_T24['T kPa'].values - D_tau) / df_T24['N kPa'].values
-	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau) / df_MOD['N_Pa'].values*1e-3
+	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau) / (df_MOD['N_Pa'].values*1e-3)
 	II = df_T24.index
 
 	xlims, ylims = get_lims(XI, YI, PADXY)
@@ -176,7 +176,7 @@ def main(args):
 	XI = df_T06['S tot'].values
 	XM = df_MOD['Stot'].values
 	YI = (df_T06['T kPa'].values - D_tau) / df_T06['N kPa'].values
-	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau) / df_MOD['N_Pa'].values*1e-3
+	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau) / (df_MOD['N_Pa'].values*1e-3)
 	II = df_T06.index
 
 	# xlims, ylims = get_lims(XI, YI, PADXY)

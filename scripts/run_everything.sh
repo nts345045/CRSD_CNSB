@@ -79,13 +79,13 @@ python $SRC/preprocessing/split_out_experiments.py -i $STRESS_SMOOTH -o $SPLIT_D
 python $SRC/preprocessing/split_out_experiments.py -i $LVDT_SMOOTH -o $SPLIT_DATA_PATH -t "LVDT" -f $EXP_TIMES -p $PADSEC
 
 echo "~~~~~~~~~~ PROCESSING LVDT DATA FOR MELT COEFFICIENTS ~~~~~~~~~~"
-python $SRC/primary/analyze_cleaned_lvdt.py -i $PPDIR -o "$PPDIR/6_lvdt_melt_corrected" -d $PADSEC
+python $SRC/primary/analyze_cleaned_lvdt.py -i $SPLIT_DATA_PATH -o "$PPDIR/6_lvdt_melt_corrected" -d $PADSEC
 
 echo "!!!!!!!!!! TIME SERIES PROCESSING COMPLETE !!!!!!!!!!"
 
 # Cavity pick postprocessing
 echo "~~~~~~~~~~ PROCESSING CAVITY GEOMETRIES ~~~~~~~~~~"
-python $SRC/preprocessing/process_cavity_picks.py -i '..' -o $CDIR -s
+python $SRC/preprocessing/process_cavity_picks.py -i '..' -o $CDIR
 python $SRC/primary/analyze_cavity_geometry.py -i $PPDIR -o "$PPDIR/cavities"
 
 echo "!!!!!!!!!! CAVITY GEOMETRY PROCESSING COMPLETE !!!!!!!!!"

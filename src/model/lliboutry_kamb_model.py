@@ -93,7 +93,7 @@ def calc_cavity_l(NN, USS=4.756469e-7, amp=0.0253,  BB=6.3e7, nn=3):
 	cavity_l = np.sqrt(part1*part2)
 	return cavity_l
 
-def calc_N(Pw, HH, rho=910., g=9.81):
+def calc_N(Pw, HH, rho=917., g=9.81):
 	"""Calculate the effective pressure from the ice-thickness and subglacial water pressure
 	with equation A4 in Appendix A in Stevens et al. (in prep)
 	

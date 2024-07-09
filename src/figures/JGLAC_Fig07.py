@@ -1,21 +1,19 @@
 """
-:module: JGLAC_Fig07_CrossPlots_MAIN.py
-:purpose: Plot the key timeseries from experiment T6 (6 hour oscillation)
+:module: JGLAC_Fig07.py
+:auth: Nathan T. Stevens
+:email: ntsteven@uw.edu (previously ntstevens@wisc.edu)
+:license: CC-BY-4.0
 :version: 0 - Submission format to Journal of Glaciology
-:short ref: Stevens, Hansen, and others
+:short ref: Stevens and others
 			Experimental constraints on transient glacier sliding with ice-bed separation
 :Figure #: 7
-:Figure Caption: Parameter cross-plots for experiment T24 & T6
-					(a–b) \\tau(N(t))
-					(c–d) \\Delta \\mu(N(t))
-					(e–f) \\tau(S(t))
-					(g-h) \\Delta \\mu(S(t)) 
-				Cycle number and progress through each cycle is denoted with line color 
-				(see color bar). Comparable modeled values from the double-valued sliding 
-				rule of Zoet and Iverson (2015) are shown in red in (a), (c), and (e).
+:Figure Caption:
+
 			  	 
-:auth: Nathan T. Stevens
-:email: ntstevens@wisc.edu
+
+
+TODO: update header
+TODO: (nitpicky) migrate plotting utilities to a utils module?
 """
 
 import os, argparse
@@ -65,147 +63,163 @@ def main(args):
 	df_MOD.index = df_MOD['N_Pa']
 
 	### SET REFERENCES AND OFFSETS ###
+	# Start times in UTC
 	t0_T24 = pd.Timestamp('2021-10-26T18:58')
 	t0_T06 = pd.Timestamp('2021-11-1T11:09:15')
-	D_tau = np.mean([91.76, 90.43]) #60.95 # [kPa] - amount to reduce \tau(t)
+	# Drag adjustments calculated in JGLAC_Fig05.py and JGLAC_Fig06.py - see logging output
+	D_tau_24 = 84.91
+	D_tau_06 = 84.36 
+	#= np.mean([91.76, 90.43]) #60.95 # [kPa] - amount to reduce \tau(t)
 
 	# D_tau = 90.43 # [kPa] Steadystate misfit value
 
 	### SET PLOTTING PARAMETERS
 	cmaps = ['Blues_r','Purples_r','RdPu_r','Oranges_r','Greys_r']
-	# issave = True
-	# DPI = 200
-	# FMT = 'PNG'
-	URC = (0.9,0.85)
-	ULC = (0.05,0.90)
+
 	PADXY = 0.10
 
 
 
 	### PLOTTING SECTION ###
+	# Initialize figure and subplot axes
 	fig = plt.figure(figsize=(7.5,10))
 	GS = fig.add_gridspec(ncols=2,nrows=3,hspace=0.2,wspace=0)
 	axs = [fig.add_subplot(GS[_i]) for _i in range(6)]
-	# axs = [fig.add_subplot(GS[0,0]),fig.add_subplot(GS[0,1]),\
-	# 	fig.add_subplot(GS[1,0]),fig.add_subplot(GS[1,1])]
 
-
-	# (A) T24 N x \mu'
+	### SUBPLOT (A) T24 N x \mu'
+	# Set data and model vectors
 	XI = df_T24['N kPa'].values
 	XM = df_MOD.index.values*1e-3
-	YI = (df_T24['T kPa'].values - D_tau) / XI
-	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau) / XM
+	YI = (df_T24['T kPa'].values - D_tau_24) / XI
+	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau_24) / XM
 	II = df_T24.index
-
+	# Get plot limits from data values
 	xlims, ylims = get_lims(XI, YI, PADXY)
-
+	# Plot data
 	chs = plot_cycles(axs[0],XI,YI,II, t0_T24, cmaps, ncycles=5,
 				   T=pd.Timedelta(24,unit='hour'), zorder=10)
+	# Plot modeled values
 	axs[0].plot(XM, YM, 'r-', zorder=5)
+	# Set axis limits
 	axs[0].set_xlim(xlims)
 	axs[0].set_ylim(ylims)
 
 
-	# (B) T06 N x \mu'
+	### SUBPLOT (B) T06 N x \mu'
+	# Assign Data & Modeled Values to Plot
 	XI = df_T06['N kPa'].values
 	XM = df_MOD.index.values*1e-3
-	YI = (df_T06['T kPa'].values - D_tau) / XI
-	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau) / XM
+	YI = (df_T06['T kPa'].values - D_tau_06) / XI
+	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau_06) / XM
 	II = df_T06.index
-
-	# xlims, ylims = get_lims(XI, YI, PADXY)
-
+	# Plot data
 	chs = plot_cycles(axs[1],XI,YI,II, t0_T06, cmaps, ncycles=5,
 				   T=pd.Timedelta(6,unit='hour'), zorder=10)
+	# Plot modeled values
 	axs[1].plot(XM, YM, 'r-', zorder=5)
+	# Set plot limits using same limits from subplot (A)
 	axs[1].set_xlim(xlims)
 	axs[1].set_ylim(ylims)
 
+### SUBPLOT (C) T24 N x S LVDT
+	# Get data and modeled value vectors
+	XI = df_T24['S tot'].values
+	XM = df_MOD['Stot'].values
+	YI = (df_T24['T kPa'].values - D_tau_24) / df_T24['N kPa'].values
+	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau_24) / (df_MOD['N_Pa'].values*1e-3)
+	II = df_T24.index
+
+	# Get plot limits from data
+	xlims, ylims = get_lims(XI, YI, PADXY)
+	# Overwrite x-axis limits with custom value to show more of the modeled area
+	xlims = [0.124, 0.275]
+	# Plot data
+	chs = plot_cycles(axs[2],XI,YI,II, t0_T24, cmaps, ncycles=5,
+				   T=pd.Timedelta(24,unit='hour'), zorder=10)
+	# Plot modeled values
+	axs[2].plot(XM, YM, 'r-', zorder=5)
+	# Set plot limits
+	axs[2].set_xlim(xlims)
+	axs[2].set_ylim(ylims)
 
 
-	# (C) T24 N x S LVDT
+	### SUBPLOT (D) T06 N x \mu'
+	# Get data and modeled value vectors
+	XI = df_T06['S tot'].values
+	XM = df_MOD['Stot'].values
+	YI = (df_T06['T kPa'].values - D_tau_06) / df_T06['N kPa'].values
+	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau_06) / (df_MOD['N_Pa'].values*1e-3)
+	II = df_T06.index
+	# Plot data
+	chs = plot_cycles(axs[3],XI,YI,II, t0_T06, cmaps, ncycles=5,
+				   T=pd.Timedelta(6,unit='hour'), zorder=10)
+	# Plot modeled values
+	axs[3].plot(XM, YM, 'r-', zorder=5)
+	# Set plot limits using limits from subplot (E)
+	axs[3].set_xlim(xlims)
+	axs[3].set_ylim(ylims)
+
+
+	### SUBPLOT (E) T24 N x S LVDT
+	# Get data and modeled value vectors
 	XI = df_T24['N kPa'].values
 	XM = df_MOD.index.values*1e-3
 	YI = df_T24['S tot'].values
 	YM = df_MOD['Stot'].values
 	II = df_T24.index
-
+	# Get plot limits from data
 	xlims, ylims = get_lims(XI, YI, PADXY)
-
-	chs = plot_cycles(axs[2],XI,YI,II, t0_T24, cmaps, ncycles=5,
+	# Plot data
+	chs = plot_cycles(axs[4],XI,YI,II, t0_T24, cmaps, ncycles=5,
 				   T=pd.Timedelta(24,unit='hour'), zorder=10)
-	axs[2].plot(XM, YM, 'r-', zorder=5)
-	axs[2].set_xlim(xlims)
-	axs[2].set_ylim(ylims)
+	# Plot model
+	axs[4].plot(XM, YM, 'r-', zorder=5)
+	# Set plot limits
+	axs[4].set_xlim(xlims)
+	axs[4].set_ylim(ylims)
 
 
-	# (D) T06 N x \mu'
+	### SUBPLOT (F) T06 N x \mu'
+	# Get data and modeled value vectors
 	XI = df_T06['N kPa'].values
 	XM = df_MOD.index.values*1e-3
 	YI = df_T06['S tot'].values
 	YM = df_MOD['Stot'].values
 	II = df_T06.index
 
-	# xlims, ylims = get_lims(XI, YI, PADXY)
-
-	chs = plot_cycles(axs[3],XI,YI,II, t0_T06, cmaps, ncycles=5,
-				   T=pd.Timedelta(6,unit='hour'), zorder=10)
-	axs[3].plot(XM, YM, 'r-', zorder=5)
-	axs[3].set_xlim(xlims)
-	axs[3].set_ylim(ylims)
-
-
-	# (E) T24 N x S LVDT
-	XI = df_T24['S tot'].values
-	XM = df_MOD['Stot'].values
-	YI = (df_T24['T kPa'].values - D_tau) / df_T24['N kPa'].values
-	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau) / (df_MOD['N_Pa'].values*1e-3)
-	II = df_T24.index
-
-	xlims, ylims = get_lims(XI, YI, PADXY)
-	xlims = [0.124, 0.275]
-	chs = plot_cycles(axs[4],XI,YI,II, t0_T24, cmaps, ncycles=5,
-				   T=pd.Timedelta(24,unit='hour'), zorder=10)
-	axs[4].plot(XM, YM, 'r-', zorder=5)
-	axs[4].set_xlim(xlims)
-	axs[4].set_ylim(ylims)
-
-
-	# (F) T06 N x \mu'
-
-	XI = df_T06['S tot'].values
-	XM = df_MOD['Stot'].values
-	YI = (df_T06['T kPa'].values - D_tau) / df_T06['N kPa'].values
-	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau) / (df_MOD['N_Pa'].values*1e-3)
-	II = df_T06.index
-
-	# xlims, ylims = get_lims(XI, YI, PADXY)
-
 	chs = plot_cycles(axs[5],XI,YI,II, t0_T06, cmaps, ncycles=5,
 				   T=pd.Timedelta(6,unit='hour'), zorder=10)
 	axs[5].plot(XM, YM, 'r-', zorder=5)
+	# Set plot limits using limits from subplot (C)
 	axs[5].set_xlim(xlims)
 	axs[5].set_ylim(ylims)
 
 
-	# Formatting & Labels
-	axs[0].set_title('Experiment T24')
-	axs[1].set_title('Experiment T06')
-
-	for _i in range(4):
-		axs[_i].set_xlabel('$N$ (kPa)')
-	
-	for _i in [4,5]:
-		axs[_i].set_xlabel('$S_{LVDT}$ and $S_{mod}$ ( - )')
 	
 
+	### FORMATTING & LABELING
+	# Add experiment titles to each column head
+	axs[0].set_title('Exp. T24')
+	axs[1].set_title('Exp. T06')
+
+	# Add Effective Pressure Labels
+	for _i in [0,1,4,5]:
+		axs[_i].set_xlabel('Effective Pressure (kPa)')
+	# Add contact fraction labels
+	for _i in [2,3]:
+		axs[_i].set_xlabel('Contact Fraction ( - )')
+	axs[4].set_ylabel('Contact Fraction ( - )')
+	# Add drag labels
+	for _i in [0,2]:
+		axs[_i].set_ylabel('Drag ( - )')
+
+	# Shift right column y-axis labels and ticks to right
 	for _i in [1,3,5]:
 		axs[_i].yaxis.tick_right()
+		# # Included for completeness, commented out because unused for now
 		# axs[_i].yaxis.set_label_position('right')
-	for _i in [0,4]:
-		axs[_i].set_ylabel('$\mu^\prime$ and $\\mu_{mod}$ ( - )')
-	axs[2].set_ylabel('$S_{LVDT}$ and $S_{mod}$ ( - )')
-	
+
+	# Add subplot labels
 	for _i, _l in enumerate(['a','b','c','d','e','f']):
 		xlims = axs[_i].get_xlim()
 		ylims = axs[_i].get_ylim()
@@ -215,8 +229,6 @@ def main(args):
 			_l, fontweight='extra bold', fontstyle='italic', fontsize=14)
 
 	### COLORBAR PLOTTING ###
-
-	Tc = 24
 	cbar_placement = 'bottom'
 	# Create timing colorbar
 	for k_ in range(5):
@@ -232,7 +244,7 @@ def main(args):
 				cax.text(0.5,2.5,'Cycle Number',ha='center',va='center')
 		chb.ax.set_xticklabels(str(k_+1))
 
-
+	### SAVING DECISION TREE ###
 	if not args.render_only:
 		if args.dpi == 'figure':
 			dpi = 'figure'
@@ -250,9 +262,12 @@ def main(args):
 			os.makedirs(os.path.split(savename)[0])
 		plt.savefig(savename, dpi=dpi, format=args.format)
 
+	### DISPLAY DECISION POINT ###
 	if args.show:
 		plt.show()
 
+
+### MAKE FIGURE RENDERING COMMAND LINE FRIENDLY ###
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(
 		prog='JGLAC_Fig07.py',

@@ -47,10 +47,6 @@ def main(args):
 	df_CM.index = pd.to_datetime(df_CM.Epoch_UTC, unit='s')
 	df_CP.index = pd.to_datetime(df_CP.Epoch_UTC, unit='s')
 
-	# Plotting Controls #
-	issave = True
-	DPI = 200
-	FMT = 'PNG'
 
 	# Define Reference time for T06
 	t0_T06 = pd.Timestamp('2021-11-1T16:09:15')
@@ -58,8 +54,8 @@ def main(args):
 				#       minus calculated values given the geometry of the bed
 				# 	  for steady-state N(t)
 
-	D_tauP = np.nanmean(df_CM[df_CM.index > t0_T06 + pd.Timedelta(30.5,unit='hour')]['T kPa']) - \
-			np.nanmean(df_CM[df_CM.index > t0_T06 + pd.Timedelta(30.5,unit='hour')]['hat T kPa'])
+	D_tauP = np.nanmean(df_CM[df_CM.index > t0_T06 + pd.Timedelta(30.01,unit='hour')]['T kPa']) - \
+			np.nanmean(df_CM[df_CM.index > t0_T06 + pd.Timedelta(30.01,unit='hour')]['hat T kPa'])
 	print('Estimated shift for \\tau is %.3e kPa'%(D_tauP))
 
 	# Make elapsed time indices
@@ -97,10 +93,11 @@ def main(args):
 
 	# (a) PLOT \tau(t) 
 	# Plot observed values
-	axs[0].plot(dtindex,df_NT['Tau_kPa'],'k-',zorder=10,label='$\\tau$')
+	axs[0].plot(dtindex,df_NT['Tau_kPa'],'k-',zorder=10,label='$\\tau^{obs}$')
+	# Plot adjusted values
+	axs[0].plot(dtindex,df_NT['Tau_kPa'] - D_tauP,'b-',zorder=7, label='$\\tau^{\\prime}$')
 	# Plot modeled values
 	axs[0].plot(dtmindex,df_CM['hat T kPa'].values,'r-',zorder=5, label='$\\tau^{calc}$')  
-	axs[0].plot(dtindex,df_NT['Tau_kPa'] - D_tauP,'b-',zorder=7, label='$\\tau^{\\prime}$')
 	# Apply labels & formatting
 	axs[0].set_ylabel('Shear Stress (kPa)')
 	# axb.set_ylabel('$\\hat{\\tau}$(t) [kPa]',rotation=270,labelpad=15,color='red')
@@ -109,26 +106,28 @@ def main(args):
 
 	axs[0].text(-0.25,df_CM['hat T kPa'].values[-1] + D_tauP/2,'$\\Delta \\tau$',fontsize=14,ha='center',va='center')
 	axs[0].arrow(-1.33,162.33,0,95.4 - 162.33,head_width=2/5,width=0.1/5,head_length=10,fc='k')
-	# ylims = axs[0].get_ylim()
-	# axs[0].set_ylim([ylims[0]-25, ylims[1]])
-	# axs[0].legend(ncols=3,loc='lower center', bbox_to_anchor=(0.5, -0.05))
+	# Add legend
+	ylims = axs[0].get_ylim()
+	axs[0].set_ylim([ylims[0]-30, ylims[1]])
+	axs[0].legend(ncols=3, loc='lower center', bbox_to_anchor=(0.5,-0.05)).set_zorder(level=1)
+	# Annotation about logging gap
+	axs[0].text(29,95,'Transducer Logging Gap',rotation=90, ha='center',va='center',fontsize=8)
+
+
 	# (b) PLOT \Delta \mu(t)
 	# Plot observed values
-	# axs[1].plot(dtindex,mu_obs,'k-',zorder=10,label='Obs.')
+	axs[1].plot(dtindex,mu_tP,'b-',zorder=7,label='$\\mu^{\\prime}$')
 	# plot modeled values
 	axs[1].plot(dtmindex,mu_calc,'r-',zorder=5,label='$\\mu^{calc}$')
-	# Shifted \tau result
-	axs[1].plot(dtindex,mu_tP,'b-',zorder=7,label='$\\mu^{\\prime}$')
 	# Apply labels & formatting
 	axs[1].set_xticks(np.arange(-3,36,3))
 	axs[1].grid(axis='x',linestyle=':')
 	axs[1].set_ylabel('Drag ( - )')
+	# Add legend
 	ylims = axs[1].get_ylim()
-	axs[1].set_ylim([ylims[0], ylims[1]+.02])
-	# axs[1].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.65, -0.075))
-	# axc.set_ylabel('$\\Delta\\mu$ (t) [ - ]',rotation=270,labelpad=15,color='red')
-	# axs[1].set_ylim([-0.11,0.22])
-	#axs[1].legend(ncol=1,loc='upper left')
+	axs[1].set_ylim([ylims[0], ylims[1]+0.02])
+	axs[1].legend(ncol=2,loc='upper right').set_zorder(level=1)
+
 
 	# (c) PLOT S(t)
 	# Plot mapped values from LVDT
@@ -138,10 +137,11 @@ def main(args):
 	# Apply labels and formatting
 	axs[2].set_xticks(np.arange(-3,36,3))
 	axs[2].grid(axis='x',linestyle=':')
-	axs[2].set_ylabel('Scaled Contact\nLength ( - )')
-	# ylims = axs[2].get_ylim()
-	# axs[2].set_ylim([ylims[0]-0.025, ylims[1]])
-	# axs[2].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.5, -0.05))
+	axs[2].set_ylabel('Contact Fraction ( - )')
+	# Add Legend
+	ylims = axs[2].get_ylim()
+	axs[2].set_ylim([ylims[0]-0.025, ylims[1]])
+	axs[2].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.5, -0.05)).set_zorder(level=1)
 
 
 	# ## SUBPLOT FORMATTING
@@ -180,7 +180,7 @@ def main(args):
 
 
 
-	axs[-1].set_xlabel('Elapsed Time from Start of Experiment T06 (hr)')
+	axs[-1].set_xlabel('Elapsed Time from Start of Exp. T06 (hr)')
 
 	if not args.render_only:
 		if args.dpi == 'figure':

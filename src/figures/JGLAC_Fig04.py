@@ -3,7 +3,8 @@
 :auth: Nathan T. Stevens
 :email: ntsteven@uw.edu
 :license: CC-BY-4.0
-
+TODO: Update file header
+TODO: Clean up extraneous (commented-out) code
 """
 
 import os, argparse
@@ -79,14 +80,52 @@ def main(args):
 	IND = (df_COR['N kPa'].max()*1e3 + 1e3 >= df_MOD.index) &\
 		(df_MOD.index >= df_COR['N kPa'].min()*1e3 - 1e3)
 
+	axs[0].plot((df_OBS.index - t0_T24).total_seconds()/3600,Sobs,\
+				'ko-',ms=6,label='$S$',zorder=3)
+	axs[0].plot((df_OBS.index - t0_T24).total_seconds()/3600,Sstobs,\
+				'kv-',ms=6,label='$S_{stoss}$',zorder=3)
+	axs[0].plot((df_OBS.index - t0_T24).total_seconds()/3600,Sleeobs,\
+				'ks-',ms=6,label='$S_{lee}$',zorder=3)
+
+	# Plot color masking for association with Figs 4c-d
+	axs[0].scatter((df_OBS.index - t0_T24).total_seconds()/3600,Sobs,\
+				s=5,c=(df_OBS.index - t0_T24).total_seconds()/3600,\
+				marker='o',zorder=4)
+	axs[0].scatter((df_OBS.index - t0_T24).total_seconds()/3600,Sstobs,\
+				s=5,c=(df_OBS.index - t0_T24).total_seconds()/3600,\
+				marker='v',zorder=4)
+	axs[0].scatter((df_OBS.index - t0_T24).total_seconds()/3600,Sleeobs,\
+				s=5,c=(df_OBS.index - t0_T24).total_seconds()/3600,\
+				marker='s',zorder=4)
+
+	# Corrected LVDT
+	axs[0].plot((df_COR.index - t0_T24).total_seconds()/3600,df_COR['S tot'].values,\
+				'b-',lw=3,ms=4,zorder=2,label='$S^{LVDT}$')
+	# Modeled
+	mod_tuples = [('Stot','r-',2, '$S^{calc}$'),
+			   	  ('Sstoss','r--',1.5, '$S^{calc}_{stoss}$'),
+				  ('Slee','r:',1.5, '$S^{calc}_{lee}$')]
+	for fld_,fmt_,lw_,lbl_ in mod_tuples:
+		Y_ = np.interp(df_COR['N kPa'].values*1e3,df_MOD.index.values,df_MOD[fld_].values)
+		axs[0].plot((df_COR.index - t0_T24).total_seconds()/3600,Y_,fmt_,zorder=1,lw=lw_, label=lbl_)
+
+	# Axis formatting
+	axs[0].set_xticks(np.arange(0,132,12))
+	axs[0].grid(axis='x',linestyle=':')
+	axs[0].set_ylabel('Contact Fraction ( - )')
+	axs[0].set_xticks(np.arange(0,132,12))
+	axs[0].grid(axis='x',linestyle=':')
+	# Legend
+	axs[0].legend(bbox_to_anchor=(1., 1))
+
 	### (a) TIMESERIES OF R(t)
 	# Photogrametry 
 	axs[1].plot((df_OBS.index - t0_T24).total_seconds()/3600,Robs,\
-				'ko-',ms=6,label='a) Obs. Mean\nb) Obs. Total',zorder=3)
+				'ko-',ms=6,label='$R$',zorder=3)
 	axs[1].plot((df_OBS.index - t0_T24).total_seconds()/3600,Rstobs,\
-				'kv-',ms=6,label='Obs. Stoss',zorder=3)
+				'kv-',ms=6,label='$R_{stoss}$',zorder=3)
 	axs[1].plot((df_OBS.index - t0_T24).total_seconds()/3600,Rleeobs,\
-				'ks-',ms=6,label='Obs. Lee',zorder=3)
+				'ks-',ms=6,label='$R_{lee}$',zorder=3)
 
 	axs[1].scatter((df_OBS.index - t0_T24).total_seconds()/3600,Robs,\
 				s=5,c=(df_OBS.index - t0_T24).total_seconds()/3600,\
@@ -100,21 +139,22 @@ def main(args):
 
 	# Corrected LVDT
 	axs[1].plot((df_COR.index - t0_T24).total_seconds()/3600,df_COR['R mea'].values,\
-				'b-',lw=3,ms=4,zorder=2,label='LVDT-Based')
+				'b-',lw=3,ms=4,zorder=2,label='$R^{LVDT}$')
 	# Modeled
 	# for fld_,fmt_ in [('Rstoss','r--'),('Rmea','r-'),('Rlee','r:')]:
 	Y_ = np.interp(df_COR['N kPa'].values*1e3,df_MOD.index.values,df_MOD['Rmea'].values)
-	axs[1].plot((df_COR.index - t0_T24).total_seconds()/3600,Y_,'r-',label='a) Mod. Mean\nb) Mod. Total',zorder=1)
+	axs[1].plot((df_COR.index - t0_T24).total_seconds()/3600,Y_,'r-',label='$R^{calc}$',zorder=1)
 	Y_ = np.interp(df_COR['N kPa'].values*1e3,df_MOD.index.values,df_MOD['Rstoss'].values)
-	axs[1].plot((df_COR.index - t0_T24).total_seconds()/3600,Y_,'r--',label='Mod. Stoss',zorder=1)
+	axs[1].plot((df_COR.index - t0_T24).total_seconds()/3600,Y_,'r--',label='$R^{calc}_{stoss}$',zorder=1)
 	Y_ = np.interp(df_COR['N kPa'].values*1e3,df_MOD.index.values,df_MOD['Rlee'].values)
-	axs[1].plot((df_COR.index - t0_T24).total_seconds()/3600,Y_,'r:',label='Mod. Lee',lw=2,zorder=1)
+	axs[1].plot((df_COR.index - t0_T24).total_seconds()/3600,Y_,'r:',label='$R^{calc}_{lee}$',lw=2,zorder=1)
 
+	axs[1].legend(bbox_to_anchor=(1.,1))
 
 	axs[1].set_xticks(np.arange(0,132,12))
 	axs[1].grid(axis='x',linestyle=':')
 	# axs[2].legend(ncol=3)
-	axs[1].set_ylabel('Scaled Cavity Height [$R$] ( - )')
+	axs[1].set_ylabel('Height Fraction ( - )')
 	axs[0].set_xticklabels([])
 	ylims = axs[1].get_ylim()
 	# axs[2].xaxis.set_ticks_position('bottom')
@@ -126,44 +166,8 @@ def main(args):
 					201)
 	axs[1].scatter(TI,0.01*(ylims[1] - ylims[0]) + ylims[0]*np.ones(len(TI)),s=9,c=TI,marker='s')
 	axs[1].set_ylim(ylims)
-	axs[1].legend(bbox_to_anchor=(1.,1.25))
+	# axs[1].legend(bbox_to_anchor=(1.,1.25))
 
-
-
-
-	### (b) TIMESERIES OF S(t)
-	axs[0].plot((df_OBS.index - t0_T24).total_seconds()/3600,Sstobs,\
-				'kv-',ms=6,label='Stoss',zorder=3)
-	axs[0].plot((df_OBS.index - t0_T24).total_seconds()/3600,Sleeobs,\
-				'ks-',ms=6,label='Lee',zorder=3)
-	axs[0].plot((df_OBS.index - t0_T24).total_seconds()/3600,Sobs,\
-				'ko-',ms=6,label='Total',zorder=3)
-
-	axs[0].scatter((df_OBS.index - t0_T24).total_seconds()/3600,Sobs,\
-				s=5,c=(df_OBS.index - t0_T24).total_seconds()/3600,\
-				marker='o',zorder=4)
-	axs[0].scatter((df_OBS.index - t0_T24).total_seconds()/3600,Sstobs,\
-				s=5,c=(df_OBS.index - t0_T24).total_seconds()/3600,\
-				marker='v',zorder=4)
-	axs[0].scatter((df_OBS.index - t0_T24).total_seconds()/3600,Sleeobs,\
-				s=5,c=(df_OBS.index - t0_T24).total_seconds()/3600,\
-				marker='s',zorder=4)
-
-	# Corrected LVDT
-	axs[0].plot((df_COR.index - t0_T24).total_seconds()/3600,df_COR['S tot'].values,\
-				'b-',lw=3,ms=4,zorder=2,label='LVDT')
-
-	axs[0].set_xticks(np.arange(0,132,12))
-	axs[0].grid(axis='x',linestyle=':')
-	axs[0].set_ylabel('Scaled Contact Length\n[$S$] ( - )')
-	# axs[0].legend(ncol=3)
-	# Modeled
-	for fld_,fmt_,lw_ in [('Sstoss','r--',1.5),('Stot','r-',1.5),('Slee','r:',2)]:
-		Y_ = np.interp(df_COR['N kPa'].values*1e3,df_MOD.index.values,df_MOD[fld_].values)
-		axs[0].plot((df_COR.index - t0_T24).total_seconds()/3600,Y_,fmt_,zorder=1,lw=lw_)
-
-	axs[0].set_xticks(np.arange(0,132,12))
-	axs[0].grid(axis='x',linestyle=':')
 	# axs[0].legend(ncol=3)
 	# axs[0].xaxis.set_visible(False)
 
@@ -173,7 +177,7 @@ def main(args):
 
 	for i_ in range(2):
 		axs[i_].set_xlim([(df_COR.index[0] - t0_T24).total_seconds()/3600,\
-						(df_COR.index[-1] - t0_T24).total_seconds()/3600])
+						(df_COR.index[-1] - t0_T24).total_seconds()/3600 + 2])
 
 
 
@@ -183,8 +187,8 @@ def main(args):
 				# vmin=0,vmax=5*24*3600,zorder=2)
 	axs[2].plot(df_MOD[IND]['Stot'].values,df_MOD[IND]['Rmea'].values,'r-',zorder=1)
 
-	axs[2].set_ylabel('Scaled Cavity Height\n[$R$] ( - )')#,rotation=270,labelpad=15,zorder=10)
-	axs[2].set_xlabel('Scaled Contact Length\n[$S$] ( - )')
+	axs[2].set_ylabel('Height Fraction [$R$] ( - )')#,rotation=270,labelpad=15,zorder=10)
+	axs[2].set_xlabel('Contact Fraction [$S$] ( - )')
 
 
 	# ### (d) SCALED PICK LOCATIONS
@@ -203,7 +207,7 @@ def main(args):
 	gxm = lkm.calc_profiles(df_COR['N kPa'].min()*1e3)['gx']
 	gxu = lkm.calc_profiles(df_COR['N kPa'].mean()*1e3)['gx']
 	gxM = lkm.calc_profiles(df_COR['N kPa'].max()*1e3)['gx']
-
+	# print(f"{df_COR['N kPa'].min()} - {df_COR['N kPa'].mean()} - {df_COR['N kPa'].max()}")
 	xlims = axs[3].get_xlim()
 
 	# # Plot Cavity Roof Positions
@@ -239,24 +243,24 @@ def main(args):
 	# # Annotations in (c)
 	axs[3].arrow(-.2,.45,.3,0,ec='w',fc='w',zorder=10,\
 				width=.005,head_width=0.05,head_length=0.05)
+	axs[3].text(-.2, .5,'Stoss\nSide',color='w')
+	axs[3].text(.1, .5, 'Lee\nSide', color='w')
 	axs[3].text(-0.05,0.5,'Rotation Direction',color='w',ha='center',va='center')
-	axs[3].text(0.05,0.8,'Lee\n[$p_{d}$]',color='w')
-	axs[3].text(-.15,.65,'Stoss\n[$p_{r}$]',color='w')
-	axs[3].text(0,0.90,'Crest\n[$p_{c}$]',color='w',ha='center',va='center')
+	axs[3].text(0.04,0.9,'$p_{d}$',color='w')
+	axs[3].text(-.16,.66,'$p_{r}$',color='w')
+	axs[3].text(0,0.90,'Crest',color='w',ha='center',va='center')
 	axs[3].text(0,.65,'Bed',color='w',ha='center',va='center')
 	axs[3].text(-.2,0.975,'Ice',ha='center',va='center')
 	axs[3].text(.133,0.85,'Cavity',va='center')
 	axs[3].text(-.06,1.03,'Contact',ha='center',va='center',color='r',\
 				rotation=12.5)
-	axs[3].text(-.228,.833,'Modeled\nCavity Roofs',\
+	axs[3].text(-.228,.820,'Modeled\nCavity Roofs',\
 				ha='center',va='center',color='blue',\
 				rotation=-7.5)
 
 
 	axs[3].yaxis.set_label_position('right')
 	axs[3].yaxis.set_ticks_position('right')
-	# axs[3].set_xlim([df_MOD[IND]['Stot'].min(),df_MOD[IND]['Stot'].max()])
-	# axs[3].set_ylim([df_MOD[IND]['Rmea'].min(),df_MOD[IND]['Rmea'].max()])
 
 
 	lblkw = {'fontsize':14,'fontweight':'extra bold','fontstyle':'italic'}

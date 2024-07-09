@@ -43,7 +43,7 @@ def main(args):
 	fig = plt.figure(figsize=(6,4.5))
 	pch = plt.pcolor(df_U.values, df_N.values, df_u.values, cmap='Blues')
 	plt.colorbar(pch)
-	plt.text(38,500,'Drag ($\\mu$) [ - ]',rotation=270,fontsize=10,ha='center',va='center')
+	plt.text(38,500,'Drag [$\\mu$] ( - )',rotation=270,fontsize=10,ha='center',va='center')
 	plt.clim([0,.35])
 
 	# Shear stress contours

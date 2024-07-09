@@ -34,7 +34,7 @@ def main(args):
 	DPI = 200
 	FMT = 'png'
 	# Labels and intervals
-	LBV = ['Mechanically Inferred\nSteady State','T24','Geometric Steady State\n(Rest Period)','T06']#,'T96']
+	LBV = ['Hold Period\n(Mechanically Inferred)\n(Steady State)','T24','Hold Period\n(Geometric Steady State)','T06']#,'T96']
 	TSV = [pd.Timestamp("2021-10-25T18:00:00"),pd.Timestamp('2021-10-26T18:56'),\
 		pd.Timestamp("2021-10-31T19:03"),pd.Timestamp('2021-11-1T16:09:15')]
 	TEV = [pd.Timestamp("2021-10-26T18:56"),pd.Timestamp("2021-10-31T19:03"),\

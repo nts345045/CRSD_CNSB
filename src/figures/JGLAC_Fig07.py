@@ -65,7 +65,7 @@ def main(args):
 	### SET REFERENCES AND OFFSETS ###
 	# Start times in UTC
 	t0_T24 = pd.Timestamp('2021-10-26T18:58')
-	t0_T06 = pd.Timestamp('2021-11-1T11:09:15')
+	t0_T06 = pd.Timestamp('2021-11-1T16:09:15')
 	# Drag adjustments calculated in JGLAC_Fig05.py and JGLAC_Fig06.py - see logging output
 	D_tau_24 = 84.91
 	D_tau_06 = 84.36 
@@ -78,7 +78,9 @@ def main(args):
 
 	PADXY = 0.10
 
-
+	# Get steadystate reference values for drag
+	mu0_calc_24 = 0.231654
+	mu0_calc_06 = 0.229299
 
 	### PLOTTING SECTION ###
 	# Initialize figure and subplot axes
@@ -86,12 +88,14 @@ def main(args):
 	GS = fig.add_gridspec(ncols=2,nrows=3,hspace=0.2,wspace=0)
 	axs = [fig.add_subplot(GS[_i]) for _i in range(6)]
 
-	### SUBPLOT (A) T24 N x \mu'
+	### SUBPLOT (A) T24 N x \Delta\mu
 	# Set data and model vectors
 	XI = df_T24['N kPa'].values
 	XM = df_MOD.index.values*1e-3
 	YI = (df_T24['T kPa'].values - D_tau_24) / XI
-	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau_24) / XM
+	YM = (df_MOD['T_Pa'].values*1e-3) / XM
+	YM -= mu0_calc_24
+	YI -= mu0_calc_24
 	II = df_T24.index
 	# Get plot limits from data values
 	xlims, ylims = get_lims(XI, YI, PADXY)
@@ -110,7 +114,9 @@ def main(args):
 	XI = df_T06['N kPa'].values
 	XM = df_MOD.index.values*1e-3
 	YI = (df_T06['T kPa'].values - D_tau_06) / XI
-	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau_06) / XM
+	YM = (df_MOD['T_Pa'].values*1e-3) / XM
+	YM -= mu0_calc_06
+	YI -= mu0_calc_06
 	II = df_T06.index
 	# Plot data
 	chs = plot_cycles(axs[1],XI,YI,II, t0_T06, cmaps, ncycles=5,
@@ -121,12 +127,14 @@ def main(args):
 	axs[1].set_xlim(xlims)
 	axs[1].set_ylim(ylims)
 
-### SUBPLOT (C) T24 N x S LVDT
+### SUBPLOT (C) T24 S x Delta Mu
 	# Get data and modeled value vectors
 	XI = df_T24['S tot'].values
 	XM = df_MOD['Stot'].values
 	YI = (df_T24['T kPa'].values - D_tau_24) / df_T24['N kPa'].values
-	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau_24) / (df_MOD['N_Pa'].values*1e-3)
+	YM = (df_MOD['T_Pa'].values*1e-3) / (df_MOD['N_Pa'].values*1e-3)
+	YM -= mu0_calc_24
+	YI -= mu0_calc_24
 	II = df_T24.index
 
 	# Get plot limits from data
@@ -143,12 +151,14 @@ def main(args):
 	axs[2].set_ylim(ylims)
 
 
-	### SUBPLOT (D) T06 N x \mu'
+	### SUBPLOT (D) T06 S x \Delta\mu
 	# Get data and modeled value vectors
 	XI = df_T06['S tot'].values
 	XM = df_MOD['Stot'].values
 	YI = (df_T06['T kPa'].values - D_tau_06) / df_T06['N kPa'].values
-	YM = (df_MOD['T_Pa'].values*1e-3 - D_tau_06) / (df_MOD['N_Pa'].values*1e-3)
+	YM = (df_MOD['T_Pa'].values*1e-3) / (df_MOD['N_Pa'].values*1e-3)
+	YM -= mu0_calc_06
+	YI -= mu0_calc_06
 	II = df_T06.index
 	# Plot data
 	chs = plot_cycles(axs[3],XI,YI,II, t0_T06, cmaps, ncycles=5,
@@ -211,7 +221,7 @@ def main(args):
 	axs[4].set_ylabel('Contact Fraction ( - )')
 	# Add drag labels
 	for _i in [0,2]:
-		axs[_i].set_ylabel('Drag ( - )')
+		axs[_i].set_ylabel('Change in Drag ( - )')
 
 	# Shift right column y-axis labels and ticks to right
 	for _i in [1,3,5]:

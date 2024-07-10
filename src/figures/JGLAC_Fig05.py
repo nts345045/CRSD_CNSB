@@ -77,6 +77,7 @@ def main(args):
 	mu_calc = df_CM24['hat T kPa'].values/df_CM24['N kPa'].values
 	# Get reference \\mu(t) for differencing
 	mu0_calc = mu_calc[-1]
+	print(mu0_calc)
 	# Get calculated change in drag
 	Dmu_calc = mu_calc - mu0_calc
 
@@ -105,15 +106,15 @@ def main(args):
 	axs[0].set_ylim([ylims[0]-30, ylims[1]])
 	axs[0].legend(ncols=3, loc='lower center', bbox_to_anchor=(0.5,-0.05)).set_zorder(level=1)
 	
-	# (b) PLOT \Delta \mu(t)
+	# (b) PLOT \Delta \mu
 	# Plot adjusted values
-	axs[1].plot(dtindex[np.isfinite(mu_tP)],mu_tP[np.isfinite(mu_tP)],'b-',zorder=5,label='$\\mu^{\\prime}$')
+	axs[1].plot(dtindex[np.isfinite(mu_tP)],mu_tP[np.isfinite(mu_tP)] - mu0_calc,'b-',zorder=5,label='$\\Delta\\mu^{obs}$')
 	# plot modeled values
-	axs[1].plot(dtzindex,mu_calc ,'r-',zorder=5,label='$\\mu^{calc}$')
+	axs[1].plot(dtzindex,mu_calc - mu0_calc,'r-',zorder=5,label='$\\Delta\\mu^{calc}$')
 	# Apply labels & formatting
 	axs[1].set_xticks(np.arange(0,132,12))
 	axs[1].grid(axis='x',linestyle=':')
-	axs[1].set_ylabel('Drag ( - )')
+	axs[1].set_ylabel('Change in Drag ( - )')
 	# Add legend
 	ylims = axs[1].get_ylim()
 	axs[1].set_ylim([ylims[0], ylims[1]+0.02])

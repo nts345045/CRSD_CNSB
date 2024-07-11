@@ -39,6 +39,7 @@ bash setup_env.sh
 3) Save the data repository contents to a `data` folder in the repository root directory:  
  - Get data from temporary repository on [GoogleDrive](https://drive.google.com/file/d/15HGneDKxhNtJsmUiabvF9Pa51rNKA3jz/view?usp=share_link)  
  - Create a new folder `data` in the repository and un-tar the repository in there.
+ - **WORK IN PROGRESS**: Nate is cleaning this up so it's plug & play.
 
 4) Run the `run_everything.sh` script from the `scripts` directory:  
 ```

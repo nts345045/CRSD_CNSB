@@ -100,13 +100,13 @@ def main(args):
 	# Get plot limits from data values
 	xlims, ylims = get_lims(XI, YI, PADXY)
 	# Plot data
-	chs = plot_cycles(axs[0],XI,YI,II, t0_T24, cmaps, ncycles=5,
+	chs = plot_cycles(axs[0+2],XI,YI,II, t0_T24, cmaps, ncycles=5,
 				   T=pd.Timedelta(24,unit='hour'), zorder=10)
 	# Plot modeled values
-	axs[0].plot(XM, YM, 'r-', zorder=5)
+	axs[0+2].plot(XM, YM, 'r-', zorder=5)
 	# Set axis limits
-	axs[0].set_xlim(xlims)
-	axs[0].set_ylim(ylims)
+	axs[0+2].set_xlim(xlims)
+	axs[0+2].set_ylim(ylims)
 
 
 	### SUBPLOT (B) T06 N x \mu'
@@ -119,13 +119,13 @@ def main(args):
 	YI -= mu0_calc_06
 	II = df_T06.index
 	# Plot data
-	chs = plot_cycles(axs[1],XI,YI,II, t0_T06, cmaps, ncycles=5,
+	chs = plot_cycles(axs[1+2],XI,YI,II, t0_T06, cmaps, ncycles=5,
 				   T=pd.Timedelta(6,unit='hour'), zorder=10)
 	# Plot modeled values
-	axs[1].plot(XM, YM, 'r-', zorder=5)
+	axs[1+2].plot(XM, YM, 'r-', zorder=5)
 	# Set plot limits using same limits from subplot (A)
-	axs[1].set_xlim(xlims)
-	axs[1].set_ylim(ylims)
+	axs[1+2].set_xlim(xlims)
+	axs[1+2].set_ylim(ylims)
 
 ### SUBPLOT (C) T24 S x Delta Mu
 	# Get data and modeled value vectors
@@ -142,13 +142,13 @@ def main(args):
 	# Overwrite x-axis limits with custom value to show more of the modeled area
 	xlims = [0.124, 0.275]
 	# Plot data
-	chs = plot_cycles(axs[2],XI,YI,II, t0_T24, cmaps, ncycles=5,
+	chs = plot_cycles(axs[2+2],XI,YI,II, t0_T24, cmaps, ncycles=5,
 				   T=pd.Timedelta(24,unit='hour'), zorder=10)
 	# Plot modeled values
-	axs[2].plot(XM, YM, 'r-', zorder=5)
+	axs[2+2].plot(XM, YM, 'r-', zorder=5)
 	# Set plot limits
-	axs[2].set_xlim(xlims)
-	axs[2].set_ylim(ylims)
+	axs[2+2].set_xlim(xlims)
+	axs[2+2].set_ylim(ylims)
 
 
 	### SUBPLOT (D) T06 S x \Delta\mu
@@ -161,13 +161,13 @@ def main(args):
 	YI -= mu0_calc_06
 	II = df_T06.index
 	# Plot data
-	chs = plot_cycles(axs[3],XI,YI,II, t0_T06, cmaps, ncycles=5,
+	chs = plot_cycles(axs[3+2],XI,YI,II, t0_T06, cmaps, ncycles=5,
 				   T=pd.Timedelta(6,unit='hour'), zorder=10)
 	# Plot modeled values
-	axs[3].plot(XM, YM, 'r-', zorder=5)
+	axs[3+2].plot(XM, YM, 'r-', zorder=5)
 	# Set plot limits using limits from subplot (E)
-	axs[3].set_xlim(xlims)
-	axs[3].set_ylim(ylims)
+	axs[3+2].set_xlim(xlims)
+	axs[3+2].set_ylim(ylims)
 
 
 	### SUBPLOT (E) T24 N x S LVDT
@@ -180,13 +180,13 @@ def main(args):
 	# Get plot limits from data
 	xlims, ylims = get_lims(XI, YI, PADXY)
 	# Plot data
-	chs = plot_cycles(axs[4],XI,YI,II, t0_T24, cmaps, ncycles=5,
+	chs = plot_cycles(axs[4-4],XI,YI,II, t0_T24, cmaps, ncycles=5,
 				   T=pd.Timedelta(24,unit='hour'), zorder=10)
 	# Plot model
-	axs[4].plot(XM, YM, 'r-', zorder=5)
+	axs[4-4].plot(XM, YM, 'r-', zorder=5)
 	# Set plot limits
-	axs[4].set_xlim(xlims)
-	axs[4].set_ylim(ylims)
+	axs[4-4].set_xlim(xlims)
+	axs[4-4].set_ylim(ylims)
 
 
 	### SUBPLOT (F) T06 N x \mu'
@@ -197,12 +197,12 @@ def main(args):
 	YM = df_MOD['Stot'].values
 	II = df_T06.index
 
-	chs = plot_cycles(axs[5],XI,YI,II, t0_T06, cmaps, ncycles=5,
+	chs = plot_cycles(axs[5-4],XI,YI,II, t0_T06, cmaps, ncycles=5,
 				   T=pd.Timedelta(6,unit='hour'), zorder=10)
-	axs[5].plot(XM, YM, 'r-', zorder=5)
+	axs[5-4].plot(XM, YM, 'r-', zorder=5)
 	# Set plot limits using limits from subplot (C)
-	axs[5].set_xlim(xlims)
-	axs[5].set_ylim(ylims)
+	axs[5-4].set_xlim(xlims)
+	axs[5-4].set_ylim(ylims)
 
 
 	
@@ -213,14 +213,14 @@ def main(args):
 	axs[1].set_title('Exp. T06')
 
 	# Add Effective Pressure Labels
-	for _i in [0,1,4,5]:
+	for _i in range(4):
 		axs[_i].set_xlabel('Effective Pressure (kPa)')
 	# Add contact fraction labels
-	for _i in [2,3]:
+	for _i in [4,5]:
 		axs[_i].set_xlabel('Contact Fraction ( - )')
-	axs[4].set_ylabel('Contact Fraction ( - )')
+	axs[0].set_ylabel('Contact Fraction ( - )')
 	# Add drag labels
-	for _i in [0,2]:
+	for _i in [2,4]:
 		axs[_i].set_ylabel('Change in Drag ( - )')
 
 	# Shift right column y-axis labels and ticks to right

@@ -106,12 +106,12 @@ echo "Figure 3 - Effective pressures during T24, T6, and bounding hold periods"
 echo "Figure 4 - Cavity geometry observation from T24"
 # python $SRC/figures/JGLAC_Fig04.py -i $CDIR -o $FIGDIR -f 'png' -d 200
 echo "Figure 5 - Cavity geometry observation from T24"
-python $SRC/figures/JGLAC_Fig05.py -i $PPDIR -o $FIGDIR -f 'png' -d 200
+# python $SRC/figures/JGLAC_Fig05.py -i $PPDIR -o $FIGDIR -f 'png' -d 200
 echo "Figure 6 - Cavity geometry observation from T06"
-python $SRC/figures/JGLAC_Fig06.py -i $PPDIR -o $FIGDIR -f 'png' -d 200
+# python $SRC/figures/JGLAC_Fig06.py -i $PPDIR -o $FIGDIR -f 'png' -d 200
 echo "Figure 7 - Experiment T24 and T06 Crossplots"
-python $SRC/figures/JGLAC_Fig07.py -i $CDIR -o $FIGDIR -f 'png' -d 200 --show -r
+python $SRC/figures/JGLAC_Fig07.py -i $CDIR -o $FIGDIR -f 'png' -d 200
 echo "Figure 8 - Experiment T06 and T24 local stresses"
-# python $SRC/figures/JGLAC_Fig08.py -i $CDIR -o $FIGDIR -f 'png' -d 200
+# python $SRC/figures/JGLAC_Fig08.py -i $CDIR -o $FIGDIR -f 'png' -d 200 --show
 echo "Figure 9 - Comparison of T06 and T24 to common sliding rule parameters from Schoof (2005) parameterizations"
 # python $SRC/figures/JGLAC_Fig09.py -i $PPDIR -o $FIGDIR -f 'png' -d 200

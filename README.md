@@ -1,5 +1,5 @@
 # CRSD_CNSB Code Respository  
-This repository contains the source code used to produce results and figures presented in Stevens et al. (submitted) for the University of Wisconsin - Madison Cryogenic Ring Shear Device (CRSD) Cyclic N (effective pressure) Sinusoidal Bed (CNSB) experiment conducted in 2021.   
+This repository contains the source code used to produce results and figures presented in Stevens et al. (**almost** submitted) for the University of Wisconsin - Madison Cryogenic Ring Shear Device (CRSD) Cyclic N (effective pressure) Sinusoidal Bed (CNSB) experiment conducted in 2021.   
 
 Manuscript in preparation for submission to the Journal of Glaciology
 
@@ -26,7 +26,7 @@ To get all the data and run all the processing required to reproduce results pre
 
 0) Download a distribution of [conda](https://docs.anaconda.com/miniconda/miniconda-install/) for your operating system.  
 
-1) Use `git` to pull this repository from GitHub:  
+1) Use `git` to clone this repository from GitHub. E.g.,  
 ```
 git clone https://github.com/nts345045/CRSD_OLUB.git
 ```

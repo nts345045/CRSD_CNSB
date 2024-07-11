@@ -75,28 +75,30 @@ def main(args):
 	t1_T06 = t0_T06 + pd.Timedelta(6*(5-QSS_trim_06), unit='hour')
 	df_T06 = df_T06[(df_T06.index >= t0_T06) & (df_T06.index < t1_T06)]
 
+	D_mu = 0.23
 	xlims = [0, .1]
-	ylims = [0, .35]
+	ylims = [-D_mu, .12]
 	D_tau = np.mean([84.38, 84.28]) #[kPa] - amount to reduce \tau
 
 
 	### PLOTTING SECTION ###
-	fig = plt.figure(figsize=(5.25,5.25))
+	fig = plt.figure(figsize=(6,5.25))
 	# GS = fig.add_gridspec(ncols=1,nrows=2,hspace=.2,wspace=0)
 	# axs = [fig.add_subplot(GS[_i]) for _i in range(2)]
-	plt.plot(np.r_[15/NkPa_MOD, np.zeros(1)], np.r_[TkPa_MOD/NkPa_MOD, np.zeros(1)],
-		  	'r-',label='$\\mu^{calc}$, Steady State Theory')
+	plt.plot(np.r_[15/NkPa_MOD, np.zeros(1)],
+		     np.r_[TkPa_MOD/NkPa_MOD, np.zeros(1)] - D_mu,
+		  	'r-',label='Steady State Model')
 	plt.plot(15/(df_T24['N kPa'].values),
-		  	(df_T24['T kPa'].values - D_tau)/df_T24['N kPa'].values,
-			'k-',label=f'$\\mu^\\prime$, Exp. T24 Cycles {QSS_trim_24}$\\endash$5')
+		  	(df_T24['T kPa'].values - D_tau)/df_T24['N kPa'].values - D_mu,
+			'k-',label=f'Exp. T24 Cycles {QSS_trim_24}$\\endash$5')
 	plt.plot(15/(df_T06['N kPa'].values),
-		  	(df_T06['T kPa'].values - D_tau)/df_T06['N kPa'].values,
-			'b-',label=f'$\\mu^\\prime$, Exp. T06 Cycles {QSS_trim_06}$\\endash$5')
+		  	(df_T06['T kPa'].values - D_tau)/df_T06['N kPa'].values - D_mu,
+			'b-',label=f'Exp. T06 Cycles {QSS_trim_06}$\\endash$5')
 	
 	plt.xlim(xlims)
 	plt.ylim(ylims)
 	plt.legend(loc='lower right')
-	plt.ylabel('Drag ( - )')
+	plt.ylabel('Change in Drag ( - )')
 	plt.xlabel('$U_b / N$ ($m$ $kPa^{-1}$ $a^{-1}$)')
 
 	if not args.render_only:

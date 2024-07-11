@@ -3,9 +3,9 @@ requires = ["setuptools","wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name="CRSD_OLUB"
+name="CRSD_CNSB"
 authors = [{name="Nathan T. Stevens", email="ntsteven@uw.edu"},
-           {name="Dougal D. Hansen", email="ddhansen@wisc.edu"}]
+           {name="Dougal D. Hansen", email="ddhansen3@wisc.edu"}]
 requires-python = ">=3.9"
 version = "1.0.0"
 readme = "README.md"
@@ -25,7 +25,7 @@ dependencies = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["figures*", "processing*", "model*", "util*","src*"]
+include = ["src*"]
 
 [project.urls]
-GitHub = "https://github.com/nts345045/CRSD_OLUB"
+GitHub = "https://github.com/nts345045/CRSD_CNSB"

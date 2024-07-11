@@ -105,7 +105,7 @@ def main(args):
 	axs[0].set_xticks(np.arange(-3,36,3))
 	axs[0].grid(axis='x',linestyle=':')
 
-	axs[0].text(-0.25,df_CM['hat T kPa'].values[-1] + D_tauP/2,'$\\Delta \\tau$',fontsize=14,ha='center',va='center')
+	# axs[0].text(-0.25,df_CM['hat T kPa'].values[-1] + D_tauP/2,'$\\Delta \\tau$',fontsize=14,ha='center',va='center')
 	axs[0].arrow(-1.33,162.33,0,95.4 - 162.33,head_width=2/5,width=0.1/5,head_length=10,fc='k')
 	# Add legend
 	ylims = axs[0].get_ylim()

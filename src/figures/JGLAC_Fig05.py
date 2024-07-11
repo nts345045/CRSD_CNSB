@@ -99,7 +99,7 @@ def main(args):
 	axs[0].set_ylabel('Shear Stress (kPa)')
 	axs[0].set_xticks(np.arange(0,132,12))
 	axs[0].grid(axis='x',linestyle=':')
-	axs[0].text(115,df_CM24['hat T kPa'].values[-1] + D_tauP/2,'$\\Delta \\tau$',fontsize=14,ha='center',va='center')
+	# axs[0].text(115,df_CM24['hat T kPa'].values[-1] + D_tauP/2,'$\\Delta \\tau$',fontsize=14,ha='center',va='center')
 	axs[0].arrow(118,153,0,95.4 - 154,head_width=2,width=0.1,head_length=10,fc='k')
 	# Add legend
 	ylims = axs[0].get_ylim()

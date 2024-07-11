@@ -1,5 +1,7 @@
-# CRSD_OLUB Code Respository  
-This repository contains the source code used to produce results and figures presented in Stevens et al. (in prep) from the University of Wisconsin - Madison Cryogenic Ring Shear Device (CRSD) Oscillatory Loading on an Undulatory Bed (OLUB) experiment conducted in 2021.  
+# CRSD_CNSB Code Respository  
+This repository contains the source code used to produce results and figures presented in Stevens et al. (submitted)  
+for the University of Wisconsin - Madison Cryogenic Ring Shear Device (CRSD)  
+Cyclic N (effective pressure) Sinusoidal Bed experiment conducted in 2021.   
 
 Manuscript in preparation for submission to the Journal of Glaciology
 
@@ -37,10 +39,8 @@ bash setup_env.sh
 ```
 
 3) Save the data repository contents to a `data` folder in the repository root directory:  
-```
-mkdir data
-wget <url here> data
-```
+ - Get data from temporary repository on [GoogleDrive](https://drive.google.com/file/d/15HGneDKxhNtJsmUiabvF9Pa51rNKA3jz/view?usp=share_link)  
+ - Create a new folder `data` in the repository and un-tar the repository in there.
 
 4) Run the `run_everything.sh` script from the `scripts` directory:  
 ```

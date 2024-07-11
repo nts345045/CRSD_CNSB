@@ -1,7 +1,5 @@
 # CRSD_CNSB Code Respository  
-This repository contains the source code used to produce results and figures presented in Stevens et al. (submitted)  
-for the University of Wisconsin - Madison Cryogenic Ring Shear Device (CRSD)  
-Cyclic N (effective pressure) Sinusoidal Bed experiment conducted in 2021.   
+This repository contains the source code used to produce results and figures presented in Stevens et al. (submitted) for the University of Wisconsin - Madison Cryogenic Ring Shear Device (CRSD) Cyclic N (effective pressure) Sinusoidal Bed (CNSB) experiment conducted in 2021.   
 
 Manuscript in preparation for submission to the Journal of Glaciology
 

@@ -14,11 +14,11 @@ Nathan T. Stevens
 Dougal D. Hansen  
     - Department of Geoscience, University of Wisconsin-Madison  
 Lucas K. Zoet  
-    - Department of Geoscience, University of Wisconsin-Madison
+    - Department of Geoscience, University of Wisconsin-Madison  
 Peter E. Sobol  
-    - Department of Geoscience, University of Wisconsin-Madison
+    - Department of Geoscience, University of Wisconsin-Madison  
 Neal E. Lord  
-    - Department of Geoscience, University of Wisconsin-Madison
+    - Department of Geoscience, University of Wisconsin-Madison  
 
 # Using this repository:  
 

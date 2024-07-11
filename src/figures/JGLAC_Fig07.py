@@ -88,7 +88,44 @@ def main(args):
 	GS = fig.add_gridspec(ncols=2,nrows=3,hspace=0.2,wspace=0)
 	axs = [fig.add_subplot(GS[_i]) for _i in range(6)]
 
-	### SUBPLOT (A) T24 N x \Delta\mu
+
+	### SUBPLOT (A) T24 N x S LVDT
+	# Get data and modeled value vectors
+	XI = df_T24['N kPa'].values
+	XM = df_MOD.index.values*1e-3
+	YI = df_T24['S tot'].values
+	YM = df_MOD['Stot'].values
+	II = df_T24.index
+	# Get plot limits from data
+	xlims, ylims = get_lims(XI, YI, PADXY)
+	# Plot data
+	chs = plot_cycles(axs[0],XI,YI,II, t0_T24, cmaps, ncycles=5,
+				   T=pd.Timedelta(24,unit='hour'), zorder=10)
+	# Plot model
+	axs[0].plot(XM, YM, 'r-', zorder=5)
+	# Set plot limits
+	axs[0].set_xlim(xlims)
+	axs[0].set_ylim(ylims)
+
+
+	### SUBPLOT (B) T06 N x \Delta\mu
+	# Get data and modeled value vectors
+	XI = df_T06['N kPa'].values
+	XM = df_MOD.index.values*1e-3
+	YI = df_T06['S tot'].values
+	YM = df_MOD['Stot'].values
+	II = df_T06.index
+
+	chs = plot_cycles(axs[1],XI,YI,II, t0_T06, cmaps, ncycles=5,
+				   T=pd.Timedelta(6,unit='hour'), zorder=10)
+	axs[1].plot(XM, YM, 'r-', zorder=5)
+	# Set plot limits using limits from subplot (C)
+	axs[1].set_xlim(xlims)
+	axs[1].set_ylim(ylims)
+	axs[1].text(420,0.18, '- Rising $N$ ->', ha='center',rotation=5)
+	axs[1].text(370,0.22, '<- Falling $N$ -', ha='center', rotation=5)
+
+	### SUBPLOT (C) T24 N x \Delta\mu
 	# Set data and model vectors
 	XI = df_T24['N kPa'].values
 	XM = df_MOD.index.values*1e-3
@@ -100,16 +137,16 @@ def main(args):
 	# Get plot limits from data values
 	xlims, ylims = get_lims(XI, YI, PADXY)
 	# Plot data
-	chs = plot_cycles(axs[0+2],XI,YI,II, t0_T24, cmaps, ncycles=5,
+	chs = plot_cycles(axs[2],XI,YI,II, t0_T24, cmaps, ncycles=5,
 				   T=pd.Timedelta(24,unit='hour'), zorder=10)
 	# Plot modeled values
-	axs[0+2].plot(XM, YM, 'r-', zorder=5)
+	axs[2].plot(XM, YM, 'r-', zorder=5)
 	# Set axis limits
-	axs[0+2].set_xlim(xlims)
-	axs[0+2].set_ylim(ylims)
+	axs[2].set_xlim(xlims)
+	axs[2].set_ylim(ylims)
 
 
-	### SUBPLOT (B) T06 N x \mu'
+	### SUBPLOT (D) T06 N x \Delta\mu
 	# Assign Data & Modeled Values to Plot
 	XI = df_T06['N kPa'].values
 	XM = df_MOD.index.values*1e-3
@@ -119,15 +156,19 @@ def main(args):
 	YI -= mu0_calc_06
 	II = df_T06.index
 	# Plot data
-	chs = plot_cycles(axs[1+2],XI,YI,II, t0_T06, cmaps, ncycles=5,
+	chs = plot_cycles(axs[3],XI,YI,II, t0_T06, cmaps, ncycles=5,
 				   T=pd.Timedelta(6,unit='hour'), zorder=10)
 	# Plot modeled values
-	axs[1+2].plot(XM, YM, 'r-', zorder=5)
+	axs[3].plot(XM, YM, 'r-', zorder=5)
 	# Set plot limits using same limits from subplot (A)
-	axs[1+2].set_xlim(xlims)
-	axs[1+2].set_ylim(ylims)
+	axs[3].set_xlim(xlims)
+	axs[3].set_ylim(ylims)
 
-### SUBPLOT (C) T24 S x Delta Mu
+	# axs[3].arrow(220,-0.03, 500-220,-0.03, width=0.001, head_width=0.01, head_length=0.03)
+	axs[3].text(330,-0.05,'- Rising $N$ ->', rotation=-8)
+	axs[3].text(310,0.03, '<- Falling $N$ -', rotation=-10)
+
+	### SUBPLOT (E) T24 S x \Delta\mu
 	# Get data and modeled value vectors
 	XI = df_T24['S tot'].values
 	XM = df_MOD['Stot'].values
@@ -142,16 +183,18 @@ def main(args):
 	# Overwrite x-axis limits with custom value to show more of the modeled area
 	xlims = [0.124, 0.275]
 	# Plot data
-	chs = plot_cycles(axs[2+2],XI,YI,II, t0_T24, cmaps, ncycles=5,
+	chs = plot_cycles(axs[4],XI,YI,II, t0_T24, cmaps, ncycles=5,
 				   T=pd.Timedelta(24,unit='hour'), zorder=10)
 	# Plot modeled values
-	axs[2+2].plot(XM, YM, 'r-', zorder=5)
+	axs[4].plot(XM, YM, 'r-', zorder=5)
 	# Set plot limits
-	axs[2+2].set_xlim(xlims)
-	axs[2+2].set_ylim(ylims)
+	axs[4].set_xlim(xlims)
+	axs[4].set_ylim(ylims)
 
+	axs[4].text(.21, .04, '$N_{min}$',ha='center', va='center')
+	axs[4].text(.255, -0.04, '$N_{max}$',ha='center', va='center')
 
-	### SUBPLOT (D) T06 S x \Delta\mu
+	### SUBPLOT (F) T06 S x \Delta\mu
 	# Get data and modeled value vectors
 	XI = df_T06['S tot'].values
 	XM = df_MOD['Stot'].values
@@ -161,51 +204,20 @@ def main(args):
 	YI -= mu0_calc_06
 	II = df_T06.index
 	# Plot data
-	chs = plot_cycles(axs[3+2],XI,YI,II, t0_T06, cmaps, ncycles=5,
+	chs = plot_cycles(axs[5],XI,YI,II, t0_T06, cmaps, ncycles=5,
 				   T=pd.Timedelta(6,unit='hour'), zorder=10)
 	# Plot modeled values
-	axs[3+2].plot(XM, YM, 'r-', zorder=5)
+	axs[5].plot(XM, YM, 'r-', zorder=5)
 	# Set plot limits using limits from subplot (E)
-	axs[3+2].set_xlim(xlims)
-	axs[3+2].set_ylim(ylims)
+	axs[5].set_xlim(xlims)
+	axs[5].set_ylim(ylims)
 
 
-	### SUBPLOT (E) T24 N x S LVDT
-	# Get data and modeled value vectors
-	XI = df_T24['N kPa'].values
-	XM = df_MOD.index.values*1e-3
-	YI = df_T24['S tot'].values
-	YM = df_MOD['Stot'].values
-	II = df_T24.index
-	# Get plot limits from data
-	xlims, ylims = get_lims(XI, YI, PADXY)
-	# Plot data
-	chs = plot_cycles(axs[4-4],XI,YI,II, t0_T24, cmaps, ncycles=5,
-				   T=pd.Timedelta(24,unit='hour'), zorder=10)
-	# Plot model
-	axs[4-4].plot(XM, YM, 'r-', zorder=5)
-	# Set plot limits
-	axs[4-4].set_xlim(xlims)
-	axs[4-4].set_ylim(ylims)
+	axs[5].text(0.19, -0.04, '- Rising $N$ ->', rotation=-65, ha='center',va='center')
+	axs[5].text(0.23, 0.00, '<- Falling $N$ -', rotation=-80, ha='center',va='center')
+	axs[5].text(0.19, 0.03, '$N_{min}$', ha='center',va='center')
+	axs[5].text(0.22, -0.06, '$N_{max}$', ha='center',va='center')
 
-
-	### SUBPLOT (F) T06 N x \mu'
-	# Get data and modeled value vectors
-	XI = df_T06['N kPa'].values
-	XM = df_MOD.index.values*1e-3
-	YI = df_T06['S tot'].values
-	YM = df_MOD['Stot'].values
-	II = df_T06.index
-
-	chs = plot_cycles(axs[5-4],XI,YI,II, t0_T06, cmaps, ncycles=5,
-				   T=pd.Timedelta(6,unit='hour'), zorder=10)
-	axs[5-4].plot(XM, YM, 'r-', zorder=5)
-	# Set plot limits using limits from subplot (C)
-	axs[5-4].set_xlim(xlims)
-	axs[5-4].set_ylim(ylims)
-
-
-	
 
 	### FORMATTING & LABELING
 	# Add experiment titles to each column head

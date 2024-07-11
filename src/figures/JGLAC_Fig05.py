@@ -1,23 +1,12 @@
 """
 :module: JGLAC_Fig05.py
-:purpose: Plot the key timeseries from experiment T24 (24 hour oscillation)
 :version: 0 - Submission format to Journal of Glaciology
-:short ref: Stevens, Hansen, and others
-			Experimental constraints on transient glacier sliding with ice-bed separation
+:short ref: Stevens and others - Experimental constraints on transient glacier slip with ice-bed separation
 :Figure #: 5
-:Figure Caption: Experiment T24 temporal evolution of 
-				 (a) effective pressure, N(t), 
-				 (b) shear stress, \tau\left(t\right), 
-				 (c) relative ice-bed separation, \Delta z^\ast\left(t\right), and 
-				 (d) relative drag, \Delta\mu\left(t\right). 
-				 Vertical bars mark the timing of maximum (solid) and minimum (dashed) values of 
-				 	N(t) (blue),
-				  	\tau\left(t\right) (orange), 
-				  	\Delta z^\ast\left(t\right) (red), and 
-				  	\Delta\mu\left(t\right) (violet) within each cycle. 
-TODO: Update file header
 :auth: Nathan T. Stevens
-:email: ntstevens@wisc.edu
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
+:purpose: Plot shear stress, changes in drag, and contact fractions time-series from experiment T24
 """
 import os, argparse
 import pandas as pd

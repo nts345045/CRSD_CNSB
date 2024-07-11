@@ -1,9 +1,14 @@
 """
-:script: src/figures/JGLAC_Fig04.py
+:module: JGLAC_Fig04.py
+
+:version: 0 - Submission format to Journal of Glaciology
+:short ref: Stevens and others - Experimental constraints on transient glacier slip with ice-bed separation
+:Figure #: 4
 :auth: Nathan T. Stevens
 :email: ntsteven@uw.edu
 :license: CC-BY-4.0
-TODO: Update file header
+:purpose: 
+	Plot cavity geometry measurements and comparison with instrument-inferred cavity geometry parameters
 TODO: Clean up extraneous (commented-out) code
 """
 
@@ -13,29 +18,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import src.model.lliboutry_kamb_model as lkm
 
-# plt.rc('text',usetex=True)
-
-# Map Data
-
 def main(args):
-	# ROOT = os.path.join('..')
-	# DDIR = args.input_path
-	# DDIR = os.path.join(ROOT,'processed_data','cavities')
-	# Map Experimental Data
+
 	# Observed Cavity Geometry DataData
 	T24_SM = os.path.join(args.input_path,'Postprocessed_Cavity_Geometries.csv')
 	# Processed Cavity Geometry Data
 	T24_CM = os.path.join(args.input_path,'EX_T24_cavity_metrics.csv')
 	# Steady-State Modelled Values
 	MOD_CM = os.path.join(args.input_path,'modeled_values.csv')
-
-	# Map output directory
-	# ODIR = os.path.join(ROOT,'results','figures')
-	
-	# issave = True
-	# DPI = 200
-	# FMT = 'PNG'
-
 
 	### LOAD EXPERIMENTAL DATA ###
 	# Load Experimental Data
@@ -69,8 +59,7 @@ def main(args):
 
 	# Initalize Figure
 	fig = plt.figure(figsize=(7.5,7.5))
-	# GS = fig.add_gridspec(2,12, hspace=0)
-	# axs = [fig.add_subplot(GS[0,:10]), fig.add_subplot(GS[1,:10])]
+
 	GS1 = fig.add_gridspec(3,12,hspace=0)
 	GS2 = fig.add_gridspec(3,45,wspace=0)
 	axs = [fig.add_subplot(GS1[0,:10]),fig.add_subplot(GS1[1,:10]),\
@@ -153,12 +142,10 @@ def main(args):
 
 	axs[1].set_xticks(np.arange(0,132,12))
 	axs[1].grid(axis='x',linestyle=':')
-	# axs[2].legend(ncol=3)
 	axs[1].set_ylabel('Height Fraction ( - )')
 	axs[0].set_xticklabels([])
 	ylims = axs[1].get_ylim()
-	# axs[2].xaxis.set_ticks_position('bottom')
-	# axs[2].xaxis.set_label_position('top')
+
 	axs[1].set_xlabel('Elapsed Time from Start of Experiment T24 (hr)')
 
 	TI = np.linspace((df_OBS.index[0] - t0_T24).total_seconds()/3600,\
@@ -166,14 +153,6 @@ def main(args):
 					201)
 	axs[1].scatter(TI,0.01*(ylims[1] - ylims[0]) + ylims[0]*np.ones(len(TI)),s=9,c=TI,marker='s')
 	axs[1].set_ylim(ylims)
-	# axs[1].legend(bbox_to_anchor=(1.,1.25))
-
-	# axs[0].legend(ncol=3)
-	# axs[0].xaxis.set_visible(False)
-
-	# Slvdt = np.interp(df_COR['R mea'].values,df_MOD['Rmea'].values,df_MOD['Stot'].values,period=24)
-	# axs[0].plot((df_COR.index - t0_T24).total_seconds()/3600,Slvdt,'b-',zorder=2)
-
 
 	for i_ in range(2):
 		axs[i_].set_xlim([(df_COR.index[0] - t0_T24).total_seconds()/3600,\
@@ -184,7 +163,6 @@ def main(args):
 	# ### (c) CROSSPLOT OF S(\bar{R}(t))
 	axs[2].scatter(Sobs,Robs,s=9,c=(df_OBS.index - t0_T24).total_seconds(),\
 				zorder=2)
-				# vmin=0,vmax=5*24*3600,zorder=2)
 	axs[2].plot(df_MOD[IND]['Stot'].values,df_MOD[IND]['Rmea'].values,'r-',zorder=1)
 
 	axs[2].set_ylabel('Height Fraction [$R$] ( - )')#,rotation=270,labelpad=15,zorder=10)

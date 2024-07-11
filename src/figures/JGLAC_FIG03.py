@@ -1,20 +1,13 @@
 """
-:script: src/figures/JGLAC_Fig03.py
-:purpose: Plot the N(t) forcing function starting from the N(t) steady
-		  state prior to experiment T24 through to the end of the 
-		  steady-state following experiment T6
+:module: JGLAC_Fig03.py
 :version: 0 - Submission format to Journal of Glaciology
-:short ref: Stevens, Hansen, and others
-			Experimental constraints on transient glacier sliding with ice-bed separation
+:short ref: Stevens and others - Experimental constraints on transient glacier slip with ice-bed separation
 :Figure #: 3
-:Figure Caption: Effective pressure (vertical pressure – water pressure) profiles with experiment 
-				 names (below) and cycle numbers (above) labeled. The steady state periods and 
-				 experimental periods are delimited with vertical dashed lines. Timestamps are in UTC
-
 :auth: Nathan T. Stevens
-:email: ntsteven@uw.edu (formerly: ntstevens@wisc.edu)
+:email: ntsteven@uw.edu
 :license: CC-BY-4.0
-
+:purpose: 
+	Plot the effecitve pressure time-series for experiments T24, T06 and bounding hold periods
 """
 import os, argparse
 import pandas as pd
@@ -23,7 +16,6 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
 def main(args):
-
 
 	# df = pd.read_csv(os.path.join('..','processed_data','4_Smoothed_Pressure_Data.csv'))
 	df = pd.read_csv(os.path.join(args.input_pressure_file))

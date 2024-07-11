@@ -1,6 +1,12 @@
 """
-JGLAC_Fig09_PMT_loc.py
-
+:module: JGLAC_Fig08.py
+:version: 0 - Submission format to Journal of Glaciology
+:short ref: Stevens and others - Experimental constraints on transient glacier slip with ice-bed separation
+:Figure #: 8
+:auth: Nathan T. Stevens
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
+:purpose: Plot comparison of local stresses and area averaged stresses for experiments T06 and T24
 """
 import os, argparse
 import pandas as pd

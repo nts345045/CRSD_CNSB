@@ -1,19 +1,12 @@
 """
 :module: JGLAC_Fig07.py
-:auth: Nathan T. Stevens
-:email: ntsteven@uw.edu (previously ntstevens@wisc.edu)
-:license: CC-BY-4.0
 :version: 0 - Submission format to Journal of Glaciology
-:short ref: Stevens and others
-			Experimental constraints on transient glacier sliding with ice-bed separation
+:short ref: Stevens and others - Experimental constraints on transient glacier slip with ice-bed separation
 :Figure #: 7
-:Figure Caption:
-
-			  	 
-
-
-TODO: update header
-TODO: (nitpicky) migrate plotting utilities to a utils module?
+:auth: Nathan T. Stevens
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
+:purpose: Plot the phase spaces for N-\\Delta\\mu-S for experiments T24 and T06, and modeled equivalents
 """
 
 import os, argparse

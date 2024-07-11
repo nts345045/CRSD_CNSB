@@ -1,14 +1,12 @@
 """
 :module: JGLAC_Fig09.py
-:purpose: Plot the key timeseries from experiment T6 (6 hour oscillation)
 :version: 0 - Submission format to Journal of Glaciology
-:short ref: Stevens and others (submitted)
-			Experimental constraints on transient glacier sliding with ice-bed separation
+:short ref: Stevens and others - Experimental constraints on transient glacier slip with ice-bed separation
 :Figure #: 9
-:Figure Caption: 
 :auth: Nathan T. Stevens
-:email: ntsteven@uw.edu
+:email: ntstevenuw.edu
 :license: CC-BY-4.0
+:purpose: Plot change in drag againt effective pressure normalized slip velocity (sliding rule parameter space)
 """
 
 import os, argparse

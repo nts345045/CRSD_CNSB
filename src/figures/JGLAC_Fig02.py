@@ -1,27 +1,14 @@
 """
-:module: JGLAC_Fig02_Steady_State_Parameter_Space.py
-:purpose: Plot the modeled parameter space (N,\\tau,S,\\mu) for the UW-CRSD
-		  assuming rheologic properties identical to those in Zoet & Iverson
-		  (2015)
-:version: 0 - Submission format to Journal of Glaciology
-:short ref: Stevens, Hansen, and others
-			Experimental constraints on transient glacier sliding with ice-bed separation
-:Figure #: 2
-:Figure Caption: Parameter space for the double-valued drag sliding model of Zoet and Iverson (2015) 
-				 for the geometry of the UW¬–CRSD and the sinusoidal bed in this study (Table 1) and 
-				 UW–CRSD operational limits (Table 2). 
-				 	Figure axes show linear slip velocities, U_b, and effective pressures, N. 
-				 	Shading shows predicted \\mu (colorbar) 
-				 	solid contours show predicted shear stresses, \tau, and 
-				 	dotted contours represent predicted the ice-bed contact area fractions, S. 
-				 	The operational limit \tau_{max} = 275 kPa is shown as a red dashed line. 
-				 	The operational range of N(t) for these experiments are shown as an orange
-				 	line on the centerline velocity, U_b = 15 m a^{-1} and surrounded by an orange
-				 	shaded region that bounds the inner and outer diameter velocities V\\in[X, Y]
-:auth: Nathan T. Stevens
-:email: ntstevens@wisc.edu
+:module: JGLAC_Fig02.py
 
-TODO: Cleanup help documentation
+:version: 0 - Submission format to Journal of Glaciology
+:short ref: Stevens and others - Experimental constraints on transient glacier slip with ice-bed separation
+:Figure #: 2
+:auth: Nathan T. Stevens
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
+:purpose: 
+	Plot the modeled parameter space (N,\\tau,S,\\mu) for the UW-CRSD assuming rheologic properties identical to those in Zoet & Iverson (2015)
 """
 import os, argparse
 import pandas as pd

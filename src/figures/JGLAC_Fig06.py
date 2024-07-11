@@ -1,23 +1,12 @@
 """
-:module: JGLAC_Fig06_Experiment_T06_Timeseries.py
-:purpose: Plot the key timeseries from experiment T06 (06 hour oscillation)
+:module: JGLAC_Fig06.py
 :version: 0 - Submission format to Journal of Glaciology
-:short ref: Stevens, Hansen, and others
-			Experimental constraints on transient glacier sliding with ice-bed separation
+:short ref: Stevens and others - Experimental constraints on transient glacier slip with ice-bed separation
 :Figure #: 6
-:Figure Caption: Experiment T06 temporal evolution of 
-				 (a) effective pressure, N(t), 
-				 (b) shear stress, \tau\left(t\right), 
-				 (c) relative ice-bed separation, \Delta z^\ast\left(t\right), and 
-				 (d) relative drag, \Delta\mu\left(t\right). 
-				 Vertical bars mark the timing of maximum (solid) and minimum (dashed) values of 
-				 	N(t) (blue),
-				  	\tau\left(t\right) (orange), 
-				  	\Delta z^\ast\left(t\right) (red), and 
-				  	\Delta\mu\left(t\right) (violet) within each cycle. 
-
 :auth: Nathan T. Stevens
-:email: ntstevens@wisc.edu
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
+:purpose: Plot shear stress, changes in drag, and contact fractions time-series from experiment T06
 """
 import os, argparse
 import pandas as pd

@@ -1,5 +1,5 @@
 # CRSD_CNSB Code Respository  
-This repository contains the source code used to produce results and figures presented in Stevens et al. (**almost** submitted) for the University of Wisconsin - Madison Cryogenic Ring Shear Device (CRSD) Cyclic N (effective pressure) Sinusoidal Bed (CNSB) experiment conducted in 2021.   
+This repository contains the source code used to produce results and figures presented in Stevens et al. (submitted) for the University of Wisconsin - Madison Cryogenic Ring Shear Device (CRSD) Cyclic N (effective pressure) Sinusoidal Bed (CNSB) experiment conducted in 2021.   
 
 Manuscript in preparation for submission to the Journal of Glaciology
 
@@ -28,18 +28,24 @@ To get all the data and run all the processing required to reproduce results pre
 
 1) Use `git` to clone this repository from GitHub. E.g.,  
 ```
-git clone https://github.com/nts345045/CRSD_OLUB.git
+git clone https://github.com/nts345045/CRSD_CNSB.git
+cd CRSD_CNSB
 ```
 
-2) Use the `setup_env.sh` script to generate a conda environment `crsd` and activates the environment:  
+2) Use the `setup_env.sh` script to generate a conda environment `crsd`:  
 ```
 bash setup_env.sh
+conda activate crsd
 ```
 
-3) Save the data repository contents to a `data` folder in the repository root directory:  
- - Get data from temporary repository on [GoogleDrive](https://drive.google.com/file/d/15HGneDKxhNtJsmUiabvF9Pa51rNKA3jz/view?usp=share_link)  
- - Create a new folder `data` in the repository and un-tar the repository in there.
- - **WORK IN PROGRESS**: Nate is cleaning this up so it's plug & play.
+3) Get the input data for time-series processing into the repository root directory:  
+ - Get data from temporary repository on [GoogleDrive](https://drive.google.com/file/d/1-QdYwzCuwoD8WaA8GHAhceLC2aZYDdHk/view?usp=share_link)  
+ - un-tar the repository in the root directory of your cloned repository (`your/path/to/CRSD_CNSB`)
+```
+mv ~/Downloads/data.tar
+tar -xf data.tar
+rm data.tar
+```
 
 4) Run the `run_everything.sh` script from the `scripts` directory:  
 ```

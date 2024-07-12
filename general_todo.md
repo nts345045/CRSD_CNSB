@@ -2,7 +2,8 @@
 ## ToDos
 
 TODO: (Nitpicky) - Convert all instances of raw ram measurements from N --> Pv labels and Pe --> N to match manuscript.
-TODO: Clean up structure of data repo so its not all one zip file
+TODO: Get full time-lapse holding lists into data READ_ME
+TODO: Make sure QGIS files load & strip off extraneous files from data repo
 
 ## Bugs
 BUG: Placeholder

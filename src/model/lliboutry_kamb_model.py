@@ -184,7 +184,31 @@ def calc_S(xr,xd,lbda=0.31425):
 	return 1. - (xr - xd)/lbda
 
 
-def model_roof(NN, USS=15./(365*24*3600), lbda=0.31425, amp=0.0253, BB=6.3e7, nn=3, npts=5001):
+def model_roof(NN, USS=15./(365*24*3600), lbda=0.31425, amp=0.0253, BB=6.3e7, nn=3., npts=5001):
+	"""Model the cavity roof geometry ignoring the presence
+	of a down-flow obstacle. Default values set for the 
+	UW-CRSD experiments in Stevens and others (in review)
+
+	:param NN: effective pressure [pascals]
+	:type NN: float
+	:param USS: steady-state sliding velocity,
+		defaults to 15./(365*24*3600) [meters per annum]
+	:type USS: float, optional
+	:param lbda: obstacle wave-length (also model domain length),
+		defaults to 0.31425 [meters]
+	:type lbda: float, optional
+	:param amp: obstacle amplitude, defaults to 0.0253 [meters]
+	:type amp: float, optional
+	:param BB: ice effective viscosity, defaults to 6.3e7 [Pa annum**1/nn]
+	:type BB: float, optional
+	:param nn: ice flow exponent, defaults to 3 [dimensionless]
+	:type nn: float, optional
+	:param npts: number of model points, defaults to 5001 [count]
+	:type npts: int, optional
+	:returns:
+	 - **xvect** (*numpy.ndarray*) -- horizontal coordinate vector [meters]
+	 - **gvect** (*numpy.ndarray*) -- vertical coordinate vector [meters]
+	"""	
 	# Create modeling domain
 	xvect = np.linspace(0,lbda,npts)
 	# Convert wavelength to wavenumber
@@ -192,22 +216,55 @@ def model_roof(NN, USS=15./(365*24*3600), lbda=0.31425, amp=0.0253, BB=6.3e7, nn
 	# Calculate cavity lengthscale
 	cavity_l = calc_cavity_l(NN=NN, USS=USS, amp=amp, BB=BB, nn=nn)
 	# Calculate roof elevation profile
-	g_roof = calc_g_roof(xvect=xvect, cavity_l=cavity_l, amp=amp)
-
-	return xvect, g_roof
+	gvect = calc_g_roof(xvect=xvect, cavity_l=cavity_l, amp=amp)
+	return xvect, gvect
 
 def model_bed(lbda=0.31425, amp=0.0253, npts=5001):
+	"""Create a discretized model of the UW-CRSD sinusoidal
+	bed for one obstacle (crest-to-crest).
+
+	:param lbda: obstacle wavelength, defaults to 0.31425 [meters]
+	:type lbda: float, optional
+	:param amp: obstacle amplitude, defaults to 0.0253 [meters]
+	:type amp: float, optional
+	:param npts: number of model points, defaults to 5001 [count]
+	:type npts: int, optional
+	:returns:
+	 - **xvect** (*numpy.ndarray*) -- horizontal coordinate vector [meters]
+	 - **hvect** (*numpy.ndarray*) -- vertical coordinate vector [meters]
+	"""	
 	xvect = np.linspace(0,lbda, npts)
 	wavenumber = lbda2k(lbda)
 	# Calculate bed elevation profile
-	h_bed = calc_h_bed(xvect=xvect, amp=amp, wavenumber=wavenumber)
-	return xvect, h_bed
+	hvect = calc_h_bed(xvect=xvect, amp=amp, wavenumber=wavenumber)
+	return xvect, hvect
 
-def get_cavity_ends(xvect, g_roof, h_bed):
-	idx = np.argwhere(np.diff(np.sign(g_roof - h_bed))).flatten()
+def get_cavity_ends(xvect, gvect, hvect):
+	"""Get the reattachment and detachment point 
+	positions of a modeled cavity described 
+
+	:param xvect: _description_
+	:type xvect: _type_
+	:param gvect: _description_
+	:type gvect: _type_
+	:param hvect: _description_
+	:type hvect: _type_
+	:return: _description_
+	:rtype: _type_
+	"""	
+	if xvect.shape != gvect.shape:
+		raise ValueError
+	if xvect.shape != hvect.shape:
+		raise ValueError
+	if gvect.shape != hvect.shape:
+		raise ValueError
+
+	idx = np.argwhere(np.diff(np.sign(gvect - hvect))).flatten()
+	# If there are two distinct points, parse
 	if len(idx) == 2:
 		xd = xvect[idx[0]]
 		xr = xvect[idx[1]]
+	# FIXME: Need to tidy this up
 	else:
 		breakpoint()
 	return xr, xd
@@ -501,6 +558,36 @@ def calc_geometry_space_from_NU(Nv, Uv, hh=0.0253*2, lbda=0.31425, BB=6.3e7, nn=
 			ijout = calc_SR_single(N_, U_, hh=hh, lbda=lbda, BB=BB, nn=nn, npts=npts)
 			output_array[ii,jj,:] = ijout
 	return output_array
+
+
+def calc_v_equivalent(N, N0, V0, hh=0.0253*2, BB=6.3e7, nn=3):
+	"""
+	Model the velocity perturbation that would produce a comparable
+	steady-state cavity geometry as an effective pressure perturbation
+	given a reference effective pressure and velocity
+
+	:param N: new effective pressure [pascals]
+	:type N: float
+	:param N0: reference effective pressure [pascals]
+	:type N0: float
+	:param V0: reference sliding velocity [meters annum**-1]
+	:type V0: float
+	:param hh: bed obstacle height, defaults to 0.0506 [meters]
+	:type hh: float, optional
+	:param lbda: bed obstacle wavelength, defaults to 0.31425 [meters]
+	:type lbda: float, optional
+	:param BB: effective viscosity, defaults to 6.3e7 [Pa annum**1/nn]
+	:type BB: float, optional
+	:param nn: flow law exponent, defaults to 3
+	:type nn: float, optional
+	:return:
+	 - **V** (*float*) -- equivalent velocity
+	"""
+	# Calculate cavity length
+	ll = calc_cavity_l(N, V0, hh/2, BB, nn)
+	# Solve for velocity equivalent
+	V = (np.pi*ll**2)/(8.*hh*(BB/N0)**nn)
+	return V
 
 
 # def bedmodel(lbda=.3*np.pi*2.*0.25,hh=.078,npts=5001,pi_offset=0.5,lbda_offset=0.5,ncycles=1.5):

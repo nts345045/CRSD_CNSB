@@ -21,11 +21,11 @@ import src.model.lliboutry_kamb_model as lkm
 def main(args):
 
 	# Observed Cavity Geometry DataData
-	T24_SM = os.path.join(args.input_path,'Postprocessed_Cavity_Geometries.csv')
+	T24_SM = os.path.join(args.gpath,'Postprocessed_Cavity_Geometries.csv')
 	# Processed Cavity Geometry Data
-	T24_CM = os.path.join(args.input_path,'EX_T24_cavity_metrics.csv')
+	T24_CM = os.path.join(args.gpath,'EX_T24_cavity_metrics.csv')
 	# Steady-State Modelled Values
-	MOD_CM = os.path.join(args.input_path,'modeled_values.csv')
+	MOD_CM = os.path.join(args.mpath,'cavity_geometry_mapping_values.csv')
 
 	### LOAD EXPERIMENTAL DATA ###
 	# Load Experimental Data
@@ -276,14 +276,34 @@ if __name__ == '__main__':
 	)
 
 	parser.add_argument(
-		'-i',
-		'--input_path',
-		dest='input_path',
+		'-e',
+		'--experiment_path',
+		dest='epath',
+		default=os.path.join('..','..','processed_data','cavities'),
+		help='Path to the cleaned up cavity geometry observation outputs',
+		type=str
+	)
+	parser.add_argument(
+		'-g',
+		'--geometry_path',
+		dest='gpath',
 		default=os.path.join('..','..','processed_data','cavities'),
 		help='Path to the cleaned up cavity geometry observation outputs',
 		type=str
 	)
 	
+	parser.add_argument(
+		'-m',
+		'--model_path',
+		dest='mpath',
+		default=os.path.join('..','..','processed_data','cavities'),
+		help='Path to the cleaned up cavity geometry observation outputs',
+		type=str
+	)
+	
+	
+
+
 	parser.add_argument(
 		'-o',
 		'--output_path',

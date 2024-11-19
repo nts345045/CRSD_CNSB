@@ -146,9 +146,9 @@ def main(args):
 			except:
 				dpi = 'figure'
 		if dpi == 'figure':
-			savename = os.path.join(args.output_path, f'JGLAC_Fig01C_fdpi.{args.format}')
+			savename = os.path.join(args.output_path, f'JGLAC_Fig01A_fdpi.{args.format}')
 		else:
-			savename = os.path.join(args.output_path, f'JGLAC_Fig01C_{dpi}dpi.{args.format}')
+			savename = os.path.join(args.output_path, f'JGLAC_Fig01A_{dpi}dpi.{args.format}')
 		if not os.path.exists(os.path.split(savename)[0]):
 			os.makedirs(os.path.split(savename)[0])
 		plt.savefig(savename, dpi=dpi, format=args.format)
@@ -169,7 +169,7 @@ if __name__ == '__main__':
 		action='store',
 		dest='output_path',
 		default='../results/figures',
-		help='path and name to save the rendered figure to, minus format (use -f for format). Defaults to "../results/figures/JGLAC_Fig01c"',
+		help='path and name to save the rendered figure to, minus format (use -f for format). Defaults to "../results/figures"',
 		type=str
 	)
 

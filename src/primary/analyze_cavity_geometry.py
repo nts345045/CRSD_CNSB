@@ -9,21 +9,27 @@ Logger = logging.getLogger('analyze_cavity_geometry.py')
 def main(args):
 
     # Map Experimental Data Files from T24
-    T24_NT = os.path.join(args.input_path,'5_split_data','EX_T24-Pressure.csv')
-    T24_LV = os.path.join(args.input_path,'6_lvdt_melt_corrected','EX_T24-LVDT-reduced.csv')
-    T24_SM = os.path.join(args.input_path,'cavities','Postprocessed_Cavity_Geometries.csv')
+    nt_T24_file = os.path.join(args.epath, 'EX_T24-Pressure.csv')
+    lv_T24_file = os.path.join(args.epath, 'EX_T24-LVDT-reduced.csv')
+    pp_file = os.path.join(args.gpath, 'Postprocessed_Cavity_Geometries.csv')
+    nt_T06_file = os.path.join(args.epath, 'EX_T06-Pressure.csv')
+    lv_T06_file = os.path.join(args.epath, 'EX_T06-LVDT-reduced.csv')
+
+    # T24_NT = os.path.join(args.input_path,'5_split_data','EX_T24-Pressure.csv')
+    # T24_LV = os.path.join(args.input_path,'6_lvdt_melt_corrected','EX_T24-LVDT-reduced.csv')
+    # T24_SM = os.path.join(args.input_path,'cavities','Postprocessed_Cavity_Geometries.csv')
 
     # Map Experimental Data Files from T06
-    T06_NT = os.path.join(args.input_path,'5_split_data','EX_T06-Pressure.csv')
-    T06_LV = os.path.join(args.input_path,'6_lvdt_melt_corrected','EX_T06-LVDT-reduced.csv')
+    # T06_NT = os.path.join(args.input_path,'5_split_data','EX_T06-Pressure.csv')
+    # T06_LV = os.path.join(args.input_path,'6_lvdt_melt_corrected','EX_T06-LVDT-reduced.csv')
 
 
     # LOAD EXPERIMENTAL DATA #
-    df_NT24 = pd.read_csv(T24_NT)
-    df_Z24 = pd.read_csv(T24_LV)
-    df_S24 = pd.read_csv(T24_SM)
-    df_NT06 = pd.read_csv(T06_NT)
-    df_Z06 = pd.read_csv(T06_LV)
+    df_NT24 = pd.read_csv(nt_T24_file)
+    df_Z24 = pd.read_csv(lv_T24_file)
+    df_S24 = pd.read_csv(pp_file)
+    df_NT06 = pd.read_csv(nt_T06_file)
+    df_Z06 = pd.read_csv(lv_T06_file)
 
     # Re-populate datetime index
     df_NT24.index = pd.to_datetime(df_NT24.Epoch_UTC, unit='s')
@@ -174,21 +180,21 @@ def main(args):
                                 'S lee':Slee_T06,'hat S lee':S_lee_hat6,\
                                 'S stoss':Sstoss_T06,'hat S stoss':S_stoss_hat6},index=df_Z06.index)
 
-    if not os.path.exists(args.output_path):
-        os.makediers(args.output_path)
+    if not os.path.exists(args.mpath):
+        os.makediers(args.mpath)
 
-    ## Write Corrected & Modeled Heights to File
-    R06_out = os.path.join(args.output_path,'EX_T06_cavity_metrics.csv')
+    ## Write Corrected T06 Modeled Heights to File
+    R06_out = os.path.join(args.gpath,'EX_T06_cavity_metrics.csv')
     df_summary_T06 = df_summary_T06.assign(Epoch_UTC=[x.timestamp() for x in df_summary_T06.index])
     Logger.info(f'Saving Experiment T-6 summary table to: {R06_out}')
     df_summary_T06.to_csv(R06_out,header=True,index=False)
-
-    R24_out = os.path.join(args.output_path,'EX_T24_cavity_metrics.csv')
+    ## Write corrected T24 modeled cavity heights to file
+    R24_out = os.path.join(args.gpath,'EX_T24_cavity_metrics.csv')
     df_summary_T24 = df_summary_T24.assign(Epoch_UTC=[x.timestamp() for x in df_summary_T24.index])
     Logger.info(f'Saving Experiment T24 summary table to: {R24_out}')
     df_summary_T24.to_csv(R24_out,header=True,index=False)
-
-    Rmod_out = os.path.join(args.output_path,'modeled_values.csv')
+    ## Write analytic mapping function to disk
+    Rmod_out = os.path.join(args.mpath,'cavity_geometry_mapping_values.csv')
     Logger.info(f'Saving steady state model parameters to: {Rmod_out}')
     df_MOD.to_csv(Rmod_out,header=True,index=False)
 
@@ -206,20 +212,29 @@ if __name__ == '__main__':
         description='Conduct corrections to stitch together camera-derived cavity geometry measurements and provide an abolute calibration for LVDT based parameters'
     )
     parser.add_argument(
-        '-i',
-        '--input_path',
+        '-e',
+        '--experiment_path',
         action='store',
-        dest='input_path',
-        default='./processed_data',
-        help='path to smoothed, segmented LVDT data files',
+        dest='epath',
+        default='../processed_data/experiments',
+        help='path to preprocessed time-series data split by experiment',
         type=str
     )
     parser.add_argument(
-        '-o',
-        '--output_path',
+        '-g',
+        '--geometry_path',
         action='store',
-        dest='output_path',
-        default='./processed_data/cavities',
+        dest='gpath',
+        default='../processed_data/geometry',
+        help='path to preprocessed cavity geometry data',
+        type=str
+    )
+    parser.add_argument(
+        '-m',
+        '--model_path',
+        action='store',
+        dest='mpath',
+        default='../processed_data/model',
         help='path and filename of file to save results to',
         type=str
     )

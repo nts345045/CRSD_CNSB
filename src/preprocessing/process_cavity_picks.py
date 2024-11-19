@@ -75,23 +75,28 @@ def res(x,y,h=1,lbda=1):
 def main(args):
     # Catch output directory
     ODIR = args.output_path 
-    T24_LV = os.path.join(args.input_path,'processed_data','6_lvdt_melt_corrected','EX_T24-LVDT-reduced.csv')
-    T24_NT = os.path.join(args.input_path,'processed_data','5_split_data','EX_T24-Pressure.csv')
-    # Manual Pick Data
-    PICKS = os.path.join(args.input_path,'data','master_picks_T24_Exported_Points_v6.csv')
+
+    lv_file = os.path.join(args.epath, 'EX_T24-LVDT-reduced.csv')
+    nt_file = os.path.join(args.epath, 'EX_T24-Pressure.csv')
+    pk_file = os.path.join(args.rpath, 'master_picks_T24_Exported_Points.csv')
+
+    # T24_LV = os.path.join(args.input_path,'processed_data','6_lvdt_melt_corrected','EX_T24-LVDT-reduced.csv')
+    # T24_NT = os.path.join(args.input_path,'processed_data','5_split_data','EX_T24-Pressure.csv')
+    # # Manual Pick Data
+    # PICKS = os.path.join(args.input_path,'data','master_picks_T24_Exported_Points_v6.csv')
 
     #### LOAD DATA ####
     # Load processed LVDT data
-    df_Z24 = pd.read_csv(T24_LV)
+    df_Z24 = pd.read_csv(lv_file)
     df_Z24.index = pd.to_datetime(df_Z24.Epoch_UTC)
     df_Z24 = df_Z24.drop(['Epoch_UTC'],axis=1)
     # Load Effective Pressure and Shear Stress data
-    df_NT24 = pd.read_csv(T24_NT)
+    df_NT24 = pd.read_csv(nt_file)
     df_NT24.index = pd.to_datetime(df_NT24.Epoch_UTC)
     df_NT24 = df_NT24.drop(['Epoch_UTC'],axis=1)
 
     # Do inital load
-    df_main = pd.read_csv(PICKS,parse_dates=['DateTime'],index_col='DateTime')
+    df_main = pd.read_csv(pk_file, parse_dates=['DateTime'],index_col='DateTime')
     Logger.info('converting LVDT timestamps from UTC to US Central Time temporarily')
     df_NT24.index += pd.Timedelta(-5, unit='hour')
     # Organize picks into organized sets w/ DateTime indexing
@@ -463,12 +468,21 @@ if __name__ == '__main__':
         description='This script conducts a rigid displacement and rotation optimization to best fit observed cavity endpoints to known bed geometry'
     )
     parser.add_argument(
-        '-i',
-        '--input_path',
+        '-e',
+        '--experiment_path',
         action='store',
-        dest='input_path',
-        default='.',
-        help='relative or absolute path to the root directory of this repository',
+        dest='epath',
+        default='../processed_data/experiment',
+        help='relative or absolute path to the directory hosting pre-processed timeseries data split by experiemtn',
+        type=str
+    )
+    parser.add_argument(
+        '-r',
+        '--raw_data_path',
+        action='store',
+        dest='rpath',
+        default='../data',
+        help='relative or absolute path to the raw data directory',
         type=str
     )
     parser.add_argument(
@@ -476,7 +490,7 @@ if __name__ == '__main__':
         '--output_path',
         action='store',
         dest='output_path',
-        default=os.path.join('processed_data','cavities'),
+        default=os.path.join('..','processed_data','geometry'),
         help='where to save postprocessed cavitiy geometry files',
         type=str)
     

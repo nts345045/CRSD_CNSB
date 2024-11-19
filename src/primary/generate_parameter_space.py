@@ -34,10 +34,11 @@ def main(args):
         for jj, U_ in enumerate(Uv):
             output_array[ii,jj,:] = calc_TS_single(N_, U_, npts=args.ngx, **profile)
 
-    path = os.path.split(args.output_file)[0]
-    if not os.path.exists(path):
-        Logger.warning(f'creating save path: {path}')
-        os.makedirs(path)
+    path = args.output_dir
+    # path = os.path.split(args.output_file)[0]
+    # if not os.path.exists(path):
+    #     Logger.warning(f'creating save path: {path}')
+    #     os.makedirs(path)
     if args.save_format == 'numpy':
         Logger.info(f'saving to: {save_file}')
         np.save(save_file, output_array, allow_pickle=False)
@@ -74,8 +75,8 @@ if __name__ == '__main__':
         '-o',
         '--output',
         action='store',
-        dest='output_file',
-        default='./parameter_space_values',
+        dest='output_dir',
+        default='../processed_data/model',
         help='file name root to save results to',
         type=str
     )

@@ -26,29 +26,37 @@ def main(args):
 	df_u = df_T/df_N
 	df_u[~np.isfinite(df_u.values)] = np.nan
 
+	# Initialize Figure
+	plt.figure(figsize=(6,4.5))
 
-	fig = plt.figure(figsize=(6,4.5))
-	pch = plt.pcolor(df_U.values, df_N.values, df_u.values, cmap='Blues')
-	plt.colorbar(pch)
+	# Plot drag background color
+	drag_ch = plt.pcolor(df_U.values, df_N.values, df_u.values, cmap='Blues')
+	
+	# Render drag colorbar
+	plt.colorbar(drag_ch)
 	plt.text(38,500,'Drag [$\\mu$] ( - )',rotation=270,fontsize=10,ha='center',va='center')
 	plt.clim([0,.35])
 
 	# Shear stress contours
-	ch = plt.contour(df_U.values, df_N.values, df_T.values,
+	tau_ch = plt.contour(df_U.values, df_N.values, df_T.values,
 					levels=np.arange(25,275,25), colors=['k'])
-	chm = plt.contour(df_U.values, df_N.values, df_T.values,
+	# Max shear stress contour
+	max_tau_ch = plt.contour(df_U.values, df_N.values, df_T.values,
 					levels=[275], colors=['r'], linestyles='--')
 
-	chS = plt.contour(df_U.values, df_N.values, df_S.values,
+	contact_fract_ch = plt.contour(df_U.values, df_N.values, df_S.values,
 					levels=np.arange(0.1,1,0.1), colors=['w'], linestyles=':')
 
 
 	# Plot operational range for N(t)
 	plt.plot([15]*2,[210,490],linewidth=4,color='orange',zorder=9,alpha=1)
 	plt.plot(15,350,'d',color='orange',markersize=14,alpha=1)
-	## This isn't quite right because the bed is kambered. Leave out for now
-	# plt.fill_between([7.5,22.5],[210]*2,[490]*2,color='orange',alpha=0.5,zorder=8)
-	plt.text(0.25,800,'No Cavities\n($S$ = 1)',fontsize=10,va='center')
+
+	# Annotate about cavities
+	## Technical Note: This isn't quite right because the bed is kambered, making for very small cavities on the outer radius of the bed.
+	plt.text(0.25,800,'No Cavities\n($S\\approx$ 1)',fontsize=10,va='center')
+	plt.text(15,50,'Large Cavities ($S$ < 0.1)', ha='center', va='center')
+	
 
 	# Plot V < V_{min} zone
 	plt.fill_between([0,4],[0]*2,[900]*2,color='black',alpha=0.1)
@@ -60,8 +68,9 @@ def main(args):
 
 	# Plot shear stress contour labels
 	mlocs = []; cxloc = 23
+
 	# Custom contour label positions
-	for level in ch.collections:
+	for level in tau_ch.collections:
 		path = level.get_paths()
 		if len(path) > 0:
 			cxpath = path[0].vertices[:,0]
@@ -71,10 +80,11 @@ def main(args):
 			mlocs.append((cxloc,cyloc))
 			# mlocs.append((np.mean(level.get_paths()[0].vertices[:,0]),\
 			# 	 		  np.mean(level.get_paths()[0].vertices[:,1])))
-	plt.clabel(ch,inline=True,inline_spacing=2,fontsize=10,fmt='%d kPa',manual=mlocs)
+	plt.clabel(tau_ch,inline=True,inline_spacing=2,fontsize=10,fmt='%d kPa',manual=mlocs)
 
+	# Format contour label for max tau
 	mlocs = []
-	for level in chm.collections:
+	for level in max_tau_ch.collections:
 		path = level.get_paths()
 		if len(path) > 0:
 			cxpath = path[0].vertices[:,0]
@@ -84,10 +94,12 @@ def main(args):
 			mlocs.append((cxloc,cyloc))
 			# mlocs.append((np.mean(level.get_paths()[0].vertices[:,0]),\
 			# 	 		  np.mean(level.get_paths()[0].vertices[:,1])))
-	plt.clabel(chm,inline=True,inline_spacing=2,fontsize=10,fmt='%d kPa',manual=mlocs)
+	# Render contour label for max tau
+	plt.clabel(max_tau_ch,inline=True,inline_spacing=2,fontsize=10,fmt='%d kPa',manual=mlocs)
 
+	# Format contour labels for S
 	mlocs = []; cxloc = 9
-	for level in chS.collections:
+	for level in contact_fract_ch.collections:
 		path = level.get_paths()
 		if len(path) > 0:
 			cxpath = path[0].vertices[:,0]
@@ -97,10 +109,12 @@ def main(args):
 			mlocs.append((cxloc,cyloc))
 			# mlocs.append((np.mean(path[0].vertices[:,0]),\
 			# 	 		  np.mean(path[0].vertices[:,1])))
+	# Render contour labels for S
+	plt.clabel(contact_fract_ch,inline=True,inline_spacing=2,fontsize=10,fmt='%.1f',manual=mlocs)
 
-	plt.clabel(chS,inline=True,inline_spacing=2,fontsize=10,fmt='%.1f',manual=mlocs)
-
+	# Parse render_only argument ()
 	if not args.render_only:
+		# Handle if dpi is not specified or specified as 'figure'
 		if args.dpi == 'figure':
 			dpi = 'figure'
 		else:
@@ -109,28 +123,32 @@ def main(args):
 
 			except:
 				dpi = 'figure'
+		# Format output name
 		if dpi == 'figure':
 			savename = os.path.join(args.output_path, f'JGLAC_Fig02_fdpi.{args.format}')
 		else:
 			savename = os.path.join(args.output_path, f'JGLAC_Fig02_{dpi}dpi.{args.format}')
+
+		# Check that save directory exists, if not make one
 		if not os.path.exists(os.path.split(savename)[0]):
 			os.makedirs(os.path.split(savename)[0])
+		## SAVE FIGURE TO DISK ##
 		plt.savefig(savename, dpi=dpi, format=args.format)
 
+	# If show, render plot #
 	if args.show:
 		plt.show()
 
+
+## RUN AS MAIN ##
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(
-		prog='Figure_02 : Steady State Theory Parameter Space'
-	)
-
-
+	
+	# Initialize parser
 	parser = argparse.ArgumentParser(
 		prog='JGLAC_Fig02.py',
 		description='A steady state parameter space for the Lliboutry/Kamb sliding law for ice over an undulatory bed'
 	)
-
+	# Input file path argument
 	parser.add_argument(
 		'-i',
 		'--input_path',
@@ -139,8 +157,7 @@ if __name__ == '__main__':
 		help='Path to pandas *grid.csv files generated by src/primary/generate_parameter_space.py',
 		type=str
 	)
-	
-
+	# Output file path argument
 	parser.add_argument(
 		'-o',
 		'--output_path',
@@ -150,7 +167,7 @@ if __name__ == '__main__':
 		help='path and name to save the rendered figure to, minus format (use -f for format). Defaults to "../results/figures/JGLAC_Fig01c"',
 		type=str
 	)
-
+	# Output file format argument
 	parser.add_argument(
 		'-f',
 		'-format',
@@ -161,7 +178,7 @@ if __name__ == '__main__':
 		help='the figure output format (e.g., *.png, *.pdf, *.svg) callable by :meth:`~matplotlib.pyplot.savefig`. Defaults to "png"',
 		type=str
 	)
-
+	# Output file resolution argument
 	parser.add_argument(
 		'-d',
 		'--dpi',
@@ -170,7 +187,7 @@ if __name__ == '__main__':
 		default='figure',
 		help='set the `dpi` argument for :meth:`~matplotlib.pyplot.savefig. Defaults to "figure"'
 	)
-
+	# Render figure on desktop bool switch
 	parser.add_argument(
 		'-s',
 		'--show',
@@ -178,14 +195,15 @@ if __name__ == '__main__':
 		dest='show',
 		help='if included, render the figure on the desktop in addition to saving to disk'
 	)
-
+	# Only render figure on desktop bool switch
 	parser.add_argument(
 		'-r',
 		'--render_only',
 		dest='render_only',
 		action='store_true',
-		help='including this flag skips saving to disk'
+		help='including this flag skips saving to disk (i.e., do NOT save the figure to disk)'
 	)
-
+	# Parse arguments
 	args = parser.parse_args()
+	# Run main
 	main(args)

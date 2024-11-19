@@ -1,4 +1,4 @@
-import logging
+import logging, sys
 
 class CriticalExitHandler(logging.Handler):
     """A custom :class:`~logging.Handler` sub-class that emits a sys.exit

@@ -1,7 +1,6 @@
 """
 :module: JGLAC_Fig04.py
-
-:version: 0 - Submission format to Journal of Glaciology
+:version: 1 - Revision for JOG-2024-0083 (Journal of Glaciology)
 :short ref: Stevens and others - Experimental constraints on transient glacier slip with ice-bed separation
 :Figure #: 4
 :auth: Nathan T. Stevens

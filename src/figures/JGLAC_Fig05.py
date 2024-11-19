@@ -1,12 +1,17 @@
 """
 :module: JGLAC_Fig05.py
-:version: 0 - Submission format to Journal of Glaciology
+:version: 1 - Revision on JOG-2024-0083  (Journal of Glaciology)
 :short ref: Stevens and others - Experimental constraints on transient glacier slip with ice-bed separation
 :Figure #: 5
 :auth: Nathan T. Stevens
 :email: ntsteven@uw.edu
 :license: CC-BY-4.0
-:purpose: Plot shear stress, changes in drag, and contact fractions time-series from experiment T24
+:purpose: Plot vertical stresses, shear stress, 
+	drag, and contact fractions time-series from experiment T24
+	REV1 updates
+	 - Add P_V and N as subplot (a)
+	 - Add 48 hour rolling average values
+	 - Add vertical and horizontal grids
 """
 import os, argparse
 import pandas as pd
@@ -17,16 +22,18 @@ import matplotlib.pyplot as plt
 def main(args):
 
 	# Map Experimental Data Files
-	T24_NT = os.path.join(args.input_path,'5_split_data','EX_T24-Pressure.csv')
-	T24_LV = os.path.join(args.input_path,'6_lvdt_melt_corrected','EX_T24-LVDT-reduced.csv')
-	T24_CM = os.path.join(args.input_path,'cavities','EX_T24_cavity_metrics.csv')
-	T24_CP = os.path.join(args.input_path,'cavities','Postprocessed_Cavity_Geometries.csv')
+	T24_NT = os.path.join(args.epath,'EX_T24-Pressure.csv')
+	T24_LV = os.path.join(args.epath,'EX_T24-LVDT-reduced.csv')
+	T24_CM = os.path.join(args.gpath,'EX_T24_cavity_metrics.csv')
+	T24_CP = os.path.join(args.gpath,'Postprocessed_Cavity_Geometries.csv')
+	DT_file = os.path.join(args.epath, 'Delta_Tau_Estimates.csv')
 
 	# LOAD EXPERIMENTAL DATA #
 	df_NT24 = pd.read_csv(T24_NT)
 	df_Z24 = pd.read_csv(T24_LV)
 	df_CM24 = pd.read_csv(T24_CM)
 	df_CP24 = pd.read_csv(T24_CP)
+	df_Dt = pd.read_csv(DT_file, index_col=[0])
 
 	# RECONSTITUDE DATETIME INDICES
 	df_NT24.index = pd.to_datetime(df_NT24.Epoch_UTC,unit='s')
@@ -34,114 +41,160 @@ def main(args):
 	df_CM24.index = pd.to_datetime(df_CM24.Epoch_UTC, unit='s')
 	df_CP24.index = pd.to_datetime(df_CP24.Epoch_UTC, unit='s')
 
-	# Define Reference time for T24
+	# Define experiment start time
 	t0_T24 = pd.Timestamp('2021-10-26T18:58')
 
-	# Calculate shear stress correction using geometric steady-state
-	D_tauP = df_CM24[df_CM24.index > t0_T24 + pd.Timedelta(120.01,unit='hour')]['T kPa'].mean() - \
-			 df_CM24[df_CM24.index > t0_T24 + pd.Timedelta(120.01,unit='hour')]['hat T kPa'].mean()
-	print('Estimated shift for \\tau is %.3e kPa'%(D_tauP))
+	# Get average D_tau
+	D_tauP = df_Dt['Delta tau kPa'].mean()
+	
+
 	# Make elapsed time indices
 	# For stress measures
 	dtindex = (df_NT24.index - t0_T24).total_seconds()/3600
 	# For LVDT measures
 	dtzindex = (df_Z24.index - t0_T24).total_seconds()/3600
 
-	# ylim = [-6,121]
-
 	### CALCULATE OBSERVED DRAG ###
-	# Observed Drag with \Delta \tau offset
 	mu_obs = (df_NT24['Tau_kPa'].values - D_tauP)/df_NT24['Pe_kPa'].values
-	df_mu_obs = pd.DataFrame({'mu_obs':mu_obs},index=df_NT24.index)
-	# Get Reference \\mu(t) value for differencing
-	mu0_obs = df_mu_obs[dtindex >= 121 ].mean().values
-	# Get observed change in drag
-	Dmu_obs = mu_obs - mu0_obs
-
-	### CALCULATE SHIFTED DRAG ###
-	mu_tP = (df_NT24['Tau_kPa'].values - D_tauP)/df_NT24['Pe_kPa'].values
-
 
 	### CALCULATE STEADY-STATE MODEL DRAG ###
 	mu_calc = df_CM24['hat T kPa'].values/df_CM24['N kPa'].values
-	# Get reference \\mu(t) for differencing
-	mu0_calc = mu_calc[-1]
-	print(mu0_calc)
-	# Get calculated change in drag
-	Dmu_calc = mu_calc - mu0_calc
 
+	df_mu_obs = pd.DataFrame({'obs':mu_obs}, index=df_NT24.index)
+	df_mu_calc = pd.DataFrame({'calc':mu_calc}, index=df_CM24.index)
 
 	### PLOTTING SECTION ###
 	# Initialize figure and subplot axes
-	fig,axs = plt.subplots(ncols=1,nrows=3,figsize=(7.5,5.5))
+	fig,axs = plt.subplots(ncols=1,nrows=4,figsize=(7.5,6))
 
+	# (a) PLOT Pe
+	axs[0].plot(dtindex, df_NT24['Pe_kPa'], 'k-', label='$N$', zorder=8)
+	axs[0].plot(dtindex, df_NT24['SigmaN_kPa'], 'r-', label='$P_V$', zorder=5)
 
-	# (a) PLOT \tau(t) 
+	axs[0].set_ylim([190, 540])
+	# Label cycles
+	for _c in range(5):
+		axs[0].text(12+24*_c, 500, f'{_c+1}', ha='center')
+	# axs[0].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.585, -0.05)).set_zorder(level=1)
+	# Plot long-term average
+	axs[0].plot(
+		dtindex, 
+		df_NT24['Pe_kPa'].rolling(pd.Timedelta(48,unit='hour')).mean(),
+		'k:')
+
+	# (b) PLOT \tau(t) 
 	# Plot observed values
-	axs[0].plot(dtindex,df_NT24['Tau_kPa'],'k-',zorder=10, label='$\\tau^{obs}$')
-	# Plot reduced values
-	axs[0].plot(dtindex,df_NT24['Tau_kPa'] - D_tauP,'b-',zorder=8, label='$\\tau^{\\prime}$')
+	axs[1].plot(dtindex,df_NT24['Tau_kPa'] - D_tauP,'k-',zorder=8, label='$\\tau^{obs}$')
 	# Plot modeled values
-	axs[0].plot(dtzindex,df_CM24['hat T kPa'].values ,'r-',zorder=5, label='$\\tau^{calc}$')
+	axs[1].plot(dtzindex,df_CM24['hat T kPa'].values ,'r-',zorder=5, label='$\\tau^{calc}$')
 
 	# Apply labels & formatting
-	axs[0].set_ylabel('Shear Stress (kPa)')
-	axs[0].set_xticks(np.arange(0,132,12))
-	axs[0].grid(axis='x',linestyle=':')
-	# axs[0].text(115,df_CM24['hat T kPa'].values[-1] + D_tauP/2,'$\\Delta \\tau$',fontsize=14,ha='center',va='center')
-	axs[0].arrow(118,153,0,95.4 - 154,head_width=2,width=0.1,head_length=10,fc='k')
-	# Add legend
-	ylims = axs[0].get_ylim()
-	axs[0].set_ylim([ylims[0]-30, ylims[1]])
-	axs[0].legend(ncols=3, loc='lower center', bbox_to_anchor=(0.5,-0.05)).set_zorder(level=1)
-	
-	# (b) PLOT \Delta \mu
-	# Plot adjusted values
-	axs[1].plot(dtindex[np.isfinite(mu_tP)],mu_tP[np.isfinite(mu_tP)] - mu0_calc,'b-',zorder=5,label='$\\Delta\\mu^{obs}$')
-	# plot modeled values
-	axs[1].plot(dtzindex,mu_calc - mu0_calc,'r-',zorder=5,label='$\\Delta\\mu^{calc}$')
-	# Apply labels & formatting
-	axs[1].set_xticks(np.arange(0,132,12))
-	axs[1].grid(axis='x',linestyle=':')
-	axs[1].set_ylabel('Change in Drag ( - )')
-	# Add legend
+	axs[1].set_ylabel('Shear Stress (kPa)')
+	# Add \Delta \tau arrow
+	# axs[1].arrow(118,153,0,95.4 - 154,head_width=2,width=0.1,head_length=10,fc='k')
+	# Set custom y-limits and ticks
 	ylims = axs[1].get_ylim()
-	axs[1].set_ylim([ylims[0], ylims[1]+0.02])
-	axs[1].legend(ncol=2,loc='lower right').set_zorder(level=1)
+	axs[1].set_ylim([ylims[0]-10, ylims[1]+10])
+	axs[1].set_yticks([50, 100, 150])
+	# axs[1].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.585,-0.05)).set_zorder(level=1)
+	
+	axs[1].plot(
+		dtindex, 
+		(df_NT24['Tau_kPa'] - D_tauP).rolling(pd.Timedelta(48,unit='hour')).mean(),
+		'k:'
+	)
+	axs[1].plot(
+		dtzindex,
+		df_CM24['hat T kPa'].rolling(pd.Timedelta(48, unit='hour')).mean(),
+		'r:'
+	)
 
-	# (c) PLOT S(t)
-	# Plot mapped values from LVDT
-	axs[2].plot(dtzindex,df_CM24['S tot'].values ,'b-',zorder=10, label='$S^{LVDT}$')
-	# Plot modeled values
-	axs[2].plot(dtzindex,df_CM24['hat S tot'].values ,'r-',zorder=5, label='$S^{calc}$')
-	# Apply labels and formatting
-	axs[2].set_xticks(np.arange(0,132,12))
-	axs[2].grid(axis='x',linestyle=':')
-	axs[2].set_ylabel('Contact Fraction ( - )')
+	# (c) PLOT \mu
+	# Plot observed values
+	axs[2].plot(dtindex[np.isfinite(mu_obs)],mu_obs[np.isfinite(mu_obs)],'k-',zorder=5,label='$\\mu^{obs}$')
+	# plot modeled values
+	axs[2].plot(dtzindex,mu_calc,'r-',zorder=5,label='$\\mu^{calc}$')
+	# Set custom y limits & ticks
 	ylims = axs[2].get_ylim()
-	axs[2].set_ylim([ylims[0]-0.025, ylims[1]])
-	axs[2].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.5, -0.05)).set_zorder(level=1)
+	axs[2].set_yticks([0.1, 0.15, 0.2, 0.25, 0.3])
+	axs[2].set_ylim([ylims[0]-0.01, ylims[1]+0.02])
+	# axs[2].legend(ncol=2,loc='lower right').set_zorder(level=1)
+
+	axs[2].plot(
+		dtindex, 
+		df_mu_obs.rolling(pd.Timedelta(48, unit='hour')).mean(),
+		'k:'
+	)
+
+	axs[2].plot(
+		dtzindex,
+		df_mu_calc.rolling(pd.Timedelta(48,unit='hour')).mean(),
+		'r:'
+	)
+
+	# (d) PLOT S(t)
+	# Plot mapped values from LVDT
+	axs[3].plot(dtzindex,df_CM24['S tot'].values ,'k-',zorder=10, label='$S^{LVDT}$')
+	# Plot modeled values
+	axs[3].plot(dtzindex,df_CM24['hat S tot'].values ,'r-',zorder=5, label='$S^{calc}$')
+	# Set custom y-limits
+	axs[3].set_ylim([0.08, 0.32])
+	axs[3].set_yticks(np.arange(0.1,0.3,0.05))
+	# ylims = axs[3].get_ylim()
+	# axs[3].set_ylim([ylims[0]-0.025, ylims[1]+0.025])
+	# axs[3].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.5, -0.05)).set_zorder(level=1)
+
+	axs[3].plot(
+		dtzindex,
+		df_CM24['S tot'].rolling(pd.Timedelta(48, unit='hours')).mean(),
+		'k:'
+	)
+	axs[3].plot(
+		dtzindex,
+		df_CM24['hat S tot'].rolling(pd.Timedelta(48, unit='hours')).mean(),
+		'r:'
+	)
 
 	# ## SUBPLOT FORMATTING
 	plt.subplots_adjust(hspace=0)
 	LBL = ['a','b','c','d']
-	DAT = (df_NT24['Tau_kPa'],df_mu_obs['mu_obs'],\
-		-df_Z24['LVDT_mm red'])
-
-	for i_,D_ in enumerate(DAT):
-		ylim = axs[i_].get_ylim()
+	YHN = ['Vertical Stress\n(kPa)','Shear Stress\n(kPa)','Drag ( - )','Contact Fraction\n( - )']
+	for _e in range(len(axs)):
+		ylim = axs[_e].get_ylim()
 		# set xlims from data limits
-		axs[i_].set_xlim((dtindex.min(),dtindex.max()))
-		axs[i_].text(-5,(ylim[1] - ylim[0])*0.85 + ylim[0],\
-					LBL[i_],fontsize=14,fontweight='extra bold',\
-					fontstyle='italic',ha='right')
+		axs[_e].set_xlim((dtindex.min(),dtindex.max()))
+		# set xticks positions
+		axs[_e].set_xticks(np.arange(0,132,12))
+		axs[_e].set_xticks(np.arange(-6,132,6), minor=True)
+		# Populate legends
+		axs[_e].legend(ncols=2, loc='lower center',
+				 bbox_to_anchor=(0.735,-0.05)).set_zorder(level=1)
 
-	axs[-1].set_xlabel('Elapsed Time from Start of Exp. T24 (hr)')
+		# set yaxis label position
+		axs[_e].yaxis.set_label_position('right')
+		# Set ylabel
+		axs[_e].set_ylabel(YHN[_e],rotation=270,labelpad=25)
+		# set subplot label
+		axs[_e].text(
+			-5,
+			(ylim[1] - ylim[0])*0.825 + ylim[0],
+			LBL[_e],
+			fontsize=14,
+			fontweight='extra bold',
+			fontstyle='italic',
+			ha='right')
+		# Turn on grids
+		axs[_e].grid(True, which='both', linestyle=':')
 
+	# Label xaxis for bottom plot & format major ticks
+	axs[-1].set_xlabel('Elapsed Time During Exp. T24 (hr)')
+	axs[-1].xaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{x:d}'))
+	# Remove all ticks for other plots
 	axs[0].xaxis.set_ticklabels([])
 	axs[1].xaxis.set_ticklabels([])
-
-
+	axs[2].xaxis.set_ticklabels([])
+	axs[0].set_title('Cycle Number',fontsize=10)
+	
 	if not args.render_only:
 		if args.dpi == 'figure':
 			dpi = 'figure'
@@ -170,11 +223,20 @@ if __name__ == '__main__':
 
 
 	parser.add_argument(
-		'-i',
-		'--input_path',
-		dest='input_path',
-		default=os.path.join('..','..','processed_data'),
-		help='Path to processed data (several sub-sources)',
+		'-e',
+		'--experiment_path',
+		dest='epath',
+		default=os.path.join('..','..','processed_data','experiments'),
+		help='Path to processed data for distinct experiments',
+		type=str
+	)
+	
+	parser.add_argument(
+		'-g',
+		'--geometry_path',
+		dest='gpath',
+		default=os.path.join('..','..','processed_data','geometry'),
+		help='Path to processed data for cavitiy geometries',
 		type=str
 	)
 	

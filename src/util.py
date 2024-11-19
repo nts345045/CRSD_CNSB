@@ -1,5 +1,28 @@
 import logging, sys
+import pandas as pd
+import numpy as np
 
+## Plotting Subroutines ##
+def plot_cycles(axis,Xdata,Ydata,Tindex,t0,cmaps,ncycles=5,T=pd.Timedelta(24,unit='hour'),zorder=10):
+	chs = []
+	for I_ in range(ncycles):
+		TS = t0 + I_*T
+		TE = t0 + (I_ + 1)*T
+		IND = (Tindex >= TS) & (Tindex < TE)
+		XI = Xdata[IND]
+		YI = Ydata[IND]
+		cbl = axis.scatter(XI,YI,c=(Tindex[IND] - TS)/T,cmap=cmaps[I_],s=1,zorder=zorder)
+		chs.append(cbl)
+	return chs
+
+def get_lims(XI, YI, PADXY): 
+	xlims = (np.nanmin(XI) - PADXY*(np.nanmax(XI) - np.nanmin(XI)),\
+			np.nanmax(XI) + PADXY*(np.nanmax(XI) - np.nanmin(XI)))
+	ylims = (np.nanmin(YI) - PADXY*(np.nanmax(YI) - np.nanmin(YI)),\
+			np.nanmax(YI) + PADXY*(np.nanmax(YI) - np.nanmin(YI)))
+	return xlims, ylims
+
+# Logging Subroutines
 class CriticalExitHandler(logging.Handler):
     """A custom :class:`~logging.Handler` sub-class that emits a sys.exit
     if a logging instance emits a logging.CRITICAL level message

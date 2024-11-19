@@ -89,7 +89,11 @@ NT_RAW="$RAW_DIR/RS_RAWdata_OSC_N.mat"
 # echo "!!!!!!!!!! CAVITY GEOMETRY PROCESSING COMPLETE !!!!!!!!!"
 
 # Steady State Model Processing
-echo "~~~~~~~~~~ GENERATING PARAMETER SPACE FROM LLIBOUTRY/KAMB STEADY STATE THEORY ~~~~~~~~~~"
-python $SRC/primary/generate_parameter_space.py -o $PD_MOD_DIR -f "pandas" -p "UW" 
+# echo "~~~~~~~~~~ GENERATING PARAMETER SPACE FROM LLIBOUTRY/KAMB STEADY STATE THEORY ~~~~~~~~~~"
+# python $SRC/primary/generate_parameter_space.py -o $PD_MOD_DIR -f "pandas" -p "UW" 
+
+# Calculate shear stress correction for mounting bolt sockets' resisting stress
+echo "~~~~~~~~~~ ESTIMATING SHEAR STRESS CORRECTIONS ~~~~~~~~~~"
+python $SRC/primary/calculate_socket_resistance.py -e $PD_EXP_DIR -g $PD_GEOM_DIR
 
 # echo "XXXXXXXXXXXX PROCESSING COMPLETE XXXXXXXXXXXX"

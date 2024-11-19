@@ -62,8 +62,8 @@ def main(args):
 
 	GS1 = fig.add_gridspec(3,12,hspace=0)
 	GS2 = fig.add_gridspec(3,45,wspace=0)
-	axs = [fig.add_subplot(GS1[0,:10]),fig.add_subplot(GS1[1,:10]),\
-		fig.add_subplot(GS2[2,:12]),fig.add_subplot(GS2[2,12:43])]
+	axs = [fig.add_subplot(GS1[2,:10]),fig.add_subplot(GS1[1,:10]),\
+		fig.add_subplot(GS2[0,:12]),fig.add_subplot(GS2[0,12:43])]
 
 	# Get Operational Range for Model
 	IND = (df_COR['N kPa'].max()*1e3 + 1e3 >= df_MOD.index) &\

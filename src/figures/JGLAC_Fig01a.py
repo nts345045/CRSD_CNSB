@@ -7,13 +7,14 @@ This script produces a SIMPLE 3-D rendering of the UW-Madison cryogenic ring-she
 :EMAIL: ntstevens@wisc.edu
 :VERSION: 0.0
 :LAST EDIT: August 6. 2021
+:REV1: Unaltered, barring re-assignment Figure 1c -> Figure 1a
 """
 import argparse, logging, os
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-Logger = logging.getLogger('Figure 1C Render')
+Logger = logging.getLogger('Figure 1a Render')
 
 
 
@@ -125,27 +126,15 @@ def main(args):
 	X,Y = thetaR2XY(T,R)
 	ax.plot_surface(X,Y,H,color='k',alpha=1)
 
-
-	# # Plot example slice
-	# theta = np.pi*(1.5 + 1/(2*w))
-	# R,H,T = generate_radial_slice(theta,ri - .1*ro,ro*1.1,dr,h0-(h1*.25),h1*1.25,dh)
-	# X,Y = thetaR2XY(T,R)
-	# idx = [0,-1,0,-1],[0,0,-1,-1]
-	# ax.plot_surface(X[idx].reshape(2,2),Y[idx].reshape(2,2),H[idx].reshape(2,2),color='red',alpha=0.25)
-
-	# Set Scale
-	# ax.set_xlim([-(ro+ri),(ro+ri)])
-	# ax.set_ylim([-(ro+ri),(ro+ri)])
-	# ax.set_zlim([-(ro+ri)+(h1 - h0)/2,(ro+ri)+(h1 - h0)/2])
+	# Set plot limits
 	ax.set_xlim([-ro*0.8, ro*0.8])
 	ax.set_ylim([-ro*0.8, ro*0.8])
 	ax.set_zlim([-(ro*0.8) + dh*100, ro*0.8 + dh*100])
+	# Set plot labels
 	ax.set_xlabel('X [m]')
 	ax.set_ylabel('Y [m]')
 	ax.set_zlabel('Z [m]')
 	ax.view_init(azim=-29, elev=16)
-
-
 
 	if not args.render_only:
 		if args.dpi == 'figure':
@@ -167,23 +156,11 @@ def main(args):
 	if args.show:
 		plt.show()
 
-	# ### PLOT CROSS-SECTION
-	# plt.figure()
-	# plt.fill_between([ri,ro],[ao-ai,0],[h1,h1],alpha=0.5,color='dodgerblue')
-	# plt.fill_between([ri,ro],[0,0],[ao-ai,0],alpha=0.5,color='darkgrey')
-	# plt.fill_between([ri,ro],[0,0],[ai + ao,2*ao],alpha=0.5,color='darkgrey')
-	# plt.plot([ri,ro],[ao,ao],'k-')
-	# plt.plot(np.ones(2)*(ro+ri)/2,[ao,ao+(ao+ai)/2],'k-')
-	# plt.plot([ri,ri,ro,ro],[h1,0,0,h1],'k-',linewidth=2)
-	# plt.xlim([0,ro*1.1])
-	# plt.xlabel('Radius [m]')
-	# plt.ylabel('Z [m]')
-
 
 if __name__ == '__main__':
 
 	parser = argparse.ArgumentParser(
-		prog='JGLAC_Fig01C.py',
+		prog='JGLAC_Fig01a.py',
 		description='A simple 3D rendering of the experimental chamber and undulatory bed'
 	)
 	parser.add_argument(

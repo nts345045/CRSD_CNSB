@@ -275,6 +275,9 @@ def main(args):
 
 	#### TIMESERIES FIXINS'
 	for _e in range(1,3):
+		ylims = axes[_e].get_ylim()
+		axes[_e].plot([(df_OBS.index[REF] - t0_T24).total_seconds()/3600]*2, ylims, 'm-', alpha=0.33, zorder=1)
+		axes[_e].set_ylim(ylims)
 		axes[_e].legend(bbox_to_anchor=(1.,1))
 		axes[_e].set_xticks(np.arange(-12,132,12))
 		axes[_e].set_xticks(np.arange(-6,132,6), minor=True)

@@ -119,16 +119,17 @@ def main(args):
 	axs[2].set_yticks([0.1, 0.15, 0.2, 0.25, 0.3])
 	axs[2].set_ylim([ylims[0]-0.01, ylims[1]+0.02])
 	# axs[2].legend(ncol=2,loc='lower right').set_zorder(level=1)
-
+	mu_obs_48 = df_mu_obs.rolling(pd.Timedelta(48, unit='hour')).mean()
+	mu_calc_48 = df_mu_calc.rolling(pd.Timedelta(48,unit='hour')).mean()
 	axs[2].plot(
 		dtindex, 
-		df_mu_obs.rolling(pd.Timedelta(48, unit='hour')).mean(),
+		mu_obs_48,
 		'k:'
 	)
 
 	axs[2].plot(
 		dtzindex,
-		df_mu_calc.rolling(pd.Timedelta(48,unit='hour')).mean(),
+		mu_calc_48,
 		'r:'
 	)
 
@@ -144,17 +145,18 @@ def main(args):
 	# axs[3].set_ylim([ylims[0]-0.025, ylims[1]+0.025])
 	# axs[3].legend(ncols=2, loc='lower center', bbox_to_anchor=(0.5, -0.05)).set_zorder(level=1)
 
+	S_obs_48 = df_CM24['S tot'].rolling(pd.Timedelta(48, unit='hours')).mean()
+	S_calc_48 = df_CM24['hat S tot'].rolling(pd.Timedelta(48, unit='hours')).mean()
 	axs[3].plot(
 		dtzindex,
-		df_CM24['S tot'].rolling(pd.Timedelta(48, unit='hours')).mean(),
+		S_obs_48,
 		'k:'
 	)
 	axs[3].plot(
 		dtzindex,
-		df_CM24['hat S tot'].rolling(pd.Timedelta(48, unit='hours')).mean(),
+		S_calc_48,
 		'r:'
 	)
-
 	# ## SUBPLOT FORMATTING
 	plt.subplots_adjust(hspace=0)
 	LBL = ['a','b','c','d']

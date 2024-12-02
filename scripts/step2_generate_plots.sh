@@ -1,14 +1,12 @@
 #!/bin/bash
 #
-# This script runs everything necessary to reproduce results presented
-# in Stevens et al. (202X) from minimally processed data sources archived
-# in their data repository.
+# This script generates all figures in Stevens and others (accepted)
+# using data files produced in the course of running step0_setup_processing_repo.sh
+# and step1_run_processing.sh.
 #
 # AUTHS: Nathan T. Stevens (ntsteven@uw.edu)
-#        Dougal D. Hansen (ddhansen3@wisc.edu)
-#        Peter E. Sobol (sobol@wisc.edu)
 # 
-# LICENSE: CC-BY 4.0
+# LICENSE: CC-BY-4.0
 #
 
 # Repository Root directory
@@ -51,8 +49,8 @@ echo "Figures 7 and 8 - Experiment T24 and T06 Crossplots"
 python $SRC/JGLAC_Fig07.py -e $PD_EXP_DIR -g $PD_GEOM_DIR -m $PD_MOD_DIR -o $FIGURE_DIR -f 'png' -d 200
 python $SRC/JGLAC_Fig08.py -e $PD_EXP_DIR -g $PD_GEOM_DIR -m $PD_MOD_DIR -o $FIGURE_DIR -f 'png' -d 200
 
-echo "Figure 9 - Experiment T06 and T24 local stresses"
+echo "Figure 9 - Comparison of T06 and T24 to common sliding rule parameters from Schoof (2005) parameterizations"
 python $SRC/JGLAC_Fig09.py -g $PD_GEOM_DIR -m $PD_MOD_DIR -o $FIGURE_DIR -f 'png' -d 200
 
-echo "Figure 10 - Comparison of T06 and T24 to common sliding rule parameters from Schoof (2005) parameterizations"
+echo "Figure 10 - Experiment T06 and T24 local stresses vs average stresses"
 python $SRC/JGLAC_Fig10.py -g $PD_GEOM_DIR -o $FIGURE_DIR -f 'png' -d 200

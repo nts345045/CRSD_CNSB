@@ -1,4 +1,10 @@
 #!/bin/bash
+# This script sets up the conda environment
+# for this repository and activates it
+#
+# AUTH: Nathan T. Stevens
+# EMAIL: ntsteven@uw.edu
+# LICENSE: CC-BY 4.0
 
 ENVNAME='crsd'
 ACTIVATE="$CONDA_PREFIX/bin/activate"
@@ -19,5 +25,5 @@ else
 fi
 
 if [[ "$CONDA_DEFAULT_ENV" == "$ENVNAME" ]]; then
-    python -m pip install .
+    python -m pip install ..
 fi

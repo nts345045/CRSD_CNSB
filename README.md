@@ -26,36 +26,19 @@ To get all the data and run all the processing required to reproduce results pre
 
 0) Download a distribution of [conda](https://docs.anaconda.com/miniconda/miniconda-install/) for your operating system.  
 
-1) Use `git` to clone this repository from GitHub. E.g.,  
+1) Use `git` to clone this repository:  
 ```
 git clone https://github.com/nts345045/CRSD_CNSB.git
 cd CRSD_CNSB
 ```
 
-2) Get the input data for time-series processing into the repository root directory:  
- - Get data from temporary repository on [GoogleDrive](https://drive.google.com/file/d/1-QdYwzCuwoD8WaA8GHAhceLC2aZYDdHk/view?usp=share_link)  
- - un-tar the repository in the root directory of your cloned repository (`your/path/to/CRSD_CNSB`)
-```
-mv ~/Downloads/data.tar
-tar -xf data.tar
-rm data.tar
-```
- - you should have the following files / directories in a `data` subdirectory:
-    - LVDT/
-        - 211004_135802.txt
-        - ...
-        - 211117_171018.txt
-    - master_picks_T24_Exported_Points.csv
-    - RS_RAWdata_OSC_N.mat
-    - UTC_experiment_times.csv
-
-3) Run all processing (including setting up the conda environment)
+2) Run everything (including setting up the conda environment and downloading the data repository):
 ```
 bash run_everything.sh
 ```
 
 Alternatively, `run_everything.sh` can be split out into the following steps
-1) Create the necessary directory structures and install/activate the `conda` environment:
+1) Create the necessary directory structures, install/activate the `conda` environment, and download data from MINDS@UW:
 ```
 cd scripts
 bash step0_setup_processing_repo.sh

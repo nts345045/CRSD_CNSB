@@ -1,12 +1,12 @@
 """
 :module: process_cavity_picks.py
+:auth: Nathan T. Stevens
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
 :purpose: Conduct post-processing on manually adjusted and picked locations of
 			 ice-bed contact geometries from time-lapse image series by cameras
 			 #2 and #4 during experiment T2. See notes on correction approaches
 			 below.
-:auth: Nathan T. Stevens
-:email: ntsteven@uw.edu
-:license: CC-BY-4.0
 """
 
 import os, argparse, logging

@@ -3,10 +3,8 @@
 :auth: Nathan T. Stevens
 :email: ntsteven@uw.edu
 :license: CC-BY-4.0
-:purpose: Synchronizes sampling rate of timeseries
-    and interpolate into uniform temporal sampling
-    with a sample spacing determined as the median
-    inter-sample time for the timeseries data.
+:purpose: This script removes large spikes from input
+    time series data using a z-score metric
 """
 
 import argparse, logging

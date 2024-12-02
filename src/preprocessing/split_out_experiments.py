@@ -1,10 +1,11 @@
 """
-:script: processing/preprocess/split_out_expriments.py
+:script: preprocess/split_out_expriments.py
 :auth: Nathan T. Stevens
 :email: ntsteven@uw.edu
 :license: CC-BY-4.0
-:purpose: Apply one or more moving window average boxcar
-    smoothing operators to 
+:purpose: Split continuous time series data into segments
+    relevant to experiments and hold periods featured in
+    Stevens and others (accepted) and Stevens (2022)
 """
 
 import argparse, logging, os

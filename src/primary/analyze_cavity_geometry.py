@@ -1,3 +1,13 @@
+"""
+:script: primary/analyze_cavity_geometry.py
+:auth: Nathan T. Stevens
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
+:purpose: Use pre-processed cavity pick geometry data
+    to calculate geometry parameters from camera observations
+    (R^{photo} and S^{photo}) and their lee & stoss sub-measures
+"""
+
 import os, sys, argparse, logging
 import pandas as pd
 import numpy as np
@@ -14,15 +24,6 @@ def main(args):
     pp_file = os.path.join(args.gpath, 'Postprocessed_Cavity_Geometries.csv')
     nt_T06_file = os.path.join(args.epath, 'EX_T06-Pressure.csv')
     lv_T06_file = os.path.join(args.epath, 'EX_T06-LVDT-reduced.csv')
-
-    # T24_NT = os.path.join(args.input_path,'5_split_data','EX_T24-Pressure.csv')
-    # T24_LV = os.path.join(args.input_path,'6_lvdt_melt_corrected','EX_T24-LVDT-reduced.csv')
-    # T24_SM = os.path.join(args.input_path,'cavities','Postprocessed_Cavity_Geometries.csv')
-
-    # Map Experimental Data Files from T06
-    # T06_NT = os.path.join(args.input_path,'5_split_data','EX_T06-Pressure.csv')
-    # T06_LV = os.path.join(args.input_path,'6_lvdt_melt_corrected','EX_T06-LVDT-reduced.csv')
-
 
     # LOAD EXPERIMENTAL DATA #
     df_NT24 = pd.read_csv(nt_T24_file)

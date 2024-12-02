@@ -1,3 +1,13 @@
+"""
+:module: preprocessing.calculate_effective_pressure
+:auth: Nathan T. Stevens
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
+:purpose: This script converts measured vertical pressure and
+    water pressure time series into an effective pressure time
+    series
+"""
+
 import argparse, os, logging
 import pandas as pd
 import numpy as np

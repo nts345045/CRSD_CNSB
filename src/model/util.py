@@ -1,3 +1,13 @@
+"""
+:module: model.util
+:auth: Nathan T. Stevens
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
+:purpose: This module contains utility functions in support of
+	modeling steady-state cavity geometries and predicted responses
+	to prescribed forcings.
+"""
+
 import numpy as np
 
 def acot(x):
@@ -64,12 +74,20 @@ def defined_rheology(profile='UW'):
 	return out
 
 def defined_experiment(profile='UW'):
+	"""Populate a param dictionary with prescribed geometric
+	and rheologic values for steady-state modeling
+
+	:param profile: profile to use, defaults to 'UW'
+	:type profile: str, optional
+	 also see :meth:`~model.util.defined_bed`
+	:return: 
+	 - **params** (*dict*) -- geometric and rheologic parameters
+	 	for steady-state modeling
+	"""	
 	params = defined_bed(profile=profile)
 	params.update(defined_rheology(profile=profile))
 	# params.update({'US': centerline_slip_velocity})
 	return params
-
-
 
 def lvel2avel(r_ref=.2,lvel=15.):
 	"""Convert linear velocity (lvel) into angular velocity (avel)

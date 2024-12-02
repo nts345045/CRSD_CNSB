@@ -1,3 +1,16 @@
+"""
+:script: primary/generate_parameter_space.py
+:auth: Nathan T. Stevens
+:email: ntsteven@uw.edu
+:license: CC-BY-4.0
+:purpose: Generate the parameter space shown in 
+    Figure 3 in Stevens and others (accepted) and save
+    modeled value grids to disk for use in subsequent
+    figures that compare observations to modeled values
+    (Figures 4-9)
+"""
+
+
 import logging, os, argparse
 import numpy as np
 import pandas as pd

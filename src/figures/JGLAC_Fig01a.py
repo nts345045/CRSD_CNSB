@@ -1,13 +1,15 @@
 """
-plot_ringshear_figure.py
-
-This script produces a SIMPLE 3-D rendering of the UW-Madison cryogenic ring-shear device sample chamber
-
+:module: JGLAC_Fig01a.py
 :AUTH: Nathan T. Stevens
-:EMAIL: ntstevens@wisc.edu
+:EMAIL: ntsteven@uw.edu
+:LICENSE: CC-BY-4.0
 :VERSION: 0.0
 :LAST EDIT: August 6. 2021
 :REV1: Unaltered, barring re-assignment Figure 1c -> Figure 1a
+:purpose: 
+This script produces a SIMPLE 3-D rendering of the UW-Madison cryogenic ring-shear device sample chamber
+shown in Figure 1a of Stevens and others (accepted)
+
 """
 import argparse, logging, os
 import numpy as np

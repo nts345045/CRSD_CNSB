@@ -1,11 +1,14 @@
 #!/bin/bash
 #
-# This script sets up the conda environment 
+# This script sets up the directory structure, installs the conda environment, 
+# and downloads the source data used in subsequent data processing (step1) and 
+# plotting (step1) bash scripts. It should be run from the `scripts` directory.
+#
 # AUTHS: Nathan T. Stevens (ntsteven@uw.edu)
 #        Dougal D. Hansen (ddhansen3@wisc.edu)
 #        Peter E. Sobol (sobol@wisc.edu)
 # 
-# LICENSE: CC-BY 4.0
+# LICENSE: CC-BY-4.0
 #
 
 # Repository Root directory
@@ -82,4 +85,10 @@ if [ ! -d $FIGURE_DIR ]; then
     mkdir -p $FIGURE_DIR
 fi
 
-echo "will wind up making a cURL command to download raw data repo"
+# Get data from MINDS@UW
+curl -o ../data.zip "https://minds.wisconsin.edu/bitstream/handle/1793/89628/data.zip"
+unzip ../data.zip
+mv data ..
+# Cleanup
+rm -r __MACOSX
+rm ../data.zip

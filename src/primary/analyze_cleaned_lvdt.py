@@ -1,16 +1,19 @@
 """
-:script: processing/primanry/analyze_cleaned_lvdt.py
+:script: primary/analyze_cleand_lvdt.py
 :auth: Nathan T. Stevens
 :email: ntsteven@uw.edu
 :license: CC-BY-4.0
-:purpose: 
+:purpose: Use pre-processed LVDT data to calculate
+    empirical melt rate corrections and apply calibrations
+    from the geometric steady-state between Exp. T24 and Exp. T06
+    from photo-derived measurements (Eqn. 4 in Stevens and others, accepted)
 """
 
 import argparse, logging, glob, os, sys
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from src.datetimeindex import *
+from src.util import pick_extrema_indices, fit_dateline, reduce_series_by_slope
 
 Logger = logging.getLogger('analyze_cleaned_lvdt.py')
 

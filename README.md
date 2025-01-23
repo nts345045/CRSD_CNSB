@@ -40,14 +40,13 @@ bash run_everything.sh
 Alternatively, `run_everything.sh` can be split out into the following steps
 1) Create the necessary directory structures, install/activate the `conda` environment, and download data from MINDS@UW:
 ```
-cd scripts
-bash step0_setup_processing_repo.sh
+bash scripts/step0_setup_processing_repo.sh
 ```
 2) Run data processing from the `scripts/` subdirectory
 ```
-bash step1_run_processing.sh
+bash scripts/step1_run_processing.sh
 ```
 3) Generate figures for the manuscript from the `scripts/` subdirectory
 ```
-bash step2_generate_plots.sh
+bash scripts/step2_generate_plots.sh
 ```

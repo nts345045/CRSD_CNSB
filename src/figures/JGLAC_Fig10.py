@@ -48,7 +48,7 @@ def main(args):
                 o_loc_24*1e-3,'-',color='blue',label='$\\sigma_{loc}$')
     axs[0].legend(loc='upper right')
     axs[0].set_ylabel('Pressure (MPa)')
-    axs[0].set_xlabel('Elapsed Time During Exp. T24 [hr]')
+    axs[0].set_xlabel('Elapsed Time During Exp. T24 (hr)')
     axs[0].set_xlim([-4, 121])
     axs[0].set_xticks(np.arange(0,132,12))
     ### (b) \sigma_{loc} (t) & N(t) for T06
@@ -60,8 +60,8 @@ def main(args):
     axs[1].legend(loc='center left')
     # axs[1].yaxis.set_label_position('right')
     # axs[1].yaxis.set_ticks_position('right')
-    axs[1].set_ylabel('Pressure [MPa]')#,rotation=270,labelpad=15)
-    axs[1].set_xlabel('Elapsed Time During Exp. T06 [hr]')
+    axs[1].set_ylabel('Pressure (MPa)')#,rotation=270,labelpad=15)
+    axs[1].set_xlabel('Elapsed Time During Exp. T06 (hr)')
     axs[1].set_xlim([-2, 32])
     axs[1].set_xticks(np.arange(0,33,3))
     # for j_ in range(2):

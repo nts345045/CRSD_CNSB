@@ -102,8 +102,8 @@ def main(args):
 
 	axs[0].legend(loc='lower right')
 	axs[0].set_ylabel('Drag [$\mu$] ( - )')
-	axs[1].set_ylabel('Shear Stress [$\\tau$] ( kPa )')
-	axs[1].set_xlabel('$U_b/ N$ ($m$ $kPa^{-1}$ $a^{-1}$)\n[$U_b$ = 15 $m$ $a^{-1}$]')
+	axs[1].set_ylabel('Shear Stress [$\\tau$] (kPa)')
+	axs[1].set_xlabel('$U_b/ N$ (m kPa$^{-1}$ a$^{-1}$)\n[$U_b$ = 15 $m$ $a^{-1}$]')
 	for _e, _c in enumerate(['a','b']):
 		axs[_e].set_xlim([0., 0.1])
 		axs[_e].text(axs[_e].get_xlim()[1]*0.01, axs[_e].get_ylim()[1]*0.92,

@@ -12,7 +12,7 @@
 #
 
 # Repository Root directory
-ROOT='..'
+ROOT='.'
 # DATA DIRECTORY
 RAW_DIR="$ROOT/data"
 # PROCESSED DATA DIRECTORIES & SUBDIRECTORIES
@@ -86,9 +86,9 @@ if [ ! -d $FIGURE_DIR ]; then
 fi
 
 # Get data from MINDS@UW
-curl -o ../data.zip "https://minds.wisconsin.edu/bitstream/handle/1793/89628/data.zip"
-unzip ../data.zip
-mv data ..
+curl -o $ROOT/data.zip "https://minds.wisconsin.edu/bitstream/handle/1793/89628/data.zip"
+unzip $ROOT/data.zip
+# mv data ..
 # Cleanup
 rm -r __MACOSX
-rm ../data.zip
+rm data.zip

@@ -62,7 +62,7 @@ def main(args):
 	plt.fill_between([0,4],[0]*2,[900]*2,color='black',alpha=0.1)
 
 	# Axis Labels
-	plt.xlabel('Linear Sliding Velocity [$U_b$] ($m$ $a^{-1}$)')
+	plt.xlabel('Linear Sliding Velocity [$U_b$] (m a$^{-1}$)')
 	plt.ylabel('Effective Pressure [$N$] (kPa)')
 	plt.xlim([0, 30])
 

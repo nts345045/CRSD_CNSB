@@ -133,9 +133,9 @@ def main(args):
 	ax.set_ylim([-ro*0.8, ro*0.8])
 	ax.set_zlim([-(ro*0.8) + dh*100, ro*0.8 + dh*100])
 	# Set plot labels
-	ax.set_xlabel('X [m]')
-	ax.set_ylabel('Y [m]')
-	ax.set_zlabel('Z [m]')
+	ax.set_xlabel('X (m)')
+	ax.set_ylabel('Y (m)')
+	ax.set_zlabel('Z (m)')
 	ax.view_init(azim=-29, elev=16)
 
 	if not args.render_only:

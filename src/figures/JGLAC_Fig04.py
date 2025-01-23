@@ -292,8 +292,6 @@ def main(args):
 	axes[1].text(115, 0.45, 'b', fontsize=14, fontweight='extra bold', fontstyle='italic')
 	axes[2].text(115, 0.255, 'c', fontsize=14, fontweight='extra bold', fontstyle='italic')
 
-	breakpoint()
-
 	if not args.render_only:
 		if args.dpi == 'figure':
 			dpi = 'figure'

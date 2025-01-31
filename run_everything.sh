@@ -14,8 +14,7 @@
 # NOTE: This script expects that you have already downloaded and un-tar'd the data
 # repository per steps 1 and 2 in the README.md
 
-cd scripts
-bash step0_setup_processing_repo.sh
-bash step1_run_processing.sh
-bash step2_generate_plots.sh
-cd ..
+
+bash scripts/step0_setup_processing_repo.sh
+bash scripts/step1_run_processing.sh
+bash scripts/step2_generate_plots.sh

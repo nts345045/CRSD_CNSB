@@ -125,9 +125,9 @@ def main(args):
 				dpi = 'figure'
 		# Format output name
 		if dpi == 'figure':
-			savename = os.path.join(args.output_path, f'JGLAC_Fig02_fdpi.{args.format}')
+			savename = os.path.join(args.output_path, f'JOG-2024-0083.Figure2.fdpi.{args.format}')
 		else:
-			savename = os.path.join(args.output_path, f'JGLAC_Fig02_{dpi}dpi.{args.format}')
+			savename = os.path.join(args.output_path, f'JOG-2024-0083.Figure2.{dpi}dpi.{args.format}')
 
 		# Check that save directory exists, if not make one
 		if not os.path.exists(os.path.split(savename)[0]):

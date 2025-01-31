@@ -241,9 +241,9 @@ def main(args):
 			except:
 				dpi = 'figure'
 		if dpi == 'figure':
-			savename = os.path.join(args.output_path, f'JGLAC_Fig07_fdpi.{args.format}')
+			savename = os.path.join(args.output_path, f'JOG-2024-0083.Figure7.fdpi.{args.format}')
 		else:
-			savename = os.path.join(args.output_path, f'JGLAC_Fig07_{dpi}dpi.{args.format}')
+			savename = os.path.join(args.output_path, f'JOG-2024-0083.Figure7.{dpi}dpi.{args.format}')
 		if not os.path.exists(os.path.split(savename)[0]):
 			os.makedirs(os.path.split(savename)[0])
 		plt.savefig(savename, dpi=dpi, format=args.format)
